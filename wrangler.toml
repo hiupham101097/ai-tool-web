@@ -5,4 +5,4 @@ pages_build_output_dir = "./dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "ai-site-builder"
-database_id = "THAY_BANG_ID_D1_CUA_BAN"   # chạy: wrangler d1 create ai-site-builder
+database_id = "6db77ad1-5695-4e92-a414-0a06bbf25f9c"
