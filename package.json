@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && wrangler pages functions build --outdir dist",
     "preview": "wrangler pages dev dist --d1=DB",
     "db:local": "wrangler d1 migrations apply ai-site-builder --local",
     "db:remote": "wrangler d1 migrations apply ai-site-builder --remote",
-    "deploy": "npm run build && wrangler pages deploy dist"
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "react": "^18.3.1",
