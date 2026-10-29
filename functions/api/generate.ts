@@ -7,7 +7,7 @@ interface Env {
   TURNSTILE_SECRET?: string;
 }
 
-const MODEL = "gemini-1.5-flash";
+const MODEL = "gemini-3.8-flash";
 const MAX_PROMPT = 1500;
 const RATE_LIMIT = 20;          // số lần / giờ / IP
 const enc = new TextEncoder();
@@ -35,11 +35,12 @@ async function callGemini(env: Env, prompt: string, currentSpec: unknown, retryH
   }
 
   const userText = JSON.stringify({ prompt, currentSpec, ...(retryHint ? { lastError: retryHint } : {}) });
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${encodeURIComponent(env.GEMINI_API_KEY.trim())}`;
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+    url,
     {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
         contents: [{ role: "user", parts: [{ text: userText }] }],
