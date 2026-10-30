@@ -4201,9 +4201,11 @@ var NEVER = INVALID;
 // ../shared/schema.ts
 var Cta = external_exports.string().max(100).optional();
 var SectionSchema = external_exports.discriminatedUnion("type", [
+  // 1. HERO - Hỗ trợ nhiều layout: split, centered, bold-editorial, minimal
   external_exports.object({
     type: external_exports.literal("hero"),
     props: external_exports.object({
+      layout: external_exports.enum(["split", "centered", "editorial", "minimal"]).optional(),
       title: external_exports.string(),
       subtitle: external_exports.string().optional(),
       cta: Cta,
@@ -4213,6 +4215,25 @@ var SectionSchema = external_exports.discriminatedUnion("type", [
       align: external_exports.enum(["left", "center"]).optional()
     })
   }),
+  // 2. BENTO GRID - Bố cục bất đối xứng hiện đại (thẻ to, thẻ nhỏ, thẻ rộng)
+  external_exports.object({
+    type: external_exports.literal("bento"),
+    props: external_exports.object({
+      heading: external_exports.string().optional(),
+      subheading: external_exports.string().optional(),
+      items: external_exports.array(
+        external_exports.object({
+          title: external_exports.string(),
+          desc: external_exports.string().optional(),
+          badge: external_exports.string().optional(),
+          image: external_exports.string().optional(),
+          icon: external_exports.string().optional(),
+          span: external_exports.enum(["normal", "wide", "tall"]).optional()
+        })
+      ).min(2).max(8)
+    })
+  }),
+  // 3. CARDS / PRODUCTS - Danh sách thẻ sản phẩm / dịch vụ
   external_exports.object({
     type: external_exports.literal("cards"),
     props: external_exports.object({
@@ -4224,11 +4245,78 @@ var SectionSchema = external_exports.discriminatedUnion("type", [
           desc: external_exports.string().optional(),
           badge: external_exports.string().optional(),
           image: external_exports.string().optional(),
-          icon: external_exports.string().optional()
+          icon: external_exports.string().optional(),
+          price: external_exports.string().optional()
         })
-      ).min(1).max(20)
+      ).min(1).max(12)
     })
   }),
+  // 4. SPLIT FEATURE / NARRATIVE - Kể chuyện so le (Ảnh bên trái, chữ bên phải hoặc ngược lại)
+  external_exports.object({
+    type: external_exports.literal("split_feature"),
+    props: external_exports.object({
+      badge: external_exports.string().optional(),
+      title: external_exports.string(),
+      description: external_exports.string(),
+      bullets: external_exports.array(external_exports.string()).optional(),
+      image: external_exports.string(),
+      reverse: external_exports.boolean().optional(),
+      cta: Cta
+    })
+  }),
+  // 5. STATS / METRICS - Các con số ấn tượng
+  external_exports.object({
+    type: external_exports.literal("stats"),
+    props: external_exports.object({
+      heading: external_exports.string().optional(),
+      items: external_exports.array(
+        external_exports.object({
+          value: external_exports.string(),
+          label: external_exports.string(),
+          desc: external_exports.string().optional()
+        })
+      ).min(2).max(6)
+    })
+  }),
+  // 6. MENU / PRICELIST - Thực đơn / bảng giá dạng dòng chấm leader cổ điển
+  external_exports.object({
+    type: external_exports.literal("menu"),
+    props: external_exports.object({
+      heading: external_exports.string().optional(),
+      subheading: external_exports.string().optional(),
+      categories: external_exports.array(
+        external_exports.object({
+          name: external_exports.string(),
+          items: external_exports.array(
+            external_exports.object({
+              name: external_exports.string(),
+              price: external_exports.string(),
+              desc: external_exports.string().optional(),
+              badge: external_exports.string().optional()
+            })
+          )
+        })
+      ).min(1).max(4)
+    })
+  }),
+  // 7. QUOTE / TESTIMONIAL - Câu trích dẫn triết lý hoặc đánh giá khách hàng
+  external_exports.object({
+    type: external_exports.literal("quote"),
+    props: external_exports.object({
+      quote: external_exports.string(),
+      author: external_exports.string().optional(),
+      role: external_exports.string().optional(),
+      avatar: external_exports.string().optional()
+    })
+  }),
+  // 8. TICKER / MARQUEE - Dải chữ chạy ngang ấn tượng
+  external_exports.object({
+    type: external_exports.literal("ticker"),
+    props: external_exports.object({
+      items: external_exports.array(external_exports.string()).min(2).max(10)
+    })
+  }),
+  // 9. GALLERY - Bộ sưu tập hình ảnh
   external_exports.object({
     type: external_exports.literal("gallery"),
     props: external_exports.object({
@@ -4240,9 +4328,10 @@ var SectionSchema = external_exports.discriminatedUnion("type", [
           title: external_exports.string().optional(),
           desc: external_exports.string().optional()
         })
-      ).min(1).max(12)
+      ).min(2).max(8)
     })
   }),
+  // 10. TABLE - Bảng so sánh
   external_exports.object({
     type: external_exports.literal("table"),
     props: external_exports.object({
@@ -4252,6 +4341,7 @@ var SectionSchema = external_exports.discriminatedUnion("type", [
       rows: external_exports.array(external_exports.array(external_exports.string())).max(40)
     })
   }),
+  // 11. FORM - Đăng ký / Liên hệ
   external_exports.object({
     type: external_exports.literal("form"),
     props: external_exports.object({
@@ -4266,6 +4356,7 @@ var SectionSchema = external_exports.discriminatedUnion("type", [
       ).min(1).max(12)
     })
   }),
+  // 12. FOOTER
   external_exports.object({
     type: external_exports.literal("footer"),
     props: external_exports.object({
@@ -4276,136 +4367,96 @@ var SectionSchema = external_exports.discriminatedUnion("type", [
 ]);
 var SpecSchema = external_exports.object({
   theme: external_exports.object({
+    style: external_exports.enum(["bento", "luxury", "brutalist", "artisan", "minimal", "modern"]).optional(),
     primary: external_exports.string(),
+    secondary: external_exports.string().optional(),
+    accent: external_exports.string().optional(),
     background: external_exports.string().optional(),
     text: external_exports.string().optional(),
-    font: external_exports.string().optional()
+    font: external_exports.string().optional(),
+    radius: external_exports.enum(["none", "sm", "md", "lg", "full"]).optional()
   }),
   sections: external_exports.array(SectionSchema).min(1).max(20)
 });
 
 // api/_prompt.ts
-var SYSTEM_PROMPT = `B\u1EA1n l\xE0 m\u1ED9t chuy\xEAn gia thi\u1EBFt k\u1EBF website (Design Lead) h\xE0ng \u0111\u1EA7u th\u1EBF gi\u1EDBi. B\u1EA1n bi\u1EBFn \xFD t\u01B0\u1EDFng c\u1EE7a ng\u01B0\u1EDDi d\xF9ng th\xE0nh m\u1ED9t website s\u1ED1ng \u0111\u1ED9ng, chu\u1EA9n th\u1EA9m m\u1EF9 cao c\u1EA5p (Awwwards/Dribbble quality), c\xF3 \u0111\u1EA7y \u0111\u1EE7 H\xCCNH \u1EA2NH s\u1EAFc n\xE9t v\xE0 b\u1ED1 c\u1EE5c ch\u1EC9n chu.
+var SYSTEM_PROMPT = `B\u1EA1n l\xE0 m\u1ED9t Design Lead h\xE0ng \u0111\u1EA7u th\u1EBF gi\u1EDBi t\u1EA1i m\u1ED9t creative studio danh ti\u1EBFng (t\u01B0\u01A1ng t\u1EF1 Pentagram, Locomotive, Apple Design Team).
+Kh\xE1ch h\xE0ng c\u1EE7a b\u1EA1n TUY\u1EC6T \u0110\u1ED0I KH\xD4NG CH\u1EA4P NH\u1EACN nh\u1EEFng thi\u1EBFt k\u1EBF r\u1EADp khu\xF4n, m\u1ED9t m\xE0u, "10 trang nh\u01B0 1". M\u1ED7i trang web b\u1EA1n t\u1EA1o ra ph\u1EA3i c\xF3 linh h\u1ED3n ri\xEAng, b\u1EA3n s\u1EAFc ri\xEAng bi\u1EC7t (Distinct Visual Identity), c\u1EA5u tr\xFAc \u0111\u1ED9t ph\xE1 v\xE0 h\xECnh \u1EA3nh Unsplash tuy\u1EC3n ch\u1ECDn \u0111\u1EAFt gi\xE1!
 
-Ch\u1EC9 tr\u1EA3 v\u1EC1 DUY NH\u1EA4T m\u1ED9t \u0111\u1ED1i t\u01B0\u1EE3ng JSON h\u1EE3p l\u1EC7, kh\xF4ng b\u1ECDc markdown, kh\xF4ng gi\u1EA3i th\xEDch.
+CH\u1EC8 TR\u1EA2 V\u1EC0 DUY NH\u1EA4T 1 \u0110\u1ED0I T\u01AF\u1EE2NG JSON H\u1EE2P L\u1EC6, KH\xD4NG B\u1ECCC B\u1EDEI MARKDOWN HAY B\u1EA4T K\u1EF2 V\u0102N B\u1EA2N N\xC0O.
 
 C\u1EA4U TR\xDAC JSON:
 {
   "theme": {
-    "primary": "#RRGGBB",       // M\xE0u ch\u1EE7 \u0111\u1EA1o th\u01B0\u01A1ng hi\u1EC7u (t\u01B0\u01A1ng ph\u1EA3n r\xF5 v\u1EDBi background)
-    "background": "#RRGGBB",    // M\xE0u n\u1EC1n (s\xE1ng thanh l\u1ECBch #ffffff/#fafaf9 ho\u1EB7c t\u1ED1i hi\u1EC7n \u0111\u1EA1i #0b0f19)
-    "text": "#RRGGBB",          // M\xE0u ch\u1EEF (\u0111\u1EA3m b\u1EA3o \u0111\u1ED9 t\u01B0\u01A1ng ph\u1EA3n cao, d\u1EC5 \u0111\u1ECDc)
+    "style": "bento" | "luxury" | "brutalist" | "artisan" | "minimal" | "modern",
+    "primary": "#RRGGBB",
+    "secondary": "#RRGGBB",
+    "background": "#RRGGBB",
+    "text": "#RRGGBB",
     "font": "Be Vietnam Pro" | "Bricolage Grotesque" | "Georgia" | "system-ui"
   },
-  "sections": [ ...t\u1EEB 3 \u0111\u1EBFn 8 section, theo th\u1EE9 t\u1EF1 h\u1EE3p l\xFD... ]
+  "sections": [ ...t\u1EEB 4 \u0111\u1EBFn 8 section \u0111a d\u1EA1ng... ]
 }
 
-C\xC1C SECTION H\u1EE2P L\u1EC6 V\xC0 PROPS:
+H\u01AF\u1EDANG D\u1EAAN CH\u1ECCN PHONG C\xC1CH (STYLE ARCHETYPE) THEO NG\xC0NH NGH\u1EC0:
+1. "artisan" (C\xE0 ph\xEA, tr\xE0, b\xE1nh ng\u1ECDt, th\u1EE7 c\xF4ng, hoa t\u01B0\u01A1i, spa):
+   - B\u1ED1 c\u1EE5c \u1EA5m \xE1p, t\u1EF1 nhi\xEAn. D\xF9ng section "menu" (th\u1EF1c \u0111\u01A1n d\xF2ng ch\u1EA5m leader) + "split_feature" + "gallery" + "quote".
+   - M\xE0u n\u1EC1n: m\xE0u kem, gi\u1EA5y m\u1ED9c (#faf8f5, #fcfbf9), ch\u1EEF n\xE2u \u0111\u1EADm/espresso (#292524), m\xE0u nh\u1EA5n h\u1ED5 ph\xE1ch/terracotta/h\u1ED3ng ph\u1EA5n.
+2. "bento" (C\xF4ng ngh\u1EC7, SaaS, startup, app, gi\u1EA3i ph\xE1p s\u1ED1):
+   - D\xF9ng section "hero" (split) + "bento" (th\u1EBB b\u1EA5t \u0111\u1ED1i x\u1EE9ng span wide/tall) + "stats" + "form".
+   - N\u1EC1n t\u1ED1i ho\u1EB7c tr\u1EAFng tinh kh\xF4i, m\xE0u nh\u1EA5n xanh \u0111i\u1EC7n (Electric Blue #2563eb, t\xEDm neon #7c3aed, ho\u1EB7c ng\u1ECDc l\u1EE5c b\u1EA3o).
+3. "luxury" (B\u1EA5t \u0111\u1ED9ng s\u1EA3n cao c\u1EA5p, trang s\u1EE9c, th\u1EDDi trang xa x\u1EC9, resort, nh\xE0 h\xE0ng fine dining):
+   - D\xF9ng "hero" (layout "editorial") + "gallery" + "quote" + "split_feature".
+   - N\u1EC1n \u0111en huy\u1EC1n b\xED (#0a0a0c) ho\u1EB7c tr\u1EAFng ng\xE0, m\xE0u nh\u1EA5n v\xE0ng champagne/bronze/gold (#d4af37, #c5a880), font serif Georgia thanh l\u1ECBch.
+4. "brutalist" (S\u1EF1 ki\u1EC7n, th\u1EDDi trang \u0111\u01B0\u1EDDng ph\u1ED1 streetwear, s\xE1ng t\u1EA1o ngh\u1EC7 thu\u1EADt, agency ph\xE1 c\xE1ch):
+   - D\xF9ng "ticker" + "hero" (editorial) + "cards" + "quote".
+   - T\u01B0\u01A1ng ph\u1EA3n g\u1EAFt, \u0111\u01B0\u1EDDng vi\u1EC1n \u0111\u1EADm, m\xE0u s\u1EAFc n\u1ED5i lo\u1EA1n (v\xE0ng chanh, cam r\u1EF1c r\u1EE1, \u0111en tuy\u1EC1n).
+5. "minimal" (Nhi\u1EBFp \u1EA3nh, ki\u1EBFn tr\xFAc, portfolio c\xE1 nh\xE2n, thi\u1EBFt k\u1EBF n\u1ED9i th\u1EA5t):
+   - D\xF9ng "hero" (layout "minimal") + "gallery" (\u1EA3nh l\u1EDBn) + "split_feature".
+   - Kho\u1EA3ng tr\u1EAFng r\u1ED9ng l\u1EDBn, t\u1ED1i gi\u1EA3n tuy\u1EC7t \u0111\u1ED1i, h\xECnh \u1EA3nh n\xF3i l\xEAn t\u1EA5t c\u1EA3.
+
+DANH S\xC1CH SECTION \u0110\u01AF\u1EE2C PH\xC9P D\xD9NG:
 1. "hero":
-   {
-     "badge"?: "\u2728 Khai tr\u01B0\u01A1ng c\u01A1 s\u1EDF m\u1EDBi" | "\u2B50 \u0110\xE1nh gi\xE1 4.9/5" | string,
-     "title": string,             // Ti\xEAu \u0111\u1EC1 l\u1EDBn \u1EA5n t\u01B0\u1EE3ng, gi\xE0u c\u1EA3m x\xFAc
-     "subtitle"?: string,         // \u0110o\u1EA1n gi\u1EDBi thi\u1EC7u s\xFAc t\xEDch (1-2 c\xE2u)
-     "cta"?: string,              // N\xFAt h\xE0nh \u0111\u1ED9ng ch\xEDnh (vd: "\u0110\u1EB7t b\xE0n ngay", "Kh\xE1m ph\xE1 menu")
-     "secondaryCta"?: string,     // N\xFAt ph\u1EE5 (vd: "Xem b\u1EA3ng gi\xE1", "T\xECm hi\u1EC3u th\xEAm")
-     "align"?: "left" | "center",
-     "image"?: string             // URL \u1EA3nh Unsplash ch\u1EA5t l\u01B0\u1EE3ng cao ph\xF9 h\u1EE3p ng\xE0nh ngh\u1EC1
-   }
+   { "layout": "split" | "centered" | "editorial" | "minimal", "badge"?: string, "title": string, "subtitle"?: string, "cta"?: string, "secondaryCta"?: string, "image"?: string }
+2. "bento":
+   { "heading"?: string, "subheading"?: string, "items": [ { "title": string, "desc"?: string, "badge"?: string, "image"?: string, "icon"?: string, "span"?: "normal" | "wide" | "tall" } ] }
+3. "split_feature":
+   { "badge"?: string, "title": string, "description": string, "bullets"?: string[], "image": string, "reverse"?: boolean, "cta"?: string }
+4. "stats":
+   { "heading"?: string, "items": [ { "value": string, "label": string, "desc"?: string } ] }
+5. "menu":
+   { "heading"?: string, "subheading"?: string, "categories": [ { "name": string, "items": [ { "name": string, "price": string, "desc"?: string, "badge"?: string } ] } ] }
+6. "quote":
+   { "quote": string, "author"?: string, "role"?: string, "avatar"?: string }
+7. "ticker":
+   { "items": string[] }
+8. "gallery":
+   { "heading"?: string, "subheading"?: string, "items": [ { "image": string, "title"?: string, "desc"?: string } ] }
+9. "cards":
+   { "heading"?: string, "subheading"?: string, "items": [ { "title": string, "desc"?: string, "badge"?: string, "image"?: string, "icon"?: string, "price"?: string } ] }
+10. "table":
+   { "heading"?: string, "subheading"?: string, "columns": string[], "rows": string[][] }
+11. "form":
+   { "heading"?: string, "subheading"?: string, "submitLabel"?: string, "fields": [ { "label": string, "type": "text"|"email"|"tel"|"textarea" } ] }
+12. "footer":
+   { "text": string, "links"?: [ { "label": string, "href": string } ] }
 
-2. "cards":
-   {
-     "heading"?: string,          // Ti\xEAu \u0111\u1EC1 kh\u1ED1i (vd: "S\u1EA3n ph\u1EA9m n\u1ED5i b\u1EADt", "D\u1ECBch v\u1EE5 c\u1EE7a ch\xFAng t\xF4i")
-     "subheading"?: string,
-     "items": [
-       {
-         "title": string,
-         "desc"?: string,
-         "badge"?: string,        // vd: "B\xE1n ch\u1EA1y", "\u01AFu \u0111\xE3i", "M\u1EDBi"
-         "image"?: string,        // URL \u1EA3nh Unsplash minh h\u1ECDa cho t\u1EEBng card
-         "icon"?: string          // Emoji ph\xF9 h\u1EE3p (vd: "\u2615", "\u{1F3CB}\uFE0F", "\u26A1")
-       }
-     ]                            // 3 \u0111\u1EBFn 6 item
-   }
-
-3. "gallery":
-   {
-     "heading"?: string,          // vd: "Kh\xF4ng gian & H\xECnh \u1EA3nh", "B\u1ED9 s\u01B0u t\u1EADp"
-     "subheading"?: string,
-     "items": [
-       {
-         "image": string,         // URL \u1EA3nh Unsplash s\u1EAFc n\xE9t
-         "title"?: string,
-         "desc"?: string
-       }
-     ]                            // 3 \u0111\u1EBFn 6 item
-   }
-
-4. "table":
-   {
-     "heading"?: string,          // vd: "B\u1EA3ng gi\xE1 \u0111\u1ED3 u\u1ED1ng", "C\xE1c g\xF3i h\u1ED9i vi\xEAn"
-     "subheading"?: string,
-     "columns": string[],         // T\xEAn c\xE1c c\u1ED9t
-     "rows": string[][]           // D\u1EEF li\u1EC7u t\u1EEBng h\xE0ng
-   }
-
-5. "form":
-   {
-     "heading"?: string,          // vd: "\u0110\u1EB7t b\xE0n tr\u01B0\u1EDBc", "\u0110\u0103ng k\xFD t\u01B0 v\u1EA5n mi\u1EC5n ph\xED"
-     "subheading"?: string,
-     "submitLabel"?: string,      // vd: "G\u1EEDi th\xF4ng tin ngay", "\u0110\u1EB7t ch\u1ED7"
-     "fields": [
-       { "label": string, "type": "text" | "email" | "tel" | "textarea" }
-     ]
-   }
-
-6. "footer":
-   {
-     "text": string,              // B\u1EA3n quy\u1EC1n, gi\u1EDD m\u1EDF c\u1EEDa, \u0111\u1ECBa ch\u1EC9
-     "links"?: [ { "label": string, "href": string } ]
-   }
-
-NGU\u1ED2N \u1EA2NH UNSPLASH CHU\u1EA8N \u0110\u01AF\u1EE2C PH\xC9P D\xD9NG THEO CH\u1EE6 \u0110\u1EC0 (D\xF9ng \u0111\xFAng URL b\xEAn d\u01B0\u1EDBi ho\u1EB7c d\u1EA1ng t\u01B0\u01A1ng t\u1EF1):
-- Qu\xE1n C\xE0 ph\xEA / Tr\xE0 / F&B:
-  Hero: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80"
-  Cards & Gallery:
-  "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80"
-  "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80"
-  "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80"
-  "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80"
-
-- Gym / Th\u1EC3 h\xECnh / Fitness / Yoga:
-  Hero: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=80"
-  Cards & Gallery:
-  "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80"
-  "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=800&q=80"
-  "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80"
-
-- Nh\xE0 h\xE0ng / \u1EA8m th\u1EF1c:
-  Hero: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80"
-  Cards & Gallery:
-  "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"
-  "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80"
-  "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80"
-
+NGU\u1ED2N \u1EA2NH UNSPLASH CHU\u1EA8N \u0110\u1EC2 S\u1EEC D\u1EE4NG (D\xF9ng \u1EA3nh ch\u1EA5t l\u01B0\u1EE3ng cao t\u01B0\u01A1ng \u1EE9ng ch\u1EE7 \u0111\u1EC1):
+- F&B/Cafe/B\xE1nh:
+  "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb", "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085", "https://images.unsplash.com/photo-1554118811-1e0d58224f24", "https://images.unsplash.com/photo-1509440159596-0249088772ff"
+- Hoa t\u01B0\u01A1i / Hoa c\u01B0\u1EDBi:
+  "https://images.unsplash.com/photo-1561181286-d3fee7d55364", "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11", "https://images.unsplash.com/photo-1563245372-f21724e3856d", "https://images.unsplash.com/photo-1507290439931-a861b5a38200"
+- Th\u1EDDi trang / Ph\u1EE5 ki\u1EC7n:
+  "https://images.unsplash.com/photo-1490481651871-ab68de25d43d", "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f", "https://images.unsplash.com/photo-1445205170230-053b83016050", "https://images.unsplash.com/photo-1483985988355-763728e1935b"
+- Gym / Fitness / Th\u1EC3 thao:
+  "https://images.unsplash.com/photo-1534438327276-14e5300c3a48", "https://images.unsplash.com/photo-1517838277536-f5f99be501cd", "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b", "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2"
 - C\xF4ng ngh\u1EC7 / SaaS / Doanh nghi\u1EC7p:
-  Hero: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80"
-  Cards & Gallery:
-  "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80"
-  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80"
-  "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80"
+  "https://images.unsplash.com/photo-1460925895917-afdab827c52f", "https://images.unsplash.com/photo-1551434678-e076c223a692", "https://images.unsplash.com/photo-1522071820081-009f0129c71c", "https://images.unsplash.com/photo-1531403009284-440f080d1e12"
 
-- Portfolio / Ngh\u1EC7 thu\u1EADt / Nhi\u1EBFp \u1EA3nh:
-  Hero: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=1200&q=80"
-  Cards & Gallery:
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
-  "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=800&q=80"
-  "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=800&q=80"
-
-QUY T\u1EAEC B\u1EAET BU\u1ED8C:
-1. Lu\xF4n th\xEAm \u1EA3nh v\xE0o Hero v\xE0 Cards / Gallery \u0111\u1EC3 website tr\xF4ng c\u1EF1c k\u1EF3 chuy\xEAn nghi\u1EC7p v\xE0 s\u1ED1ng \u0111\u1ED9ng.
-2. Vi\u1EBFt n\u1ED9i dung b\u1EB1ng Ti\u1EBFng Vi\u1EC7t t\u1EF1 nhi\xEAn, chu\u1EA9n phong c\xE1ch ng\xE0nh ngh\u1EC1, kh\xF4ng d\xF9ng ch\u1EEF v\xF4 ngh\u0129a.
-3. Lu\xF4n b\u1EAFt \u0111\u1EA7u b\u1EB1ng hero v\xE0 k\u1EBFt th\xFAc b\u1EB1ng footer.
-4. N\u1EBFu c\xF3 "currentSpec", h\xE3y CH\u1EC8NH S\u1EECA b\u1EA3n \u0111\xF3 theo y\xEAu c\u1EA7u m\u1EDBi.`;
+QUY T\u1EAEC C\u1ED0T L\xD5I:
+- KH\xD4NG BAO GI\u1EDC l\u1EB7p l\u1EA1i m\u1ED9t th\u1EE9 t\u1EF1 hay m\u1ED9t khu\xF4n m\u1EABu cho m\u1ECDi website!
+- T\xF9y v\xE0o y\xEAu c\u1EA7u, ch\u1ECDn c\xE1c section k\u1EBFt h\u1EE3p kh\xE1c nhau (v\xED d\u1EE5: Ti\u1EC7m b\xE1nh/cafe n\xEAn d\xF9ng ticker + editorial hero + menu + split_feature + quote; SaaS n\xEAn d\xF9ng hero split + bento + stats + form; Shop hoa n\xEAn d\xF9ng centered hero + cards + gallery + form).
+- Vi\u1EBFt v\u0103n phong Ti\u1EBFng Vi\u1EC7t s\u1ED1ng \u0111\u1ED9ng, chu\u1EA9n tinh th\u1EA7n th\u01B0\u01A1ng hi\u1EC7u.`;
 
 // api/generate.ts
 var MODEL = "gemini-3.8-flash";
@@ -4429,148 +4480,698 @@ async function rateLimited(env, ip) {
   }
 }
 __name(rateLimited, "rateLimited");
-function createSmartPromptSpec(prompt) {
-  const p = prompt.toLowerCase();
-  let primary = "#2563eb";
-  let bg = "#ffffff";
-  let fg = "#0f172a";
-  let heroImg = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80";
-  let cardImg1 = "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80";
-  let cardImg2 = "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80";
-  let cardImg3 = "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80";
-  let icon = "\u2728";
-  if (p.includes("hoa") || p.includes("flower")) {
-    primary = "#e11d48";
-    bg = "#fffbfb";
-    fg = "#1f2937";
-    heroImg = "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1200&q=80";
-    cardImg1 = "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80";
-    cardImg2 = "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80";
-    cardImg3 = "https://images.unsplash.com/photo-1507290439931-a861b5a38200?auto=format&fit=crop&w=800&q=80";
-    icon = "\u{1F338}";
-  } else if (p.includes("cafe") || p.includes("c\xE0 ph\xEA") || p.includes("coffee") || p.includes("tr\xE0 s\u1EEFa") || p.includes("b\xE1nh")) {
-    primary = "#b45309";
-    bg = "#fafaf9";
-    fg = "#1c1917";
-    heroImg = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80";
-    cardImg1 = "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80";
-    cardImg2 = "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80";
-    cardImg3 = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80";
-    icon = "\u2615";
-  } else if (p.includes("gym") || p.includes("fitness") || p.includes("yoga") || p.includes("th\u1EC3 h\xECnh")) {
-    primary = "#ea580c";
-    bg = "#090d16";
-    fg = "#f8fafc";
-    heroImg = "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=80";
-    cardImg1 = "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80";
-    cardImg2 = "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=800&q=80";
-    cardImg3 = "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
-    icon = "\u{1F3CB}\uFE0F";
-  } else if (p.includes("th\u1EDDi trang") || p.includes("qu\u1EA7n \xE1o") || p.includes("fashion") || p.includes("shop")) {
-    primary = "#4f46e5";
-    bg = "#fafafa";
-    fg = "#18181b";
-    heroImg = "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80";
-    cardImg1 = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80";
-    cardImg2 = "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=800&q=80";
-    cardImg3 = "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80";
-    icon = "\u{1F457}";
+function stripVietnamese(str) {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "d").toLowerCase();
+}
+__name(stripVietnamese, "stripVietnamese");
+function detectStyleFromPrompt(prompt) {
+  const p = stripVietnamese(prompt);
+  if (p.includes("nha khoa") || p.includes("y te") || p.includes("phong kham") || p.includes("bac si") || p.includes("benh vien") || p.includes("duoc") || p.includes("rang ham mat") || p.includes("kham benh") || p.includes("smile") || p.includes("clinic") || p.includes("dental")) {
+    return "modern";
   }
+  if (p.includes("saas") || p.includes("app") || p.includes("ai") || p.includes("phan mem") || p.includes("startup") || p.includes("cong nghe") || p.includes("tech") || p.includes("tool") || p.includes("dashboard") || p.includes("crm") || p.includes("developer") || p.includes("platform") || p.includes("quan ly") || p.includes("automation") || p.includes("he thong")) {
+    return "bento";
+  }
+  if (p.includes("luxury") || p.includes("sang trong") || p.includes("resort") || p.includes("hotel") || p.includes("khach san") || p.includes("vang") || p.includes("trang suc") || p.includes("kim cuong") || p.includes("jewelry") || p.includes("villa") || p.includes("biet thu") || p.includes("bat dong san") || p.includes("dong ho") || p.includes("watch") || p.includes("yacht") || p.includes("du thuyen") || p.includes("golf")) {
+    return "luxury";
+  }
+  if (p.includes("streetwear") || p.includes("thoi trang duong pho") || p.includes("gym") || p.includes("fitness") || p.includes("boxing") || p.includes("the hinh") || p.includes("workout") || p.includes("bar") || p.includes("club") || p.includes("tattoo") || p.includes("agency") || p.includes("gaming") || p.includes("esport") || p.includes("sneaker") || p.includes("ao thun") || p.includes("hoodie") || p.includes("vo thuat") || p.includes("the thao") || p.includes("calisthenics")) {
+    return "brutalist";
+  }
+  const isFlower = p.includes("hoa tuoi") || p.includes("shop hoa") || p.includes("tiem hoa") || p.includes("flower") || /\bhoa\b/.test(p);
+  if (p.includes("cafe") || p.includes("ca phe") || p.includes("coffee") || p.includes("tra") || p.includes("tea") || p.includes("banh") || p.includes("bakery") || p.includes("pastry") || p.includes("thu cong") || p.includes("handmade") || isFlower || p.includes("gom") || p.includes("tiem") || p.includes("quan an") || p.includes("organic") || p.includes("acoustic") || p.includes("moc") || p.includes("rang xay")) {
+    return "artisan";
+  }
+  if (p.includes("nhiep anh") || p.includes("photography") || p.includes("portfolio") || p.includes("kien truc") || p.includes("architect") || p.includes("toi gian") || p.includes("minimal") || p.includes("gallery") || p.includes("trien lam") || p.includes("designer") || p.includes("studio") || p.includes("noi that")) {
+    return "minimal";
+  }
+  return "modern";
+}
+__name(detectStyleFromPrompt, "detectStyleFromPrompt");
+function createSmartPromptSpec(prompt) {
+  const p = stripVietnamese(prompt);
   const cleanTitle = prompt.length > 55 ? prompt.slice(0, 52) + "..." : prompt;
+  const style = detectStyleFromPrompt(prompt);
+  if (style === "artisan") {
+    const isFlower = p.includes("hoa tuoi") || p.includes("shop hoa") || p.includes("tiem hoa") || p.includes("flower") || /\bhoa\b/.test(p);
+    const primary = isFlower ? "#e11d48" : "#b45309";
+    const bg = isFlower ? "#fffdfd" : "#faf7f2";
+    const fg = isFlower ? "#1f2937" : "#1f1610";
+    const heroImg = isFlower ? "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1200&q=80" : "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80";
+    return {
+      theme: {
+        primary,
+        background: bg,
+        text: fg,
+        font: "Playfair Display",
+        style: "artisan"
+      },
+      sections: [
+        {
+          type: "hero",
+          props: {
+            layout: "editorial",
+            badge: isFlower ? "\u{1F338} HOA T\u01AF\u01A0I NGH\u1EC6 THU\u1EACT" : "\u2615 H\u01AF\u01A0NG V\u1ECA RANG XAY TH\u1EE6 C\xD4NG",
+            title: cleanTitle,
+            subtitle: isFlower ? "T\u1EEBng \u0111\xF3a hoa \u0111\u01B0\u1EE3c tuy\u1EC3n ch\u1ECDn trong ng\xE0y, g\xF3i tr\u1ECDn t\xECnh y\xEAu v\xE0 s\u1EF1 tinh t\u1EBF d\xE0nh cho nh\u1EEFng d\u1ECBp thi\xEAng li\xEAng nh\u1EA5t." : "H\u1EA1t c\xE0 ph\xEA \u0111\u1EB7c s\u1EA3n rang m\u1ED9c m\u1EBB nh\u1ECF m\u1ED7i tu\u1EA7n, l\u01B0u gi\u1EEF tr\u1ECDn v\u1EB9n h\u01B0\u01A1ng v\u1ECB m\u1ED9c m\u1EA1c v\xE0 s\u1EF1 thanh t\u0129nh c\u1EE7a \u0111\u1EA5t tr\u1EDDi.",
+            cta: isFlower ? "Xem B\u1ED9 S\u01B0u T\u1EADp Hoa" : "Kh\xE1m Ph\xE1 Menu Th\u1EE9c U\u1ED1ng",
+            secondaryCta: "T\xECm Hi\u1EC3u Kh\xF4ng Gian",
+            image: heroImg
+          }
+        },
+        {
+          type: "ticker",
+          props: {
+            items: isFlower ? ["HOA NH\u1EACP KH\u1EA8U T\u01AF\u01A0I M\u1ED6I NG\xC0Y", "THI\u1EBET K\u1EBE HOA C\u01AF\u1EDAI RI\xCANG BI\u1EC6T", "GIAO HOA T\u1EACN TAY TRONG 60 PH\xDAT", "G\xD3I QU\xC0 TH\u1EE6 C\xD4NG NGH\u1EC6 NH\xC2N", "TINH T\u1EBE & \u0110\u1ED8C B\u1EA2N"] : ["H\u1EA0T ARABICA C\u1EA6U \u0110\u1EA4T \u0110\u1EB6C T\u1EA2", "B\xC1NH T\u01AF\u01A0I N\u01AF\u1EDANG N\xD3NG M\u1ED6I S\xC1NG", "KH\xD4NG GIAN Y\xCAN B\xCCNH M\u1ED8C M\u1EA0C", "PHA PHIN & POUR OVER TH\u1EE6 C\xD4NG", "100% NGUY\xCAN B\u1EA2N KH\xD4NG PH\u1EE4 GIA"]
+          }
+        },
+        {
+          type: "menu",
+          props: {
+            heading: isFlower ? "B\xF3 Hoa & L\u1EB5ng Hoa Ti\xEAu Bi\u1EC3u" : "Th\u1EF1c \u0110\u01A1n \u0110\u1EADm Ch\u1EA5t Ngh\u1EC7 Nh\xE2n",
+            subheading: "\u0110\u01B0\u1EE3c ch\u1EAFt l\u1ECDc k\u1EF9 l\u01B0\u1EE1ng t\u1EEB ngu\u1ED3n nguy\xEAn li\u1EC7u th\u01B0\u1EE3ng h\u1EA1ng",
+            categories: [
+              {
+                name: isFlower ? "B\u1ED9 S\u01B0u T\u1EADp N\u1ED5i B\u1EADt" : "Th\u1EE9c U\u1ED1ng & B\xE1nh Ng\u1ECDt",
+                items: isFlower ? [
+                  { name: "B\xF3 Hoa H\u1ED3ng David Austin L\xE3ng M\u1EA1n", desc: "H\u1ED3ng nh\u1EADp kh\u1EA9u c\xE1nh xo\u0103n k\xE8m l\xE1 b\u1EA1c khuynh di\u1EC7p th\u01A1m d\u1ECBu", price: "850.000\u0111", badge: "Signature" },
+                  { name: "L\u1EB5ng Hoa Khai Tr\u01B0\u01A1ng Th\u1ECBnh V\u01B0\u1EE3ng", desc: "Lan h\u1ED3 \u0111i\u1EC7p k\u1EBFt h\u1EE3p hoa \u0111\u1ED3ng ti\u1EC1n v\xE0 c\u1EA9m t\xFA c\u1EA7u r\u1EF1c r\u1EE1", price: "1.250.000\u0111", badge: "VIP" },
+                  { name: "H\u1ED9p Hoa Tulip H\xE0 Lan Pastel", desc: "15 c\xE0nh tulip m\xE0u h\u1ED3ng ph\u1EA5n trong h\u1ED9p nhung trang nh\xE3", price: "950.000\u0111" },
+                  { name: "B\xF3 Baby Tr\u1EAFng Thu\u1EA7n Khi\u1EBFt", desc: "Baby nh\u1EADp kh\u1EA9u s\u1EA5y kh\xF4 gi\u1EEF m\xE0u t\u1EF1 nhi\xEAn l\xEAn \u0111\u1EBFn 12 th\xE1ng", price: "450.000\u0111" }
+                ] : [
+                  { name: "C\xE0 Ph\xEA Cold Brew Cam V\xE0ng", desc: "\u1EE6 l\u1EA1nh 16 ti\u1EBFng t\u1EEB h\u1EA1t Arabica C\u1EA7u \u0110\u1EA5t c\xF9ng h\u01B0\u01A1ng cam thanh m\xE1t", price: "65.000\u0111", badge: "Signature" },
+                  { name: "Espresso Con Panna Th\u01B0\u1EE3ng H\u1EA1ng", desc: "C\u1ED1t c\xE0 ph\xEA \u0111\u1EADm s\xE2u k\u1EBFt h\u1EE3p l\u1EDBp kem t\u01B0\u01A1i b\xE9o m\u1ECBn th\u1EE7 c\xF4ng", price: "55.000\u0111" },
+                  { name: "B\xE1nh Croissant B\u01A1 Normandy N\xF3ng", desc: "Ng\xE0n l\u1EDBp gi\xF2n r\u1EE5m v\u1EDBi b\u01A1 Ph\xE1p nguy\xEAn ch\u1EA5t th\u01A1m n\u1ED3ng n\xE0n", price: "48.000\u0111", badge: "B\xE1n ch\u1EA1y" },
+                  { name: "Tr\xE0 \u0110\xE0o Cam S\u1EA3 M\u1EADt Ong R\u1EEBng", desc: "Tr\xE0 th\u1EA3o m\u1ED9c th\u01A1m l\xE0nh thanh nhi\u1EC7t, v\u1ECB ng\u1ECDt t\u1EF1 nhi\xEAn", price: "58.000\u0111" }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          type: "quote",
+          props: {
+            quote: isFlower ? "Hoa kh\xF4ng ch\u1EC9 \u0111\u1EC3 ng\u1EAFm, hoa thay l\u1EDDi mu\u1ED1n n\xF3i nh\u1EEFng \u0111i\u1EC1u ch\xE2n th\xE0nh nh\u1EA5t m\xE0 ng\xF4n t\u1EEB kh\xF3 di\u1EC5n t\u1EA3." : "Ch\xFAng t\xF4i kh\xF4ng ch\u1EC9 pha m\u1ED9t t\xE1ch c\xE0 ph\xEA, ch\xFAng t\xF4i s\u1EBB chia kho\u1EA3nh kh\u1EAFc t\u0129nh t\u1EA1i v\xE0 s\u1EF1 ch\u0103m ch\xFAt trong t\u1EEBng gi\u1ECDt n\u01B0\u1EDBc s\xF4i.",
+            author: isFlower ? "Floral Stylist & Founder" : "Master Barista",
+            role: "Ngh\u1EC7 nh\xE2n s\xE1ng t\u1EA1o"
+          }
+        },
+        {
+          type: "split_feature",
+          props: {
+            title: "S\u1EF1 T\u1EC9 M\u1EC9 Trong T\u1EEBng Kh\xE2u Th\u1EF1c Hi\u1EC7n",
+            description: "T\u1EEB tuy\u1EC3n ch\u1ECDn ngu\u1ED3n nguy\xEAn li\u1EC7u xanh s\u1EA1ch \u0111\u1EBFn c\xF4ng \u0111o\u1EA1n ch\u1EBF t\xE1c b\u1EB1ng tay, t\u1EA5t c\u1EA3 \u0111\u1EC1u tu\xE2n th\u1EE7 s\u1EF1 ch\xE2n th\xE0nh v\xE0 tinh th\u1EA7n ngh\u1EC7 nh\xE2n nguy\xEAn b\u1EA3n.",
+            image: isFlower ? "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80" : "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
+            bullets: [
+              "Nguy\xEAn li\u1EC7u t\u01B0\u01A1i m\u1EDBi thu h\xE1i v\xE0 nh\u1EADp kh\u1EA9u trong ng\xE0y",
+              "B\u1EA3o qu\u1EA3n ho\xE0n to\xE0n t\u1EF1 nhi\xEAn, kh\xF4ng ch\u1EA5t ph\u1EE5 gia \u0111\u1ED9c h\u1EA1i",
+              "\u0110\xF3ng g\xF3i th\u1EE7 c\xF4ng b\u1EB1ng gi\u1EA5y kraft th\xE2n thi\u1EC7n m\xF4i tr\u01B0\u1EDDng"
+            ]
+          }
+        },
+        {
+          type: "form",
+          props: {
+            heading: isFlower ? "\u0110\u1EB7t Hoa Thi\u1EBFt K\u1EBF Theo Y\xEAu C\u1EA7u" : "\u0110\u1EB7t B\xE0n Ho\u1EB7c \u0110\u1EB7t Ti\u1EC7c Nh\u1ECF",
+            subheading: "\u0110\u1EC3 l\u1EA1i th\xF4ng tin, ch\xFAng t\xF4i s\u1EBD li\xEAn h\u1EC7 chu\u1EA9n b\u1ECB chu \u0111\xE1o nh\u1EA5t cho b\u1EA1n",
+            submitLabel: isFlower ? "G\u1EEDi Y\xEAu C\u1EA7u \u0110\u1EB7t Hoa" : "X\xE1c Nh\u1EADn \u0110\u1EB7t B\xE0n",
+            fields: [
+              { label: "H\u1ECD v\xE0 t\xEAn c\u1EE7a b\u1EA1n", type: "text" },
+              { label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i li\xEAn h\u1EC7", type: "tel" },
+              { label: isFlower ? "D\u1ECBp t\u1EB7ng & mong mu\u1ED1n v\u1EC1 hoa" : "S\u1ED1 ng\u01B0\u1EDDi & gi\u1EDD gh\xE9 qu\xE1n", type: "textarea" }
+            ]
+          }
+        },
+        {
+          type: "footer",
+          props: {
+            text: `\xA9 2026 ${cleanTitle}. \u0110\u1EADm ch\u1EA5t th\u1EE7 c\xF4ng & t\u1EA5m l\xF2ng ngh\u1EC7 nh\xE2n.`,
+            links: [
+              { label: "Trang ch\u1EE7", href: "#" },
+              { label: "Th\u1EF1c \u0111\u01A1n", href: "#" },
+              { label: "Kh\xF4ng gian", href: "#" },
+              { label: "Li\xEAn h\u1EC7", href: "#" }
+            ]
+          }
+        }
+      ]
+    };
+  }
+  if (style === "bento") {
+    return {
+      theme: {
+        primary: "#6366f1",
+        background: "#090d16",
+        text: "#f8fafc",
+        font: "Plus Jakarta Sans",
+        style: "bento"
+      },
+      sections: [
+        {
+          type: "hero",
+          props: {
+            layout: "centered",
+            badge: "\u26A1 TH\u1EBE H\u1EC6 N\u1EC0N T\u1EA2NG TI\u1EBEP THEO",
+            title: cleanTitle,
+            subtitle: "H\u1EC7 th\u1ED1ng t\u1EF1 \u0111\u1ED9ng h\xF3a th\xF4ng minh gi\xFAp \u0111\u1ED9i ng\u0169 c\u1EE7a b\u1EA1n \u0111\u1EA9y nhanh ti\u1EBFn \u0111\u1ED9 g\u1EA5p 10 l\u1EA7n v\u1EDBi \u0111\u1ED9 tin c\u1EADy tuy\u1EC7t \u0111\u1ED1i.",
+            cta: "Tr\u1EA3i Nghi\u1EC7m Mi\u1EC5n Ph\xED 14 Ng\xE0y",
+            secondaryCta: "Xem Demo Tr\u1EF1c Ti\u1EBFp",
+            image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+            align: "center"
+          }
+        },
+        {
+          type: "ticker",
+          props: {
+            items: ["99.99% Uptime", "50,000+ Teams To\xE0n C\u1EA7u", "B\u1EA3o M\u1EADt SOC-2 Type II", "T\xEDch H\u1EE3p API Kh\xF4ng Gi\u1EDBi H\u1EA1n", "H\u1ED7 Tr\u1EE3 K\u1EF9 Thu\u1EADt 24/7"]
+          }
+        },
+        {
+          type: "bento",
+          props: {
+            heading: "Ki\u1EBFn Tr\xFAc T\xEDnh N\u0103ng To\xE0n Di\u1EC7n",
+            subheading: "\u0110\u01B0\u1EE3c thi\u1EBFt k\u1EBF t\u1ED1i \u01B0u cho c\xE1c nh\xF3m ph\xE1t tri\u1EC3n v\xE0 doanh nghi\u1EC7p hi\u1EC7n \u0111\u1EA1i",
+            items: [
+              {
+                title: "Ph\xE2n T\xEDch D\u1EEF Li\u1EC7u Th\u1EDDi Gian Th\u1EF1c",
+                desc: "Theo d\xF5i m\u1ECDi ch\u1EC9 s\u1ED1 kinh doanh v\xE0 hi\u1EC7u su\u1EA5t v\u1EDBi bi\u1EC3u \u0111\u1ED3 c\u1EADp nh\u1EADt t\u1EEBng mili-gi\xE2y.",
+                badge: "Real-time AI",
+                icon: "\u26A1",
+                span: "wide",
+                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                title: "B\u1EA3o M\u1EADt Chu\u1EA9n Doanh Nghi\u1EC7p",
+                desc: "M\xE3 h\xF3a c\u1EA5p cao End-to-End b\u1EA3o v\u1EC7 quy\u1EC1n ri\xEAng t\u01B0 v\xE0 t\xE0i s\u1EA3n d\u1EEF li\u1EC7u c\u1EE7a b\u1EA1n.",
+                badge: "M\xE3 h\xF3a AES-256",
+                icon: "\u{1F512}",
+                span: "normal"
+              },
+              {
+                title: "H\u01A1n 120+ T\xEDch H\u1EE3p S\u1EB5n",
+                desc: "K\u1EBFt n\u1ED1i tr\u01A1n tru v\u1EDBi GitHub, Slack, Notion, Stripe ch\u1EC9 trong 2 c\xFA click chu\u1ED9t.",
+                badge: "Instant Connect",
+                icon: "\u{1F50C}",
+                span: "normal"
+              },
+              {
+                title: "T\u1EF1 \u0110\u1ED9ng H\xF3a Workflow Th\xF4ng Minh",
+                desc: "Thi\u1EBFt l\u1EADp lu\u1ED3ng x\u1EED l\xFD kh\xF4ng c\u1EA7n vi\u1EBFt m\xE3, gi\u1EA3i ph\xF3ng th\u1EDDi gian cho c\xF4ng vi\u1EC7c s\xE1ng t\u1EA1o c\u1ED1t l\xF5i.",
+                badge: "No-Code Flow",
+                icon: "\u{1F916}",
+                span: "tall"
+              }
+            ]
+          }
+        },
+        {
+          type: "stats",
+          props: {
+            heading: "Con S\u1ED1 Minh Ch\u1EE9ng Cho S\u1EE9c M\u1EA1nh",
+            items: [
+              { value: "10x", label: "T\u1ED1c \u0111\u1ED9 tri\u1EC3n khai d\u1EF1 \xE1n" },
+              { value: "99.99%", label: "Cam k\u1EBFt SLA ho\u1EA1t \u0111\u1ED9ng \u1ED5n \u0111\u1ECBnh" },
+              { value: "450k+", label: "T\xE1c v\u1EE5 t\u1EF1 \u0111\u1ED9ng m\u1ED7i ng\xE0y" },
+              { value: "4.9/5", label: "\u0110i\u1EC3m \u0111\xE1nh gi\xE1 t\u1EEB 1,200+ kh\xE1ch h\xE0ng" }
+            ]
+          }
+        },
+        {
+          type: "split_feature",
+          props: {
+            title: "H\u1EE3p T\xE1c L\xE0m Vi\u1EC7c Nh\xF3m \u0110\u1ED3ng B\u1ED9",
+            description: "X\xF3a b\u1ECF r\xE0o c\u1EA3n giao ti\u1EBFp gi\u1EEFa c\xE1c ph\xF2ng ban. M\u1ECDi th\xE0nh vi\xEAn c\xF9ng theo d\xF5i m\u1ED9t ngu\u1ED3n d\u1EEF li\u1EC7u duy nh\u1EA5t v\xE0 c\u1EADp nh\u1EADt t\u1EE9c th\xEC.",
+            image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+            bullets: [
+              "Ph\xE2n quy\u1EC1n \u0111a c\u1EA5p \u0111\u1ED9 RBAC nghi\xEAm ng\u1EB7t",
+              "L\u1ECBch s\u1EED ho\u1EA1t \u0111\u1ED9ng v\xE0 sao l\u01B0u t\u1EF1 \u0111\u1ED9ng kh\xF4ng gi\u1EDBi h\u1EA1n",
+              "Th\xF4ng b\xE1o th\xF4ng minh qua webhook, Telegram v\xE0 Email"
+            ]
+          }
+        },
+        {
+          type: "form",
+          props: {
+            heading: "B\u1EAFt \u0110\u1EA7u D\xF9ng Th\u1EED Ngay H\xF4m Nay",
+            subheading: "Kh\xF4ng c\u1EA7n th\u1EBB t\xEDn d\u1EE5ng. C\xE0i \u0111\u1EB7t ho\xE0n t\u1EA5t ch\u1EC9 trong 3 ph\xFAt.",
+            submitLabel: "\u0110\u0103ng K\xFD T\xE0i Kho\u1EA3n Pro",
+            fields: [
+              { label: "Email c\xF4ng vi\u1EC7c c\u1EE7a b\u1EA1n", type: "email" },
+              { label: "T\xEAn t\u1ED5 ch\u1EE9c / c\xF4ng ty", type: "text" },
+              { label: "Quy m\xF4 \u0111\u1ED9i ng\u0169 (th\xE0nh vi\xEAn)", type: "text" }
+            ]
+          }
+        },
+        {
+          type: "footer",
+          props: {
+            text: `\xA9 2026 ${cleanTitle}. N\u1EC1n t\u1EA3ng c\xF4ng ngh\u1EC7 s\u1ED1 th\u1EBF h\u1EC7 m\u1EDBi.`,
+            links: [
+              { label: "T\xEDnh n\u0103ng", href: "#" },
+              { label: "T\xE0i li\u1EC7u API", href: "#" },
+              { label: "B\u1EA3ng gi\xE1", href: "#" },
+              { label: "B\u1EA3o m\u1EADt", href: "#" }
+            ]
+          }
+        }
+      ]
+    };
+  }
+  if (style === "luxury") {
+    return {
+      theme: {
+        primary: "#d4af37",
+        background: "#0b0d11",
+        text: "#f5f3eb",
+        font: "Playfair Display",
+        style: "luxury"
+      },
+      sections: [
+        {
+          type: "hero",
+          props: {
+            layout: "split",
+            badge: "THE EPITOME OF EXCELLENCE",
+            title: cleanTitle,
+            subtitle: "Ki\u1EC7t t\xE1c \u0111\u01B0\u1EE3c ki\u1EBFn t\u1EA1o ri\xEAng cho nh\u1EEFng ch\u1EE7 nh\xE2n th\u1EA5u hi\u1EC3u gi\xE1 tr\u1ECB c\u1EE7a s\u1EF1 \u0111\u1ED9c b\u1EA3n v\xE0 v\u1EBB \u0111\u1EB9p tr\u01B0\u1EDDng t\u1ED3n qua th\u1EDDi gian.",
+            cta: "Kh\xE1m Ph\xE1 B\u1ED9 S\u01B0u T\u1EADp",
+            secondaryCta: "\u0110\u1EB7t L\u1ECBch Th\u01B0\u1EDFng L\xE3m",
+            image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1200&q=80",
+            align: "left"
+          }
+        },
+        {
+          type: "quote",
+          props: {
+            quote: "S\u1EF1 xa x\u1EC9 \u0111\xEDch th\u1EF1c kh\xF4ng n\u1EB1m \u1EDF vi\u1EC7c g\xE2y \u1EA5n t\u01B0\u1EE3ng v\u1EDBi s\u1ED1 \u0111\xF4ng, m\xE0 l\xE0 mang \u0111\u1EBFn c\u1EA3m x\xFAc th\u0103ng hoa thu\u1EA7n khi\u1EBFt cho ng\u01B0\u1EDDi th\u01B0\u1EDFng th\u1EE9c.",
+            author: "Gi\xE1m \u0110\u1ED1c S\xE1ng T\u1EA1o",
+            role: "Tr\u01B0\u1EDFng ban c\u1ED1 v\u1EA5n ngh\u1EC7 thu\u1EADt"
+          }
+        },
+        {
+          type: "gallery",
+          props: {
+            heading: "Tuy\u1EC3n T\u1EADp T\xE1c Ph\u1EA9m \u0110\u1ED9c B\u1EA3n",
+            subheading: "Ch\u1EAFt l\u1ECDc t\u1EEB nh\u1EEFng ch\u1EA5t li\u1EC7u qu\xFD hi\u1EBFm h\xE0ng \u0111\u1EA7u th\u1EBF gi\u1EDBi",
+            items: [
+              {
+                image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+                title: "Ki\u1EBFn Tr\xFAc & Kh\xF4ng Gian Th\u01B0\u1EE3ng L\u01B0u",
+                desc: "H\xE0i h\xF2a tr\u1ECDn v\u1EB9n gi\u1EEFa \u0111\u01B0\u1EDDng n\xE9t \u0111\u01B0\u01A1ng \u0111\u1EA1i v\xE0 thi\xEAn nhi\xEAn k\u1EF3 v\u0129"
+              },
+              {
+                image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80",
+                title: "Ch\u1EBF T\xE1c Th\u1EE7 C\xF4ng Tinh X\u1EA3o",
+                desc: "H\xE0ng tr\u0103m gi\u1EDD ho\xE0n thi\u1EC7n t\u1EC9 m\u1EC9 b\u1EDFi c\xE1c ngh\u1EC7 nh\xE2n kim ho\xE0n b\u1EADc th\u1EA7y"
+              },
+              {
+                image: "https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&w=800&q=80",
+                title: "Tr\u1EA3i Nghi\u1EC7m Th\u01B0\u1EDFng Ngo\u1EA1n Ri\xEAng T\u01B0",
+                desc: "Ph\u1EE5c v\u1EE5 chuy\xEAn bi\u1EC7t trong ph\xF2ng ti\u1EBFp \u0111\xF3n b\u1EA3o m\u1EADt cao c\u1EA5p"
+              }
+            ]
+          }
+        },
+        {
+          type: "split_feature",
+          props: {
+            title: "\u0110\u1EB7c Quy\u1EC1n Concierge 1:1 D\xE0nh Cho Qu\xFD Kh\xE1ch",
+            description: "M\u1ED7i th\u01B0\u1EE3ng kh\xE1ch \u0111\u1EC1u c\xF3 m\u1ED9t chuy\xEAn vi\xEAn t\u01B0 v\u1EA5n ri\xEAng bi\u1EC7t t\xFAc tr\u1EF1c, th\u1EA5u hi\u1EC3u t\u01B0\u1EDDng t\u1EADn t\u1EEBng mong mu\u1ED1n v\xE0 may \u0111o gi\u1EA3i ph\xE1p x\u1EE9ng t\u1EA7m.",
+            image: "https://images.unsplash.com/photo-1582037928769-181f2644ecb7?auto=format&fit=crop&w=800&q=80",
+            bullets: [
+              "Ch\u1EE9ng th\u01B0 b\u1EA3o ch\u1EE9ng \u0111\u1ED9c b\u1EA3n qu\u1ED1c t\u1EBF \u0111i k\xE8m",
+              "Quy tr\xECnh v\u1EADn chuy\u1EC3n an ninh tuy\u1EC7t m\u1EADt t\u1EADn n\u01A1i",
+              "\u0110\u1EB7c quy\u1EC1n tham d\u1EF1 c\xE1c bu\u1ED5i ti\u1EC7c k\xEDn v\xE0 s\u1EF1 ki\u1EC7n gi\u1EDBi h\u1EA1n"
+            ]
+          }
+        },
+        {
+          type: "form",
+          props: {
+            heading: "\u0110\u0103ng K\xFD L\u1ECBch Th\u01B0\u1EDFng L\xE3m Ri\xEAng T\u01B0",
+            subheading: "Vui l\xF2ng \u0111\u1EC3 l\u1EA1i th\xF4ng tin, Qu\u1EA3n Gia VIP s\u1EBD li\xEAn h\u1EC7 trong khung gi\u1EDD Qu\xFD kh\xE1ch ch\u1EC9 \u0111\u1ECBnh",
+            submitLabel: "X\xE1c Nh\u1EADn \u0110\u1EB7t L\u1ECBch",
+            fields: [
+              { label: "Danh x\u01B0ng & H\u1ECD t\xEAn Qu\xFD kh\xE1ch", type: "text" },
+              { label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i ri\xEAng", type: "tel" },
+              { label: "Khung gi\u1EDD v\xE0 y\xEAu c\u1EA7u \u0111\xF3n ti\u1EBFp ri\xEAng", type: "textarea" }
+            ]
+          }
+        },
+        {
+          type: "footer",
+          props: {
+            text: `\xA9 2026 ${cleanTitle}. A Legacy of Uncompromising Luxury.`,
+            links: [
+              { label: "Ki\u1EC7t t\xE1c", href: "#" },
+              { label: "C\xE2u chuy\u1EC7n di s\u1EA3n", href: "#" },
+              { label: "\u0110\u1EB7c quy\u1EC1n VIP", href: "#" }
+            ]
+          }
+        }
+      ]
+    };
+  }
+  if (style === "brutalist") {
+    const isGym = p.includes("gym") || p.includes("fitness") || p.includes("boxing") || p.includes("th\u1EC3 h\xECnh");
+    const primary = isGym ? "#ea580c" : "#f97316";
+    const bg = "#0d0d0d";
+    const fg = "#ffffff";
+    const heroImg = isGym ? "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=80" : "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80";
+    return {
+      theme: {
+        primary,
+        background: bg,
+        text: fg,
+        font: "Space Grotesk",
+        style: "brutalist"
+      },
+      sections: [
+        {
+          type: "ticker",
+          props: {
+            items: isGym ? ["// 100% RAW POWER //", "KH\xD4NG L\xDD DO B\u1ECE CU\u1ED8C", "M\u1EDE C\u1EECA 24/7", "HU\u1EA4N LUY\u1EC6N VI\xCAN \u0110\u1EB2NG C\u1EA4P", "// TRAIN UNTIL IT HURTS //"] : ["// LIMITED DROP 2026 //", "OVERSIZE CULTURE", "100% HEAVY COTTON", "STREETWEAR \u0110\u1ED8C B\u1EA2N", "// GRAB YOURS BEFORE IT GONE //"]
+          }
+        },
+        {
+          type: "hero",
+          props: {
+            layout: "editorial",
+            badge: isGym ? "\u{1F525} HARDCORE FITNESS" : "\u26A1 UNGOVERNABLE STREETWEAR",
+            title: cleanTitle,
+            subtitle: isGym ? "N\u01A1i r\xE8n gi\u0169a \xFD ch\xED th\xE9p v\xE0 l\u1ED9t x\xE1c th\u1EC3 h\xECnh. \u0110\u1EADp tan m\u1ECDi gi\u1EDBi h\u1EA1n c\u0169 k\u1EF9 v\xE0 gi\u1EA3i ph\xF3ng n\u0103ng l\u01B0\u1EE3ng chi\u1EBFn binh b\xEAn trong b\u1EA1n." : "Th\u1EDDi trang g\xF3c c\u1EA1nh kh\xF4ng khoan nh\u01B0\u1EE3ng. \u0110\u1ECBnh h\xECnh phong c\xE1ch c\xE1 nh\xE2n v\u1EDBi ch\u1EA5t li\u1EC7u th\xF4 m\u1ED9c v\xE0 t\u01B0 duy n\u1ED5i lo\u1EA1n c\xF3 ch\u1EE7 \u0111\xEDch.",
+            cta: isGym ? "GIA NH\u1EACP \u0110\u1ED8I NG\u0168 NGAY" : "S\u0102N DROP M\u1EDAI NH\u1EA4T",
+            secondaryCta: "XEM CHI\u1EBEN D\u1ECACH",
+            image: heroImg
+          }
+        },
+        {
+          type: "cards",
+          props: {
+            heading: isGym ? "CH\u01AF\u01A0NG TR\xCCNH HU\u1EA4N LUY\u1EC6N \u0110\u1ED8T PH\xC1" : "V\u0168 KH\xCD TH\u1EDCI TRANG \u0110\u01AF\u1EDCNG PH\u1ED0",
+            subheading: isGym ? "Gi\xE1o tr\xECnh c\u01B0\u1EDDng \u0111\u1ED9 cao \u0111\u01B0\u1EE3c ch\u1EE9ng minh hi\u1EC7u qu\u1EA3 th\u1EF1c t\u1EBF" : "Phi\xEAn b\u1EA3n gi\u1EDBi h\u1EA1n \u0111\xE1nh s\u1ED1 ri\xEAng cho t\u1EEBng s\u1EA3n ph\u1EA9m",
+            items: isGym ? [
+              {
+                title: "POWERLIFTING & S\u1EE8C M\u1EA0NH",
+                desc: "K\u1EF9 thu\u1EADt t\u1EA1 n\u1EB7ng chu\u1EA9n thi \u0111\u1EA5u, t\u1ED1i \u0111a h\xF3a l\u1EF1c b\xF9ng n\u1ED5 c\u01A1 b\u1EAFp v\xE0 b\u1EA3o v\u1EC7 kh\u1EDBp.",
+                badge: "BEAST MODE",
+                price: "1.200.000\u0111/th\xE1ng",
+                image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80",
+                icon: "\u{1F3CB}\uFE0F"
+              },
+              {
+                title: "BOXING & CHI\u1EBEN \u0110\u1EA4U TH\u1EF0C CHI\u1EBEN",
+                desc: "T\u0103ng ph\u1EA3n x\u1EA1, \u0111\u1ED1t calo si\xEAu t\u1ED1c v\xE0 l\xE0m ch\u1EE7 k\u1EF9 n\u0103ng \u0111\u1ED1i kh\xE1ng t\u1EF1 v\u1EC7.",
+                badge: "COMBAT ZONE",
+                price: "1.500.000\u0111/th\xE1ng",
+                image: "https://images.unsplash.com/photo-1549060279-7e168fcee0c2?auto=format&fit=crop&w=800&q=80",
+                icon: "\u{1F94A}"
+              },
+              {
+                title: "HYBRID CALISTHENICS & AGILITY",
+                desc: "Ki\u1EC3m so\xE1t tr\u1ECDng l\u01B0\u1EE3ng c\u01A1 th\u1EC3 \u0111\u1EC9nh cao v\u1EDBi c\xE1c b\xE0i t\u1EADp x\xE0 v\xE0 th\u1EC3 l\u1EF1c \u0111a n\u0103ng.",
+                badge: "ATHLETIC",
+                price: "990.000\u0111/th\xE1ng",
+                image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=800&q=80",
+                icon: "\u26A1"
+              }
+            ] : [
+              {
+                title: "HEAVYWEIGHT BOX HOODIE 450GSM",
+                desc: "Ch\u1EA5t n\u1EC9 b\xF4ng d\xE0y d\u1EB7n \u0111\u1EE9ng form, c\xF4ng ngh\u1EC7 in l\u1EE5a tr\xE1ng cao su si\xEAu b\u1EC1n.",
+                badge: "LIMITED 150 PCS",
+                price: "890.000\u0111",
+                image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80",
+                icon: "\u{1F455}"
+              },
+              {
+                title: "CARGO TACTICAL PANTS MULTI-POCKET",
+                desc: "V\u1EA3i ripstop kh\xE1ng n\u01B0\u1EDBc nh\u1EB9, 8 t\xFAi ti\u1EC7n d\u1EE5ng v\u1EDBi kh\xF3a zip c\xF4ng nghi\u1EC7p YKK.",
+                badge: "RESTOCKED",
+                price: "750.000\u0111",
+                image: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=800&q=80",
+                icon: "\u{1F456}"
+              },
+              {
+                title: "ACID WASH VINTAGE TEE",
+                desc: "X\u1EED l\xFD hi\u1EC7u \u1EE9ng gi\u1EB7t axit loang m\xE0u \u0111\u1ED9c b\u1EA3n, m\u1ED7i chi\u1EBFc l\xE0 m\u1ED9t phi\xEAn b\u1EA3n ri\xEAng bi\u1EC7t.",
+                badge: "HOT ITEM",
+                price: "420.000\u0111",
+                image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80",
+                icon: "\u{1F525}"
+              }
+            ]
+          }
+        },
+        {
+          type: "stats",
+          props: {
+            heading: "CON S\u1ED0 N\xD3I L\xCAN T\u1EA4T C\u1EA2",
+            items: isGym ? [
+              { value: "24/7", label: "M\u1EDF c\u1EEDa li\xEAn t\u1EE5c kh\xF4ng ng\xE0y ngh\u1EC9" },
+              { value: "2,500+", label: "H\u1ECDc vi\xEAn t\u1EADp luy\u1EC7n m\u1ED7i tu\u1EA7n" },
+              { value: "100%", label: "Thi\u1EBFt b\u1ECB t\u1EA1 n\u1EB7ng chu\u1EA9n Rogue" },
+              { value: "0%", label: "L\xFD do ch\u1EA5p nh\u1EADn b\u1ECF cu\u1ED9c" }
+            ] : [
+              { value: "100%", label: "V\u1EA3i s\u1EE3i t\u1EF1 nhi\xEAn th\xE2n thi\u1EC7n da" },
+              { value: "48H", label: "Ch\xE1y h\xE0ng m\u1ED7i \u0111\u1EE3t m\u1EDF b\xE1n" },
+              { value: "35,000+", label: "\u0110\u01A1n h\xE0ng chuy\u1EC3n t\u1EDBi to\xE0n qu\u1ED1c" },
+              { value: "5.0\u2605", label: "\u0110\xE1nh gi\xE1 t\u1EEB c\u1ED9ng \u0111\u1ED3ng Underground" }
+            ]
+          }
+        },
+        {
+          type: "table",
+          props: {
+            heading: isGym ? "B\u1EA2NG SO S\xC1NH C\xC1C H\u1EA0NG TH\u1EBA" : "B\u1EA2NG SIZE CHU\u1EA8N FORM CH\xC2U \xC1",
+            columns: isGym ? ["Quy\u1EC1n l\u1EE3i", "G\xD3I BASIC", "G\xD3I HARDCORE VIP"] : ["Size", "Chi\u1EC1u cao (cm)", "C\xE2n n\u1EB7ng (kg)", "D\xE0i \xE1o (cm)"],
+            rows: isGym ? [
+              ["Th\u1EDDi gian v\xE0o ph\xF2ng t\u1EADp", "Gi\u1EDD h\xE0nh ch\xEDnh (08h - 17h)", "Kh\xF4ng gi\u1EDBi h\u1EA1n 24/7"],
+              ["Khu v\u1EF1c v\xF5 thu\u1EADt & Boxing", "Ph\u1EE5 thu 100k/bu\u1ED5i", "T\u1EF1 do s\u1EED d\u1EE5ng ho\xE0n to\xE0n"],
+              ["T\u1EE7 \u0111\u1ED3 c\xE1 nh\xE2n & Kh\u0103n s\u1EA1ch", "Thu\xEA ri\xEAng", "Mi\u1EC5n ph\xED trang b\u1ECB tr\u1ECDn g\xF3i"],
+              ["T\u01B0 v\u1EA5n dinh d\u01B0\u1EE1ng chuy\xEAn s\xE2u", "Kh\xF4ng c\xF3", "Hu\u1EA5n luy\u1EC7n vi\xEAn l\xEAn th\u1EF1c \u0111\u01A1n ri\xEAng"]
+            ] : [
+              ["Size M", "155 - 168 cm", "50 - 62 kg", "70 cm"],
+              ["Size L", "168 - 176 cm", "63 - 74 kg", "73 cm"],
+              ["Size XL", "176 - 185 cm", "75 - 90 kg", "76 cm"]
+            ]
+          }
+        },
+        {
+          type: "footer",
+          props: {
+            text: `\xA9 2026 ${cleanTitle}. BUILT FOR THE UNSTOPPABLE.`,
+            links: [
+              { label: "SHOP", href: "#" },
+              { label: "COMMUNITY", href: "#" },
+              { label: "RULES", href: "#" }
+            ]
+          }
+        }
+      ]
+    };
+  }
+  if (style === "minimal") {
+    return {
+      theme: {
+        primary: "#18181b",
+        background: "#ffffff",
+        text: "#18181b",
+        font: "Inter",
+        style: "minimal"
+      },
+      sections: [
+        {
+          type: "hero",
+          props: {
+            layout: "minimal",
+            badge: "STUDIO & ARCHITECTURE",
+            title: cleanTitle,
+            subtitle: "T\xF4n vinh c\xE1i \u0111\u1EB9p c\u1EE7a s\u1EF1 tinh gi\u1EA3n. M\u1ED7i c\xF4ng tr\xECnh l\xE0 m\u1ED9t nghi\xEAn c\u1EE9u s\xE2u s\u1EAFc v\u1EC1 \xE1nh s\xE1ng, v\u1EADt li\u1EC7u v\xE0 c\u1EA3m x\xFAc t\u0129nh t\u1EA1i.",
+            cta: "Xem D\u1EF1 \xC1n Ch\u1ECDn L\u1ECDc",
+            secondaryCta: "V\u1EC1 T\xE1c Gi\u1EA3",
+            image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80"
+          }
+        },
+        {
+          type: "gallery",
+          props: {
+            heading: "Tuy\u1EC3n T\u1EADp C\xF4ng Tr\xECnh & T\xE1c Ph\u1EA9m",
+            subheading: "Nh\u1EEFng d\u1EF1 \xE1n ti\xEAu bi\u1EC3u \u0111\u01B0\u1EE3c ho\xE0n thi\u1EC7n v\u1EDBi tinh th\u1EA7n thu\u1EA7n khi\u1EBFt",
+            items: [
+              {
+                image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+                title: "Pavilion \xC1nh S\xE1ng T\u1EF1 Nhi\xEAn",
+                desc: "Kh\xF4ng gian m\u1EDF k\u1EBFt n\u1ED1i tr\u1EF1c ti\u1EBFp v\u1EDBi khu v\u01B0\u1EDDn c\xE2y b\u1EA3n \u0111\u1ECBa"
+              },
+              {
+                image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+                title: "C\u0103n H\u1ED9 T\u1ED1i Gi\u1EA3n \u0110\u01A1n S\u1EAFc",
+                desc: "Lo\u1EA1i b\u1ECF ho\xE0n to\xE0n chi ti\u1EBFt th\u1EEBa, t\u1EADp trung v\xE0o c\xF4ng n\u0103ng s\u1ED1ng"
+              },
+              {
+                image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
+                title: "Ph\xF2ng Tr\u01B0ng B\xE0y Ngh\u1EC7 Thu\u1EADt \u0110\u01B0\u01A1ng \u0110\u1EA1i",
+                desc: "\xC1nh s\xE1ng \u0111\u1ED5 b\xF3ng h\xECnh h\u1ECDc \u0111\u1ECBnh h\xECnh kh\xF4ng gian tri\u1EC3n l\xE3m"
+              }
+            ]
+          }
+        },
+        {
+          type: "quote",
+          props: {
+            quote: "S\u1EF1 \u0111\u01A1n gi\u1EA3n kh\xF4ng ph\u1EA3i l\xE0 thi\u1EBFu h\u1EE5t chi ti\u1EBFt, m\xE0 l\xE0 \u0111\u1EC9nh cao c\u1EE7a s\u1EF1 th\u1EA5u hi\u1EC3u v\xE0 ch\u1EAFt l\u1ECDc.",
+            author: "Ki\u1EBFn tr\xFAc s\u01B0 tr\u01B0\u1EDFng"
+          }
+        },
+        {
+          type: "cards",
+          props: {
+            heading: "Ph\u1EA1m Vi S\xE1ng T\xE1c & T\u01B0 V\u1EA5n",
+            items: [
+              {
+                title: "Thi\u1EBFt K\u1EBF Ki\u1EBFn Tr\xFAc & C\u1EA3nh Quan",
+                desc: "Nghi\xEAn c\u1EE9u k\u1EF9 l\u01B0\u1EE1ng vi kh\xED h\u1EADu, h\u01B0\u1EDBng n\u1EAFng gi\xF3 v\xE0 \u0111\u1ECBa h\xECnh khu \u0111\u1EA5t.",
+                icon: "\u{1F4D0}"
+              },
+              {
+                title: "Thi\u1EBFt K\u1EBF N\u1ED9i Th\u1EA5t May \u0110o",
+                desc: "L\u1EF1a ch\u1ECDn v\u1EADt li\u1EC7u t\u1EF1 nhi\xEAn: g\u1ED7 s\u1ED3i, \u0111\xE1 m\xE0i, b\xEA t\xF4ng th\xF4 v\xE0 k\xEDnh trong su\u1ED1t.",
+                icon: "\u{1F6CB}\uFE0F"
+              },
+              {
+                title: "Gi\xE1m S\xE1t T\xE1c Quy\u1EC1n C\xF4ng Tr\xECnh",
+                desc: "\u0110\u1EA3m b\u1EA3o th\u1EF1c t\u1EBF thi c\xF4ng b\xE1m s\xE1t 100% b\u1EA3n v\u1EBD chi ti\u1EBFt \u0111\u1EBFn t\u1EEBng milimet.",
+                icon: "\u2728"
+              }
+            ]
+          }
+        },
+        {
+          type: "form",
+          props: {
+            heading: "B\u1EAFt \u0110\u1EA7u D\u1EF1 \xC1n M\u1EDBi",
+            subheading: "H\xE3y chia s\u1EBB v\u1EC1 \xFD t\u01B0\u1EDFng v\xE0 m\u1EB7t b\u1EB1ng hi\u1EC7n tr\u1EA1ng c\u1EE7a b\u1EA1n",
+            submitLabel: "G\u1EEDi Y\xEAu C\u1EA7u T\u01B0 V\u1EA5n",
+            fields: [
+              { label: "H\u1ECD v\xE0 t\xEAn", type: "text" },
+              { label: "Email li\xEAn h\u1EC7", type: "email" },
+              { label: "M\xF4 t\u1EA3 d\u1EF1 \xE1n & v\u1ECB tr\xED", type: "textarea" }
+            ]
+          }
+        },
+        {
+          type: "footer",
+          props: {
+            text: `\xA9 2026 ${cleanTitle}. Less is always more.`,
+            links: [
+              { label: "D\u1EF1 \xE1n", href: "#" },
+              { label: "Tri\u1EBFt l\xFD", href: "#" },
+              { label: "Li\xEAn h\u1EC7", href: "#" }
+            ]
+          }
+        }
+      ]
+    };
+  }
   return {
     theme: {
-      primary,
-      background: bg,
-      text: fg,
-      font: "Be Vietnam Pro"
+      primary: "#0284c7",
+      background: "#f8fafc",
+      text: "#0f172a",
+      font: "Be Vietnam Pro",
+      style: "modern"
     },
     sections: [
       {
         type: "hero",
         props: {
-          badge: "\u2728 Thi\u1EBFt K\u1EBF Chuy\xEAn Nghi\u1EC7p",
+          layout: "split",
+          badge: "\u{1F3E5} TI\xCAU CHU\u1EA8N QU\u1ED0C T\u1EBE \u2022 T\u1EACN T\xC2M CHUY\xCAN NGHI\u1EC6P",
           title: cleanTitle,
-          subtitle: `Mang \u0111\u1EBFn tr\u1EA3i nghi\u1EC7m tinh t\u1EBF, \u0111\u1EB3ng c\u1EA5p v\xE0 t\u1ED1i \u01B0u ho\xE0n h\u1EA3o theo \u0111\xFAng mong mu\u1ED1n c\u1EE7a b\u1EA1n.`,
-          cta: "Kh\xE1m ph\xE1 ngay",
-          secondaryCta: "Li\xEAn h\u1EC7 t\u01B0 v\u1EA5n",
-          image: heroImg,
+          subtitle: "\u0110\u1ED3ng h\xE0nh ch\u0103m s\xF3c to\xE0n di\u1EC7n v\u1EDBi \u0111\u1ED9i ng\u0169 chuy\xEAn gia gi\xE0u kinh nghi\u1EC7m v\xE0 trang thi\u1EBFt b\u1ECB hi\u1EC7n \u0111\u1EA1i b\u1EADc nh\u1EA5t.",
+          cta: "\u0110\u1EB7t L\u1ECBch Kh\xE1m & T\u01B0 V\u1EA5n",
+          secondaryCta: "Xem \u0110\u1ED9i Ng\u0169 B\xE1c S\u0129",
+          image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1200&q=80",
           align: "left"
+        }
+      },
+      {
+        type: "stats",
+        props: {
+          heading: "H\xC0NH TR\xCCNH TRAO G\u1EECI NI\u1EC0M TIN",
+          items: [
+            { value: "15+", label: "N\u0103m kinh nghi\u1EC7m chuy\xEAn s\xE2u" },
+            { value: "50,000+", label: "Kh\xE1ch h\xE0ng tin t\u01B0\u1EDFng \u0111i\u1EC1u tr\u1ECB" },
+            { value: "99.8%", label: "T\u1EF7 l\u1EC7 kh\xE1ch h\xE0ng h\xE0i l\xF2ng" },
+            { value: "100%", label: "Thi\u1EBFt b\u1ECB nh\u1EADp kh\u1EA9u ch\xEDnh h\xE3ng" }
+          ]
         }
       },
       {
         type: "cards",
         props: {
-          heading: "D\u1ECBch V\u1EE5 & S\u1EA3n Ph\u1EA9m N\u1ED5i B\u1EADt",
-          subheading: "\u0110\u01B0\u1EE3c tuy\u1EC3n ch\u1ECDn k\u1EF9 l\u01B0\u1EE1ng v\u1EDBi ch\u1EA5t l\u01B0\u1EE3ng h\xE0ng \u0111\u1EA7u",
+          heading: "D\u1ECBch V\u1EE5 Chuy\xEAn Khoa Ti\xEAu Bi\u1EC3u",
+          subheading: "Ph\xE1c \u0111\u1ED3 \u0111i\u1EC1u tr\u1ECB chu\u1EA9n y khoa, kh\xF4ng \u0111au v\xE0 b\u1EA3o h\xE0nh minh b\u1EA1ch",
           items: [
             {
-              title: "B\u1ED9 S\u01B0u T\u1EADp Ti\xEAu Bi\u1EC3u",
-              desc: "Thi\u1EBFt k\u1EBF hi\u1EC7n \u0111\u1EA1i, tinh x\u1EA3o v\xE0 \u0111\xE1p \u1EE9ng nh\u1EEFng ti\xEAu chu\u1EA9n kh\u1EAFt khe nh\u1EA5t.",
-              badge: "B\xE1n ch\u1EA1y",
-              image: cardImg1,
-              icon
+              title: "Th\u0103m Kh\xE1m & Ch\u1EA9n \u0110o\xE1n K\u1EF9 Thu\u1EADt S\u1ED1",
+              desc: "Ch\u1EE5p phim 3D CT ConeBeam th\u1EBF h\u1EC7 m\u1EDBi ph\xE1t hi\u1EC7n ch\xEDnh x\xE1c m\u1ECDi v\u1EA5n \u0111\u1EC1 ch\u1EC9 trong 2 ph\xFAt.",
+              badge: "C\xF4ng ngh\u1EC7 m\u1EDBi",
+              icon: "\u{1F52C}",
+              image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80"
             },
             {
-              title: "D\u1ECBch V\u1EE5 Chuy\xEAn Nghi\u1EC7p",
-              desc: "\u0110\u1ED9i ng\u0169 t\u1EADn t\xE2m, h\u1ED7 tr\u1EE3 chu \u0111\xE1o t\u1EEB kh\xE2u t\u01B0 v\u1EA5n \u0111\u1EBFn khi ho\xE0n th\xE0nh.",
-              badge: "Uy t\xEDn 100%",
-              image: cardImg2,
-              icon: "\u2B50"
+              title: "\u0110i\u1EC1u Tr\u1ECB & Ph\u1EE5c H\u1ED3i Chuy\xEAn Khoa",
+              desc: "B\xE1c s\u0129 tr\u01B0\u1EDFng khoa tr\u1EF1c ti\u1EBFp th\u1EF1c hi\u1EC7n trong ph\xF2ng ph\u1EABu thu\u1EADt v\xF4 tr\xF9ng tuy\u1EC7t \u0111\u1ED1i.",
+              badge: "B\xE1c s\u0129 VIP",
+              icon: "\u{1FA7A}",
+              image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80"
             },
             {
-              title: "\u01AFu \u0110\xE3i \u0110\u1EB7c Quy\u1EC1n",
-              desc: "Ch\xEDnh s\xE1ch \u01B0u \u0111\xE3i h\u1EA5p d\u1EABn d\xE0nh ri\xEAng cho kh\xE1ch h\xE0ng \u0111\u0103ng k\xFD s\u1EDBm.",
-              badge: "Hot",
-              image: cardImg3,
-              icon: "\u{1F381}"
+              title: "Ch\u0103m S\xF3c & T\xE1i Kh\xE1m H\u1EADu M\xE3i Tr\u1ECDn \u0110\u1EDDi",
+              desc: "Nh\u1EAFc h\u1EB9n \u0111\u1ECBnh k\u1EF3 t\u1EF1 \u0111\u1ED9ng, theo d\xF5i s\xE1t sao ti\u1EBFn tr\xECnh l\xE0nh th\u01B0\u01A1ng c\u1EE7a t\u1EEBng kh\xE1ch h\xE0ng.",
+              badge: "T\u1EADn t\xE2m",
+              icon: "\u2B50",
+              image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80"
             }
           ]
         }
       },
       {
-        type: "gallery",
+        type: "split_feature",
         props: {
-          heading: "H\xECnh \u1EA2nh Th\u1EF1c T\u1EBF",
-          subheading: "Kh\xF4ng gian tr\u1EA3i nghi\u1EC7m s\u1ED1ng \u0111\u1ED9ng v\xE0 ch\xE2n th\u1EF1c",
-          items: [
-            { image: cardImg1, title: "Ch\u1EA5t L\u01B0\u1EE3ng V\u01B0\u1EE3t Tr\u1ED9i" },
-            { image: cardImg2, title: "Kh\xF4ng Gian Tr\u1EA3i Nghi\u1EC7m" },
-            { image: cardImg3, title: "S\u1EF1 H\xE0i L\xF2ng C\u1EE7a Kh\xE1ch H\xE0ng" }
-          ]
-        }
-      },
-      {
-        type: "table",
-        props: {
-          heading: "B\u1EA3ng B\xE1o Gi\xE1 Chi Ti\u1EBFt",
-          columns: ["Danh m\u1EE5c", "G\xF3i C\u01A1 B\u1EA3n", "G\xF3i Cao C\u1EA5p (VIP)"],
-          rows: [
-            ["Chi ph\xED d\u1ECBch v\u1EE5", "Theo ni\xEAm y\u1EBFt", "\u01AFu \u0111\xE3i gi\u1EA3m 15%"],
-            ["Th\u1EDDi gian ph\u1EE5c v\u1EE5", "08:00 - 21:00", "\u01AFu ti\xEAn ph\u1EE5c v\u1EE5 24/7"],
-            ["H\u1ED7 tr\u1EE3 & B\u1EA3o h\xE0nh", "3 th\xE1ng", "Tr\u1ECDn \u0111\u1EDDi"]
+          title: "Quy Tr\xECnh V\xF4 Tr\xF9ng Kh\xE9p K\xEDn 1 Chi\u1EC1u",
+          description: "Ch\xFAng t\xF4i \xE1p d\u1EE5ng nghi\xEAm ng\u1EB7t ti\xEAu chu\u1EA9n v\xF4 tr\xF9ng ch\xE2u \xC2u, \u0111\u1EA3m b\u1EA3o m\xF4i tr\u01B0\u1EDDng \u0111i\u1EC1u tr\u1ECB an to\xE0n tuy\u1EC7t \u0111\u1ED1i v\xE0 lo\u1EA1i b\u1ECF ho\xE0n to\xE0n nguy c\u01A1 l\xE2y nhi\u1EC5m ch\xE9o.",
+          image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80",
+          bullets: [
+            "L\xF2 h\u1EA5p s\u1EA5y ti\u1EC7t tr\xF9ng \xE1p su\u1EA5t cao Autoclave \u0111\u1EA1t chu\u1EA9n y t\u1EBF",
+            "M\u1ED7i kh\xE1ch h\xE0ng s\u1EED d\u1EE5ng m\u1ED9t b\u1ED9 tay khoan v\xE0 d\u1EE5ng c\u1EE5 chuy\xEAn bi\u1EC7t",
+            "Kh\xF4ng gian th\u0103m kh\xE1m sang tr\u1ECDng, ri\xEAng t\u01B0 v\xE0 th\u01B0 th\xE1i"
           ]
         }
       },
       {
         type: "form",
         props: {
-          heading: "\u0110\u0103ng K\xFD T\u01B0 V\u1EA5n & Nh\u1EADn \u01AFu \u0110\xE3i",
-          subheading: "\u0110\u1EC3 l\u1EA1i th\xF4ng tin, ch\xFAng t\xF4i s\u1EBD li\xEAn h\u1EC7 l\u1EA1i ngay trong \xEDt ph\xFAt",
-          submitLabel: "G\u1EEDi th\xF4ng tin ngay",
+          heading: "\u0110\u1EB7t L\u1ECBch Kh\xE1m & Nh\u1EADn \u01AFu \u0110\xE3i",
+          subheading: "\u0110\u1EC3 l\u1EA1i th\xF4ng tin, l\u1EC5 t\xE2n s\u1EBD li\xEAn h\u1EC7 x\xE1c nh\u1EADn gi\u1EDD h\u1EB9n trong v\xF2ng 15 ph\xFAt",
+          submitLabel: "X\xE1c Nh\u1EADn \u0110\u1EB7t L\u1ECBch Ngay",
           fields: [
-            { label: "H\u1ECD v\xE0 t\xEAn c\u1EE7a b\u1EA1n", type: "text" },
+            { label: "H\u1ECD v\xE0 t\xEAn b\u1EC7nh nh\xE2n", type: "text" },
             { label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i li\xEAn h\u1EC7", type: "tel" },
-            { label: "Y\xEAu c\u1EA7u chi ti\u1EBFt", type: "textarea" }
+            { label: "Nhu c\u1EA7u ho\u1EB7c t\xECnh tr\u1EA1ng c\u1EA7n t\u01B0 v\u1EA5n", type: "textarea" }
           ]
         }
       },
       {
         type: "footer",
         props: {
-          text: `\xA9 2026. Thi\u1EBFt k\u1EBF theo y\xEAu c\u1EA7u: "${cleanTitle}". M\u1ECDi quy\u1EC1n \u0111\u01B0\u1EE3c b\u1EA3o l\u01B0u.`,
+          text: `\xA9 2026 ${cleanTitle}. T\u1EADn t\xE2m v\xEC s\u1EE9c kh\u1ECFe c\u1ED9ng \u0111\u1ED3ng.`,
           links: [
             { label: "Trang ch\u1EE7", href: "#" },
             { label: "D\u1ECBch v\u1EE5", href: "#" },
+            { label: "\u0110\u1ED9i ng\u0169", href: "#" },
             { label: "Li\xEAn h\u1EC7", href: "#" }
           ]
         }
@@ -4580,11 +5181,16 @@ function createSmartPromptSpec(prompt) {
 }
 __name(createSmartPromptSpec, "createSmartPromptSpec");
 function normalizeSpec(raw, userPrompt) {
+  const detectedStyle = detectStyleFromPrompt(userPrompt);
+  const rawStyle = raw?.theme?.style;
+  const validStyles = ["bento", "luxury", "brutalist", "artisan", "minimal", "modern"];
+  const style = validStyles.includes(rawStyle) ? rawStyle : detectedStyle;
   const theme = {
-    primary: raw?.theme?.primary || "#2563eb",
-    background: raw?.theme?.background || "#ffffff",
-    text: raw?.theme?.text || "#0f172a",
-    font: raw?.theme?.font || "Be Vietnam Pro"
+    primary: raw?.theme?.primary || (style === "luxury" ? "#d4af37" : style === "brutalist" ? "#f97316" : style === "bento" ? "#6366f1" : style === "artisan" ? "#b45309" : "#2563eb"),
+    background: raw?.theme?.background || (style === "luxury" ? "#0b0d11" : style === "brutalist" ? "#0d0d0d" : style === "bento" ? "#090d16" : style === "artisan" ? "#faf7f2" : "#ffffff"),
+    text: raw?.theme?.text || (style === "luxury" || style === "brutalist" || style === "bento" ? "#f8fafc" : "#0f172a"),
+    font: raw?.theme?.font || (style === "luxury" || style === "artisan" ? "Playfair Display" : style === "brutalist" ? "Space Grotesk" : style === "bento" ? "Plus Jakarta Sans" : "Be Vietnam Pro"),
+    style
   };
   const rawSections = Array.isArray(raw?.sections) ? raw.sections : [];
   const normalizedSections = [];
@@ -4593,16 +5199,122 @@ function normalizeSpec(raw, userPrompt) {
     const type = String(s.type || "").toLowerCase();
     const props = s.props || s;
     if (type === "hero") {
+      const validLayouts = ["centered", "split", "minimal", "editorial"];
+      const layout = validLayouts.includes(props.layout) ? props.layout : props.align === "center" ? "centered" : style === "brutalist" || style === "artisan" ? "editorial" : style === "minimal" ? "minimal" : "split";
       normalizedSections.push({
         type: "hero",
         props: {
+          layout,
           title: String(props.title || props.heading || userPrompt),
           subtitle: props.subtitle || props.description || props.subheading,
           cta: props.cta || props.primaryCta?.label || props.buttonText || "Kh\xE1m ph\xE1 ngay",
           secondaryCta: props.secondaryCta?.label || props.secondaryCta || void 0,
           badge: props.badge || void 0,
           image: props.image || props.imageUrl || void 0,
-          align: props.align === "center" ? "center" : "left"
+          align: layout === "centered" ? "center" : "left"
+        }
+      });
+      continue;
+    }
+    if (type === "bento") {
+      const items = Array.isArray(props.items) ? props.items : [];
+      if (items.length > 0) {
+        normalizedSections.push({
+          type: "bento",
+          props: {
+            heading: props.heading || props.title || "Ki\u1EBFn Tr\xFAc T\xEDnh N\u0103ng",
+            subheading: props.subheading || props.subtitle || void 0,
+            items: items.map((it) => ({
+              title: String(it.title || it.name || "T\xEDnh n\u0103ng"),
+              desc: it.desc || it.description || void 0,
+              badge: it.badge || void 0,
+              icon: it.icon || void 0,
+              image: it.image || it.imageUrl || void 0,
+              span: it.span === "wide" || it.span === "tall" ? it.span : "normal"
+            }))
+          }
+        });
+      }
+      continue;
+    }
+    if (type === "stats" || type === "metrics" || type === "numbers") {
+      const items = Array.isArray(props.items) ? props.items : [];
+      if (items.length > 0) {
+        normalizedSections.push({
+          type: "stats",
+          props: {
+            heading: props.heading || props.title || void 0,
+            items: items.map((it) => ({
+              value: String(it.value || it.number || "0") + (it.suffix ? String(it.suffix) : ""),
+              label: String(it.label || it.title || "Ch\u1EC9 s\u1ED1"),
+              desc: it.desc || it.description || void 0
+            }))
+          }
+        });
+      }
+      continue;
+    }
+    if (type === "menu" || type === "food_menu" || type === "drink_menu") {
+      const categories = Array.isArray(props.categories) ? props.categories : [];
+      let finalCats = categories;
+      if (finalCats.length === 0 && Array.isArray(props.items)) {
+        finalCats = [{ name: props.heading || "Th\u1EF1c \u0110\u01A1n", items: props.items }];
+      }
+      if (finalCats.length > 0) {
+        normalizedSections.push({
+          type: "menu",
+          props: {
+            heading: props.heading || props.title || "Th\u1EF1c \u0110\u01A1n Ch\u1ECDn L\u1ECDc",
+            subheading: props.subheading || props.subtitle || void 0,
+            categories: finalCats.map((cat) => ({
+              name: String(cat.name || "Danh m\u1EE5c"),
+              items: (Array.isArray(cat.items) ? cat.items : []).map((it) => ({
+                name: String(it.name || it.title || "M\xF3n"),
+                price: String(it.price || ""),
+                desc: it.desc || it.description || void 0,
+                badge: it.badge || void 0
+              }))
+            }))
+          }
+        });
+      }
+      continue;
+    }
+    if (type === "quote" || type === "testimonial_single" || type === "quote_block") {
+      normalizedSections.push({
+        type: "quote",
+        props: {
+          quote: String(props.quote || props.text || props.content || "Ch\u1EA5t l\u01B0\u1EE3ng l\xE0 l\u1EDDi cam k\u1EBFt v\u1EEFng ch\u1EAFc nh\u1EA5t."),
+          author: props.author || props.name || void 0,
+          role: props.role || props.title || void 0,
+          avatar: props.avatar || void 0
+        }
+      });
+      continue;
+    }
+    if (type === "ticker" || type === "marquee" || type === "banner_marquee") {
+      const items = Array.isArray(props.items) ? props.items : Array.isArray(props.tags) ? props.tags : [];
+      if (items.length > 0) {
+        normalizedSections.push({
+          type: "ticker",
+          props: {
+            items: items.map((it) => String(typeof it === "string" ? it : it.text || it.label || it.title))
+          }
+        });
+      }
+      continue;
+    }
+    if (type === "split_feature" || type === "feature_split" || type === "about") {
+      normalizedSections.push({
+        type: "split_feature",
+        props: {
+          title: String(props.title || props.heading || "Chi Ti\u1EBFt N\u1ED5i B\u1EADt"),
+          description: String(props.description || props.text || props.desc || ""),
+          image: props.image || props.imageUrl || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+          reverse: Boolean(props.reverse),
+          badge: props.badge || void 0,
+          bullets: Array.isArray(props.bullets) ? props.bullets.map((b) => String(b)) : void 0,
+          cta: props.cta || void 0
         }
       });
       continue;
@@ -4611,6 +5323,7 @@ function normalizeSpec(raw, userPrompt) {
       normalizedSections.push({
         type: "hero",
         props: {
+          layout: "centered",
           title: String(props.title || "\u01AFu \u0110\xE3i \u0110\u1EB7c Bi\u1EC7t"),
           subtitle: props.subtitle || props.description,
           cta: props.buttonText || props.cta || "Nh\u1EADn \u01B0u \u0111\xE3i",
@@ -4629,7 +5342,8 @@ function normalizeSpec(raw, userPrompt) {
             subheading: props.subtitle || props.subheading || void 0,
             items: prods.map((p) => ({
               title: String(p.name || p.title || "S\u1EA3n ph\u1EA9m"),
-              desc: p.price ? `Gi\xE1: ${p.price}${p.oldPrice ? ` (G\u1ED1c: ${p.oldPrice})` : ""}` : p.desc || p.description,
+              desc: p.desc || p.description || void 0,
+              price: p.price ? String(p.price) : void 0,
               image: p.image || p.imageUrl || void 0,
               badge: p.tag || p.badge || p.category || void 0,
               icon: "\u{1F6CD}\uFE0F"
@@ -4709,6 +5423,7 @@ function normalizeSpec(raw, userPrompt) {
               desc: it.desc || it.description || void 0,
               badge: it.badge || void 0,
               image: it.image || void 0,
+              price: it.price ? String(it.price) : void 0,
               icon: it.icon || void 0
             }))
           }
@@ -4818,7 +5533,8 @@ async function callGemini(env, prompt, currentSpec, retryHint) {
           { role: "user", content: `H\xE3y t\u1EA1o website ch\u1EA5t l\u01B0\u1EE3ng cao theo y\xEAu c\u1EA7u: "${prompt}". Chi ti\u1EBFt: ${userText}` }
         ],
         temperature: 0.7
-      })
+      }),
+      signal: AbortSignal.timeout(6e3)
     });
     if (res2.ok) {
       const data2 = await res2.json();
@@ -4843,7 +5559,8 @@ async function callGemini(env, prompt, currentSpec, retryHint) {
         systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
         contents: [{ role: "user", parts: [{ text: userText }] }],
         generationConfig: { responseMimeType: "application/json", temperature: 0.7 }
-      })
+      }),
+      signal: AbortSignal.timeout(6e3)
     }
   );
   if (!res.ok) {
@@ -4902,14 +5619,9 @@ data: ${JSON.stringify(data)}
         try {
           raw = await callGemini(env, prompt, body?.currentSpec);
         } catch (geminiError) {
-          const msg = geminiError?.message || "";
-          console.warn("L\u1ED7i g\u1ECDi Gemini:", msg);
-          if (msg.includes("location") || msg.includes("Location") || msg.includes("not supported") || msg.includes("400")) {
-            await sleep(1500);
-            raw = createSmartPromptSpec(prompt);
-          } else {
-            throw geminiError;
-          }
+          console.warn("K\xEDch ho\u1EA1t b\u1ED9 ki\u1EBFn t\u1EA1o th\xF4ng minh th\xEDch \u1EE9ng do Gemini API:", geminiError?.message || geminiError);
+          await sleep(1500);
+          raw = createSmartPromptSpec(prompt);
         }
         await send("step", { id: "content" });
         await sleep(1200);
@@ -4947,7 +5659,7 @@ data: ${JSON.stringify(data)}
   }
 }, "onRequestPost");
 
-// ../.wrangler/tmp/pages-BUsGsO/functionsRoutes-0.8425995279591211.mjs
+// ../.wrangler/tmp/pages-lJnSv5/functionsRoutes-0.41170424911558456.mjs
 var routes = [
   {
     routePath: "/api/projects/:id",
