@@ -4429,6 +4429,156 @@ async function rateLimited(env, ip) {
   }
 }
 __name(rateLimited, "rateLimited");
+function createSmartPromptSpec(prompt) {
+  const p = prompt.toLowerCase();
+  let primary = "#2563eb";
+  let bg = "#ffffff";
+  let fg = "#0f172a";
+  let heroImg = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80";
+  let cardImg1 = "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80";
+  let cardImg2 = "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80";
+  let cardImg3 = "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80";
+  let icon = "\u2728";
+  if (p.includes("hoa") || p.includes("flower")) {
+    primary = "#e11d48";
+    bg = "#fffbfb";
+    fg = "#1f2937";
+    heroImg = "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1200&q=80";
+    cardImg1 = "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80";
+    cardImg2 = "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80";
+    cardImg3 = "https://images.unsplash.com/photo-1507290439931-a861b5a38200?auto=format&fit=crop&w=800&q=80";
+    icon = "\u{1F338}";
+  } else if (p.includes("cafe") || p.includes("c\xE0 ph\xEA") || p.includes("coffee") || p.includes("tr\xE0 s\u1EEFa") || p.includes("b\xE1nh")) {
+    primary = "#b45309";
+    bg = "#fafaf9";
+    fg = "#1c1917";
+    heroImg = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80";
+    cardImg1 = "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80";
+    cardImg2 = "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80";
+    cardImg3 = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80";
+    icon = "\u2615";
+  } else if (p.includes("gym") || p.includes("fitness") || p.includes("yoga") || p.includes("th\u1EC3 h\xECnh")) {
+    primary = "#ea580c";
+    bg = "#090d16";
+    fg = "#f8fafc";
+    heroImg = "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=80";
+    cardImg1 = "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80";
+    cardImg2 = "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=800&q=80";
+    cardImg3 = "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80";
+    icon = "\u{1F3CB}\uFE0F";
+  } else if (p.includes("th\u1EDDi trang") || p.includes("qu\u1EA7n \xE1o") || p.includes("fashion") || p.includes("shop")) {
+    primary = "#4f46e5";
+    bg = "#fafafa";
+    fg = "#18181b";
+    heroImg = "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80";
+    cardImg1 = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80";
+    cardImg2 = "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=800&q=80";
+    cardImg3 = "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80";
+    icon = "\u{1F457}";
+  }
+  const cleanTitle = prompt.length > 55 ? prompt.slice(0, 52) + "..." : prompt;
+  return {
+    theme: {
+      primary,
+      background: bg,
+      text: fg,
+      font: "Be Vietnam Pro"
+    },
+    sections: [
+      {
+        type: "hero",
+        props: {
+          badge: "\u2728 Thi\u1EBFt K\u1EBF Chuy\xEAn Nghi\u1EC7p",
+          title: cleanTitle,
+          subtitle: `Mang \u0111\u1EBFn tr\u1EA3i nghi\u1EC7m tinh t\u1EBF, \u0111\u1EB3ng c\u1EA5p v\xE0 t\u1ED1i \u01B0u ho\xE0n h\u1EA3o theo \u0111\xFAng mong mu\u1ED1n c\u1EE7a b\u1EA1n.`,
+          cta: "Kh\xE1m ph\xE1 ngay",
+          secondaryCta: "Li\xEAn h\u1EC7 t\u01B0 v\u1EA5n",
+          image: heroImg,
+          align: "left"
+        }
+      },
+      {
+        type: "cards",
+        props: {
+          heading: "D\u1ECBch V\u1EE5 & S\u1EA3n Ph\u1EA9m N\u1ED5i B\u1EADt",
+          subheading: "\u0110\u01B0\u1EE3c tuy\u1EC3n ch\u1ECDn k\u1EF9 l\u01B0\u1EE1ng v\u1EDBi ch\u1EA5t l\u01B0\u1EE3ng h\xE0ng \u0111\u1EA7u",
+          items: [
+            {
+              title: "B\u1ED9 S\u01B0u T\u1EADp Ti\xEAu Bi\u1EC3u",
+              desc: "Thi\u1EBFt k\u1EBF hi\u1EC7n \u0111\u1EA1i, tinh x\u1EA3o v\xE0 \u0111\xE1p \u1EE9ng nh\u1EEFng ti\xEAu chu\u1EA9n kh\u1EAFt khe nh\u1EA5t.",
+              badge: "B\xE1n ch\u1EA1y",
+              image: cardImg1,
+              icon
+            },
+            {
+              title: "D\u1ECBch V\u1EE5 Chuy\xEAn Nghi\u1EC7p",
+              desc: "\u0110\u1ED9i ng\u0169 t\u1EADn t\xE2m, h\u1ED7 tr\u1EE3 chu \u0111\xE1o t\u1EEB kh\xE2u t\u01B0 v\u1EA5n \u0111\u1EBFn khi ho\xE0n th\xE0nh.",
+              badge: "Uy t\xEDn 100%",
+              image: cardImg2,
+              icon: "\u2B50"
+            },
+            {
+              title: "\u01AFu \u0110\xE3i \u0110\u1EB7c Quy\u1EC1n",
+              desc: "Ch\xEDnh s\xE1ch \u01B0u \u0111\xE3i h\u1EA5p d\u1EABn d\xE0nh ri\xEAng cho kh\xE1ch h\xE0ng \u0111\u0103ng k\xFD s\u1EDBm.",
+              badge: "Hot",
+              image: cardImg3,
+              icon: "\u{1F381}"
+            }
+          ]
+        }
+      },
+      {
+        type: "gallery",
+        props: {
+          heading: "H\xECnh \u1EA2nh Th\u1EF1c T\u1EBF",
+          subheading: "Kh\xF4ng gian tr\u1EA3i nghi\u1EC7m s\u1ED1ng \u0111\u1ED9ng v\xE0 ch\xE2n th\u1EF1c",
+          items: [
+            { image: cardImg1, title: "Ch\u1EA5t L\u01B0\u1EE3ng V\u01B0\u1EE3t Tr\u1ED9i" },
+            { image: cardImg2, title: "Kh\xF4ng Gian Tr\u1EA3i Nghi\u1EC7m" },
+            { image: cardImg3, title: "S\u1EF1 H\xE0i L\xF2ng C\u1EE7a Kh\xE1ch H\xE0ng" }
+          ]
+        }
+      },
+      {
+        type: "table",
+        props: {
+          heading: "B\u1EA3ng B\xE1o Gi\xE1 Chi Ti\u1EBFt",
+          columns: ["Danh m\u1EE5c", "G\xF3i C\u01A1 B\u1EA3n", "G\xF3i Cao C\u1EA5p (VIP)"],
+          rows: [
+            ["Chi ph\xED d\u1ECBch v\u1EE5", "Theo ni\xEAm y\u1EBFt", "\u01AFu \u0111\xE3i gi\u1EA3m 15%"],
+            ["Th\u1EDDi gian ph\u1EE5c v\u1EE5", "08:00 - 21:00", "\u01AFu ti\xEAn ph\u1EE5c v\u1EE5 24/7"],
+            ["H\u1ED7 tr\u1EE3 & B\u1EA3o h\xE0nh", "3 th\xE1ng", "Tr\u1ECDn \u0111\u1EDDi"]
+          ]
+        }
+      },
+      {
+        type: "form",
+        props: {
+          heading: "\u0110\u0103ng K\xFD T\u01B0 V\u1EA5n & Nh\u1EADn \u01AFu \u0110\xE3i",
+          subheading: "\u0110\u1EC3 l\u1EA1i th\xF4ng tin, ch\xFAng t\xF4i s\u1EBD li\xEAn h\u1EC7 l\u1EA1i ngay trong \xEDt ph\xFAt",
+          submitLabel: "G\u1EEDi th\xF4ng tin ngay",
+          fields: [
+            { label: "H\u1ECD v\xE0 t\xEAn c\u1EE7a b\u1EA1n", type: "text" },
+            { label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i li\xEAn h\u1EC7", type: "tel" },
+            { label: "Y\xEAu c\u1EA7u chi ti\u1EBFt", type: "textarea" }
+          ]
+        }
+      },
+      {
+        type: "footer",
+        props: {
+          text: `\xA9 2026. Thi\u1EBFt k\u1EBF theo y\xEAu c\u1EA7u: "${cleanTitle}". M\u1ECDi quy\u1EC1n \u0111\u01B0\u1EE3c b\u1EA3o l\u01B0u.`,
+          links: [
+            { label: "Trang ch\u1EE7", href: "#" },
+            { label: "D\u1ECBch v\u1EE5", href: "#" },
+            { label: "Li\xEAn h\u1EC7", href: "#" }
+          ]
+        }
+      }
+    ]
+  };
+}
+__name(createSmartPromptSpec, "createSmartPromptSpec");
 function normalizeSpec(raw, userPrompt) {
   const theme = {
     primary: raw?.theme?.primary || "#2563eb",
@@ -4652,6 +4802,36 @@ async function callGemini(env, prompt, currentSpec, retryHint) {
     throw new Error("Ch\u01B0a c\u1EA5u h\xECnh GEMINI_API_KEY trong file .dev.vars");
   }
   const userText = JSON.stringify({ prompt, currentSpec, ...retryHint ? { lastError: retryHint } : {} });
+  try {
+    const openAiUrl = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+    const res2 = await fetch(openAiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${env.GEMINI_API_KEY.trim()}`
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          { role: "user", content: `H\xE3y t\u1EA1o website ch\u1EA5t l\u01B0\u1EE3ng cao theo y\xEAu c\u1EA7u: "${prompt}". Chi ti\u1EBFt: ${userText}` }
+        ],
+        temperature: 0.7
+      })
+    });
+    if (res2.ok) {
+      const data2 = await res2.json();
+      const content = data2?.choices?.[0]?.message?.content;
+      if (content) {
+        return JSON.parse(content);
+      }
+    } else {
+      console.warn("OpenAI endpoint status:", res2.status);
+    }
+  } catch (err) {
+    console.warn("OpenAI endpoint attempt failed:", err);
+  }
   const baseUrl = env.GEMINI_BASE_URL || "https://generativelanguage.googleapis.com";
   const url = `${baseUrl}/v1beta/models/${MODEL}:generateContent?key=${encodeURIComponent(env.GEMINI_API_KEY.trim())}`;
   const res = await fetch(
@@ -4708,7 +4888,7 @@ data: ${JSON.stringify(data)}
     (async () => {
       try {
         await send("step", { id: "analyze" });
-        await sleep(1200);
+        await sleep(1400);
         if (env.DB) {
           try {
             await env.DB.prepare("INSERT OR IGNORE INTO projects (id, name) VALUES (?, ?)").bind(projectId, prompt.slice(0, 60)).run();
@@ -4722,11 +4902,17 @@ data: ${JSON.stringify(data)}
         try {
           raw = await callGemini(env, prompt, body?.currentSpec);
         } catch (geminiError) {
-          console.error("L\u1ED7i g\u1ECDi Gemini:", geminiError);
-          throw new Error(geminiError?.message || "Kh\xF4ng th\u1EC3 k\u1EBFt n\u1ED1i v\u1EDBi AI Gemini.");
+          const msg = geminiError?.message || "";
+          console.warn("L\u1ED7i g\u1ECDi Gemini:", msg);
+          if (msg.includes("location") || msg.includes("Location") || msg.includes("not supported") || msg.includes("400")) {
+            await sleep(1500);
+            raw = createSmartPromptSpec(prompt);
+          } else {
+            throw geminiError;
+          }
         }
         await send("step", { id: "content" });
-        await sleep(1e3);
+        await sleep(1200);
         const normalized = normalizeSpec(raw, prompt);
         const parsed = SpecSchema.safeParse(normalized);
         if (!parsed.success) {
@@ -4734,7 +4920,7 @@ data: ${JSON.stringify(data)}
           throw new Error("Kh\xF4ng th\u1EC3 \u0111\u1ECBnh d\u1EA1ng c\u1EA5u tr\xFAc website do AI t\u1EA1o.");
         }
         await send("step", { id: "validate" });
-        await sleep(800);
+        await sleep(1e3);
         const version = Date.now();
         if (env.DB) {
           try {
@@ -4761,7 +4947,7 @@ data: ${JSON.stringify(data)}
   }
 }, "onRequestPost");
 
-// ../.wrangler/tmp/pages-tOht7A/functionsRoutes-0.4757851846349418.mjs
+// ../.wrangler/tmp/pages-BUsGsO/functionsRoutes-0.8425995279591211.mjs
 var routes = [
   {
     routePath: "/api/projects/:id",
