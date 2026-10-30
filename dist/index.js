@@ -5119,6 +5119,138 @@ function createSmartPromptSpec(prompt) {
       ]
     };
   }
+  const isHR = p.includes("nhan su") || p.includes("hrm") || p.includes("cham cong") || p.includes("tuyen dung") || p.includes("tinh luong") || p.includes("tien luong");
+  if (isHR) {
+    return {
+      theme: {
+        primary: "#4f46e5",
+        secondary: "#818cf8",
+        accent: "#06b6d4",
+        background: "#0b0f19",
+        text: "#f8fafc",
+        font: "Be Vietnam Pro",
+        style: "bento"
+      },
+      sections: [
+        {
+          type: "hero",
+          props: {
+            layout: "split",
+            badge: "\u26A1 N\u1EC0N T\u1EA2NG QU\u1EA2N TR\u1ECA NH\xC2N S\u1EF0 TH\xD4NG MINH (HRM)",
+            title: cleanTitle,
+            subtitle: "Gi\u1EA3i ph\xE1p to\xE0n di\u1EC7n t\u1EF1 \u0111\u1ED9ng h\xF3a qu\u1EA3n l\xFD h\u1ED3 s\u01A1 nh\xE2n s\u1EF1, m\xE1y ch\u1EA5m c\xF4ng v\xE2n tay/khu\xF4n m\u1EB7t, t\xEDnh l\u01B0\u01A1ng t\u1EF1 \u0111\u1ED9ng v\xE0 t\u1ED1i \u01B0u h\xF3a quy tr\xECnh tuy\u1EC3n d\u1EE5ng nh\xE2n t\xE0i.",
+            cta: "Tr\u1EA3i Nghi\u1EC7m D\xF9ng Th\u1EED 14 Ng\xE0y",
+            secondaryCta: "\u0110\u0103ng K\xFD T\u01B0 V\u1EA5n 1:1",
+            image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80",
+            align: "left"
+          }
+        },
+        {
+          type: "ticker",
+          props: {
+            items: [
+              "CH\u1EA4M C\xD4NG GPS & NH\u1EACN DI\u1EC6N KHU\xD4N M\u1EB6T AI",
+              "B\u1EA2NG L\u01AF\u01A0NG T\u1EF0 \u0110\u1ED8NG CHU\u1EA8N THU\u1EBE & BHXH",
+              "S\u1ED0 H\xD3A 100% H\u1ED2 S\u01A0 & H\u1EE2P \u0110\u1ED2NG \u0110I\u1EC6N T\u1EEC",
+              "QU\u1EA2N L\xDD \u0110\u01A0N T\u1EEA NGH\u1EC8 PH\xC9P REAL-TIME",
+              "H\u01A0N 1,500+ DOANH NGHI\u1EC6P TIN D\xD9NG"
+            ]
+          }
+        },
+        {
+          type: "bento",
+          props: {
+            heading: "Ph\xE2n H\u1EC7 T\xEDnh N\u0103ng C\u1ED1t L\xF5i",
+            subheading: "\u0110\u01B0\u1EE3c thi\u1EBFt k\u1EBF tinh g\u1ECDn gi\xFAp ph\xF2ng HR v\xE0 ban l\xE3nh \u0111\u1EA1o ti\u1EBFt ki\u1EC7m 80% th\u1EDDi gian t\xE1c nghi\u1EC7p",
+            items: [
+              {
+                title: "Ch\u1EA5m C\xF4ng \u0110a N\u1EC1n T\u1EA3ng Th\xF4ng Minh",
+                desc: "\u0110\u1ED3ng b\u1ED9 t\u1EE9c th\xEC t\u1EEB m\xE1y qu\xE9t v\xE2n tay, nh\u1EADn di\u1EC7n khu\xF4n m\u1EB7t v\xE0 ch\u1EA5m c\xF4ng \u0111\u1ECBnh v\u1ECB GPS ch\u1ED1ng gian l\u1EADn.",
+                badge: "Auto Sync",
+                icon: "\u23F1\uFE0F",
+                span: "wide",
+                image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                title: "B\u1EA3ng T\xEDnh L\u01B0\u01A1ng T\u1EF1 \u0110\u1ED9ng 1-Click",
+                desc: "T\u1EF1 \u0111\u1ED9ng k\u1EBFt xu\u1EA5t c\xF4ng, ph\u1EE5 c\u1EA5p, OT, hoa h\u1ED3ng v\xE0 kh\u1EA5u tr\u1EEB thu\u1EBF TNCN, BHXH ch\xEDnh x\xE1c tuy\u1EC7t \u0111\u1ED1i.",
+                badge: "Kh\xF4ng sai s\xF3t",
+                icon: "\u{1F4CA}",
+                span: "normal"
+              },
+              {
+                title: "Qu\u1EA3n L\xFD Tuy\u1EC3n D\u1EE5ng & Onboarding",
+                desc: "Ph\u1EC5u s\xE0ng l\u1ECDc \u1EE9ng vi\xEAn t\u1EF1 \u0111\u1ED9ng, l\u01B0u tr\u1EEF CV t\u1EADp trung v\xE0 h\u01B0\u1EDBng d\u1EABn h\u1ED9i nh\u1EADp nh\xE2n vi\xEAn m\u1EDBi.",
+                badge: "Tuy\u1EC3n d\u1EE5ng 4.0",
+                icon: "\u{1F3AF}",
+                span: "normal"
+              },
+              {
+                title: "\u0110\u01A1n T\u1EEB Online & Ph\xEA Duy\u1EC7t Di \u0110\u1ED9ng",
+                desc: "Nh\xE2n vi\xEAn l\xE0m \u0111\u01A1n ngh\u1EC9 ph\xE9p, xin \u0111i mu\u1ED9n/v\u1EC1 s\u1EDBm tr\u1EF1c ti\u1EBFp tr\xEAn \u0111i\u1EC7n tho\u1EA1i; s\u1EBFp duy\u1EC7t trong 3 gi\xE2y.",
+                badge: "Paperless",
+                icon: "\u{1F4F1}",
+                span: "tall"
+              }
+            ]
+          }
+        },
+        {
+          type: "stats",
+          props: {
+            heading: "HI\u1EC6U QU\u1EA2 \u0110\u01AF\u1EE2C CH\u1EE8NG MINH TH\u1EF0C T\u1EBE",
+            items: [
+              { value: "85%", label: "Gi\u1EA3m th\u1EDDi gian x\u1EED l\xFD b\u1EA3ng l\u01B0\u01A1ng h\xE0ng th\xE1ng" },
+              { value: "100%", label: "Minh b\u1EA1ch d\u1EEF li\u1EC7u ng\xE0y c\xF4ng v\xE0 ca k\xEDp" },
+              { value: "1,500+", label: "Doanh nghi\u1EC7p trong v\xE0 ngo\xE0i n\u01B0\u1EDBc s\u1EED d\u1EE5ng" },
+              { value: "99.9%", label: "\u0110\u1ED9 ch\xEDnh x\xE1c trong t\xEDnh to\xE1n ph\xFAc l\u1EE3i" }
+            ]
+          }
+        },
+        {
+          type: "split_feature",
+          props: {
+            badge: "B\u1EA2O M\u1EACT & PH\xC2N QUY\u1EC0N",
+            title: "D\u1EEF Li\u1EC7u Nh\xE2n S\u1EF1 B\u1EA3o M\u1EADt C\u1EA5p Ng\xE2n H\xE0ng",
+            description: "To\xE0n b\u1ED9 th\xF4ng tin nh\xE2n s\u1EF1, b\u1EA3ng l\u01B0\u01A1ng v\xE0 h\u1EE3p \u0111\u1ED3ng \u0111\u01B0\u1EE3c m\xE3 h\xF3a nhi\u1EC1u l\u1EDBp v\u1EDBi h\u1EC7 th\u1ED1ng ph\xE2n quy\u1EC1n chi ti\u1EBFt theo t\u1EEBng ph\xF2ng ban v\xE0 v\u1ECB tr\xED ch\u1EE9c v\u1EE5.",
+            image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1000&q=80",
+            bullets: [
+              "H\u1EC7 th\u1ED1ng ph\xE2n quy\u1EC1n Role-Based Access Control (RBAC) nghi\xEAm ng\u1EB7t",
+              "Nh\u1EADt k\xFD ch\u1EC9nh s\u1EEDa Audit Log l\u01B0u v\u1EBFt l\u1ECBch s\u1EED m\u1ECDi thao t\xE1c thay \u0111\u1ED5i",
+              "Sao l\u01B0u d\u1EEF li\u1EC7u t\u1EF1 \u0111\u1ED9ng m\u1ED7i ng\xE0y tr\xEAn h\u1EA1 t\u1EA7ng \u0111i\u1EC7n to\xE1n \u0111\xE1m m\xE2y"
+            ],
+            cta: "T\xECm hi\u1EC3u ki\u1EBFn tr\xFAc b\u1EA3o m\u1EADt"
+          }
+        },
+        {
+          type: "form",
+          props: {
+            heading: "\u0110\u0103ng K\xFD T\u01B0 V\u1EA5n & Nh\u1EADn B\u1EA3n Demo Mi\u1EC5n Ph\xED",
+            subheading: "Chuy\xEAn vi\xEAn gi\u1EA3i ph\xE1p c\u1EE7a ch\xFAng t\xF4i s\u1EBD li\xEAn h\u1EC7 thi\u1EBFt l\u1EADp b\u1EA3n d\xF9ng th\u1EED ph\xF9 h\u1EE3p v\u1EDBi quy m\xF4 doanh nghi\u1EC7p b\u1EA1n",
+            submitLabel: "Nh\u1EADn T\u01B0 V\u1EA5n Tr\u1EF1c Ti\u1EBFp",
+            fields: [
+              { label: "H\u1ECD v\xE0 t\xEAn c\u1EE7a b\u1EA1n", type: "text" },
+              { label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i li\xEAn h\u1EC7", type: "tel" },
+              { label: "T\xEAn doanh nghi\u1EC7p / C\xF4ng ty", type: "text" },
+              { label: "Quy m\xF4 nh\xE2n s\u1EF1 (VD: 20-50, 50-200, >500 ng\u01B0\u1EDDi)", type: "text" }
+            ]
+          }
+        },
+        {
+          type: "footer",
+          props: {
+            text: `\xA9 2026 ${cleanTitle}. N\u1EC1n t\u1EA3ng qu\u1EA3n tr\u1ECB nh\xE2n s\u1EF1 v\xE0 chuy\u1EC3n \u0111\u1ED5i s\u1ED1 doanh nghi\u1EC7p.`,
+            links: [
+              { label: "T\xEDnh n\u0103ng HRM", href: "#" },
+              { label: "Ch\u1EA5m c\xF4ng & Ti\u1EC1n l\u01B0\u01A1ng", href: "#" },
+              { label: "B\u1EA3ng gi\xE1 g\xF3i", href: "#" },
+              { label: "H\u1ED7 tr\u1EE3 kh\xE1ch h\xE0ng", href: "#" }
+            ]
+          }
+        }
+      ]
+    };
+  }
   const isCourse = p.includes("khoa hoc") || p.includes("lap trinh") || p.includes("hoc") || p.includes("dao tao") || p.includes("giao duc");
   if (isCourse) {
     return {
@@ -6301,7 +6433,7 @@ data: ${JSON.stringify(data)}
   }
 }, "onRequestPost");
 
-// ../.wrangler/tmp/pages-svmgOV/functionsRoutes-0.6836441123051522.mjs
+// ../.wrangler/tmp/pages-UlPsCM/functionsRoutes-0.30158793019300156.mjs
 var routes = [
   {
     routePath: "/api/projects/:id",

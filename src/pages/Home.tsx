@@ -22,7 +22,8 @@ export default function Home() {
     const text = (textToUse ?? prompt).trim();
     if (!text) return;
     setSubmittedPrompt(text);
-    generate(text, spec, false);
+    // Khi tạo từ ô nhập chính ngoài trang chủ, đây là tạo website MỚI hoàn toàn theo chủ đề mới
+    generate(text, null, false);
   };
 
   const handleTweak = (tweakText: string) => {

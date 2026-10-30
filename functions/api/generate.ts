@@ -772,6 +772,140 @@ function createSmartPromptSpec(prompt: string): Spec {
     };
   }
 
+  // 1.7. PHẦN MỀM QUẢN LÝ NHÂN SỰ / HRM / CHẤM CÔNG / TUYỂN DỤNG / TIỀN LƯƠNG
+  const isHR = p.includes("nhan su") || p.includes("hrm") || p.includes("cham cong") || p.includes("tuyen dung") || p.includes("tinh luong") || p.includes("tien luong");
+  if (isHR) {
+    return {
+      theme: {
+        primary: "#4f46e5",
+        secondary: "#818cf8",
+        accent: "#06b6d4",
+        background: "#0b0f19",
+        text: "#f8fafc",
+        font: "Be Vietnam Pro",
+        style: "bento",
+      },
+      sections: [
+        {
+          type: "hero",
+          props: {
+            layout: "split",
+            badge: "⚡ NỀN TẢNG QUẢN TRỊ NHÂN SỰ THÔNG MINH (HRM)",
+            title: cleanTitle,
+            subtitle: "Giải pháp toàn diện tự động hóa quản lý hồ sơ nhân sự, máy chấm công vân tay/khuôn mặt, tính lương tự động và tối ưu hóa quy trình tuyển dụng nhân tài.",
+            cta: "Trải Nghiệm Dùng Thử 14 Ngày",
+            secondaryCta: "Đăng Ký Tư Vấn 1:1",
+            image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80",
+            align: "left",
+          },
+        },
+        {
+          type: "ticker",
+          props: {
+            items: [
+              "CHẤM CÔNG GPS & NHẬN DIỆN KHUÔN MẶT AI",
+              "BẢNG LƯƠNG TỰ ĐỘNG CHUẨN THUẾ & BHXH",
+              "SỐ HÓA 100% HỒ SƠ & HỢP ĐỒNG ĐIỆN TỬ",
+              "QUẢN LÝ ĐƠN TỪ NGHỈ PHÉP REAL-TIME",
+              "HƠN 1,500+ DOANH NGHIỆP TIN DÙNG"
+            ],
+          },
+        },
+        {
+          type: "bento",
+          props: {
+            heading: "Phân Hệ Tính Năng Cốt Lõi",
+            subheading: "Được thiết kế tinh gọn giúp phòng HR và ban lãnh đạo tiết kiệm 80% thời gian tác nghiệp",
+            items: [
+              {
+                title: "Chấm Công Đa Nền Tảng Thông Minh",
+                desc: "Đồng bộ tức thì từ máy quét vân tay, nhận diện khuôn mặt và chấm công định vị GPS chống gian lận.",
+                badge: "Auto Sync",
+                icon: "⏱️",
+                span: "wide",
+                image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                title: "Bảng Tính Lương Tự Động 1-Click",
+                desc: "Tự động kết xuất công, phụ cấp, OT, hoa hồng và khấu trừ thuế TNCN, BHXH chính xác tuyệt đối.",
+                badge: "Không sai sót",
+                icon: "📊",
+                span: "normal",
+              },
+              {
+                title: "Quản Lý Tuyển Dụng & Onboarding",
+                desc: "Phễu sàng lọc ứng viên tự động, lưu trữ CV tập trung và hướng dẫn hội nhập nhân viên mới.",
+                badge: "Tuyển dụng 4.0",
+                icon: "🎯",
+                span: "normal",
+              },
+              {
+                title: "Đơn Từ Online & Phê Duyệt Di Động",
+                desc: "Nhân viên làm đơn nghỉ phép, xin đi muộn/về sớm trực tiếp trên điện thoại; sếp duyệt trong 3 giây.",
+                badge: "Paperless",
+                icon: "📱",
+                span: "tall",
+              },
+            ],
+          },
+        },
+        {
+          type: "stats",
+          props: {
+            heading: "HIỆU QUẢ ĐƯỢC CHỨNG MINH THỰC TẾ",
+            items: [
+              { value: "85%", label: "Giảm thời gian xử lý bảng lương hàng tháng" },
+              { value: "100%", label: "Minh bạch dữ liệu ngày công và ca kíp" },
+              { value: "1,500+", label: "Doanh nghiệp trong và ngoài nước sử dụng" },
+              { value: "99.9%", label: "Độ chính xác trong tính toán phúc lợi" },
+            ],
+          },
+        },
+        {
+          type: "split_feature",
+          props: {
+            badge: "BẢO MẬT & PHÂN QUYỀN",
+            title: "Dữ Liệu Nhân Sự Bảo Mật Cấp Ngân Hàng",
+            description: "Toàn bộ thông tin nhân sự, bảng lương và hợp đồng được mã hóa nhiều lớp với hệ thống phân quyền chi tiết theo từng phòng ban và vị trí chức vụ.",
+            image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1000&q=80",
+            bullets: [
+              "Hệ thống phân quyền Role-Based Access Control (RBAC) nghiêm ngặt",
+              "Nhật ký chỉnh sửa Audit Log lưu vết lịch sử mọi thao tác thay đổi",
+              "Sao lưu dữ liệu tự động mỗi ngày trên hạ tầng điện toán đám mây",
+            ],
+            cta: "Tìm hiểu kiến trúc bảo mật",
+          },
+        },
+        {
+          type: "form",
+          props: {
+            heading: "Đăng Ký Tư Vấn & Nhận Bản Demo Miễn Phí",
+            subheading: "Chuyên viên giải pháp của chúng tôi sẽ liên hệ thiết lập bản dùng thử phù hợp với quy mô doanh nghiệp bạn",
+            submitLabel: "Nhận Tư Vấn Trực Tiếp",
+            fields: [
+              { label: "Họ và tên của bạn", type: "text" },
+              { label: "Số điện thoại liên hệ", type: "tel" },
+              { label: "Tên doanh nghiệp / Công ty", type: "text" },
+              { label: "Quy mô nhân sự (VD: 20-50, 50-200, >500 người)", type: "text" },
+            ],
+          },
+        },
+        {
+          type: "footer",
+          props: {
+            text: `© 2026 ${cleanTitle}. Nền tảng quản trị nhân sự và chuyển đổi số doanh nghiệp.`,
+            links: [
+              { label: "Tính năng HRM", href: "#" },
+              { label: "Chấm công & Tiền lương", href: "#" },
+              { label: "Bảng giá gói", href: "#" },
+              { label: "Hỗ trợ khách hàng", href: "#" },
+            ],
+          },
+        },
+      ],
+    };
+  }
+
   // 1.8. KHÓA HỌC / GIÁO DỤC TRỰC TUYẾN / LẬP TRÌNH / HỌC TẬP
   const isCourse = p.includes("khoa hoc") || p.includes("lap trinh") || p.includes("hoc") || p.includes("dao tao") || p.includes("giao duc");
   if (isCourse) {
