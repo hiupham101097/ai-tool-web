@@ -1895,78 +1895,75 @@ Chỉ thêm section mới (ngay trước footer) hoặc sửa đổi/cập nhậ
 Xuất ra JSON Spec đầy đủ hoàn chỉnh gồm tất cả các section cũ và mới. Chi tiết: ${userText}`
     : `Hãy tạo website chất lượng cao theo yêu cầu: "${prompt}". Chi tiết: ${userText}`;
 
-  // Cách 1: Gọi qua endpoint OpenAI-compatible của Google (vượt qua kiểm tra địa lý Cloudflare)
-  try {
-    const openAiUrl = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-    const res = await fetch(openAiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${env.GEMINI_API_KEY.trim()}`,
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: promptMessage },
-        ],
-        temperature: 0.7,
-      }),
-      signal: AbortSignal.timeout(6000),
-    });
-
-    if (res.ok) {
-      const data: any = await res.json();
-      const content = data?.choices?.[0]?.message?.content;
-      if (content) {
-        return JSON.parse(content);
-      }
-    } else {
-      console.warn("OpenAI endpoint status:", res.status);
-    }
-  } catch (err) {
-    console.warn("OpenAI endpoint attempt failed:", err);
-  }
-
-  // Cách 2: Native generateContent
+  const candidateModels = ["gemini-flash-lite-latest", "gemini-3.8-flash", "gemini-flash-latest"];
   const baseUrl = env.GEMINI_BASE_URL || "https://generativelanguage.googleapis.com";
-  const url = `${baseUrl}/v1beta/models/${MODEL}:generateContent?key=${encodeURIComponent(env.GEMINI_API_KEY.trim())}`;
-  
-  const res = await fetch(
-    url,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: [{ role: "user", parts: [{ text: promptMessage }] }],
-        generationConfig: { responseMimeType: "application/json", temperature: 0.7 },
-      }),
-      signal: AbortSignal.timeout(6000),
-    }
-  );
+  let lastErrorMsg = "";
 
-  if (!res.ok) {
-    const errText = await res.text().catch(() => "");
-    let errMsg = `Gemini API lỗi (${res.status})`;
+  for (const modelName of candidateModels) {
+    // Cách 1: Native generateContent với thời gian chờ thoải mái (40s) để AI suy nghĩ kỹ
     try {
-      const errJson = JSON.parse(errText);
-      if (errJson?.error?.message) {
-        errMsg = errJson.error.message;
+      const url = `${baseUrl}/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(env.GEMINI_API_KEY.trim())}`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: [{ role: "user", parts: [{ text: promptMessage }] }],
+          generationConfig: { responseMimeType: "application/json", temperature: 0.7 },
+        }),
+        signal: AbortSignal.timeout(40000),
+      });
+
+      if (res.ok) {
+        const data: any = await res.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (rawText) {
+          return JSON.parse(rawText);
+        }
+      } else {
+        const errText = await res.text().catch(() => "");
+        lastErrorMsg = `Model ${modelName} (${res.status}): ${errText.slice(0, 100)}`;
+        console.warn(lastErrorMsg);
       }
-    } catch {
-      if (errText) errMsg += `: ${errText.slice(0, 150)}`;
+    } catch (nativeErr: any) {
+      lastErrorMsg = `Model ${modelName} native error: ${nativeErr?.message || nativeErr}`;
+      console.warn(lastErrorMsg);
     }
-    throw new Error(errMsg);
+
+    // Cách 2: Endpoint OpenAI-compatible của Google
+    try {
+      const openAiUrl = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+      const res = await fetch(openAiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${env.GEMINI_API_KEY.trim()}`,
+        },
+        body: JSON.stringify({
+          model: modelName,
+          response_format: { type: "json_object" },
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: promptMessage },
+          ],
+          temperature: 0.7,
+        }),
+        signal: AbortSignal.timeout(40000),
+      });
+
+      if (res.ok) {
+        const data: any = await res.json();
+        const content = data?.choices?.[0]?.message?.content;
+        if (content) {
+          return JSON.parse(content);
+        }
+      }
+    } catch (openAiErr) {
+      console.warn(`OpenAI endpoint for ${modelName} failed`);
+    }
   }
 
-  const data: any = await res.json();
-  const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!rawText) {
-    throw new Error("Gemini không trả về nội dung hợp lệ.");
-  }
-  return JSON.parse(rawText);
+  throw new Error(lastErrorMsg || "Không thể kết nối đến AI sau khi đã thử tất cả các model.");
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {

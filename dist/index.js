@@ -4399,9 +4399,11 @@ C\u1EA4U TR\xDAC JSON:
 }
 
 H\u01AF\u1EDANG D\u1EAAN CH\u1ECCN PHONG C\xC1CH (STYLE ARCHETYPE) THEO NG\xC0NH NGH\u1EC0:
-1. "artisan" (C\xE0 ph\xEA, tr\xE0, b\xE1nh ng\u1ECDt, th\u1EE7 c\xF4ng, hoa t\u01B0\u01A1i, spa):
-   - B\u1ED1 c\u1EE5c \u1EA5m \xE1p, t\u1EF1 nhi\xEAn. D\xF9ng section "menu" (th\u1EF1c \u0111\u01A1n d\xF2ng ch\u1EA5m leader) + "split_feature" + "gallery" + "quote".
-   - M\xE0u n\u1EC1n: m\xE0u kem, gi\u1EA5y m\u1ED9c (#faf8f5, #fcfbf9), ch\u1EEF n\xE2u \u0111\u1EADm/espresso (#292524), m\xE0u nh\u1EA5n h\u1ED5 ph\xE1ch/terracotta/h\u1ED3ng ph\u1EA5n.
+1. "artisan" (C\xE0 ph\xEA, tr\xE0, b\xE1nh ng\u1ECDt, th\u1EE7 c\xF4ng, hoa t\u01B0\u01A1i, g\u1ED1m s\u1EE9):
+   - B\u1ED1 c\u1EE5c \u1EA5m \xE1p, t\u1EF1 nhi\xEAn, \u0111\u1EADm ch\u1EA5t ngh\u1EC7 nh\xE2n th\u1EE7 c\xF4ng.
+   - N\u1EBEU L\xC0 SHOP HOA / QU\xC0 T\u1EB6NG / G\u1ED0M S\u1EE8 / S\u1EA2N PH\u1EA8M: B\u1EAET BU\u1ED8C D\xD9NG section "cards" (th\u1EBB s\u1EA3n ph\u1EA9m c\xF3 \u1EA3nh ch\u1EE5p Unsplash \u0111\u1ED9 n\xE9t cao, gi\xE1 b\xE1n, m\xF4 t\u1EA3 chi ti\u1EBFt, huy hi\u1EC7u) + "split_feature" (k\u1EC3 chuy\u1EC7n tri\u1EBFt l\xFD th\u01B0\u01A1ng hi\u1EC7u) + "gallery" + "form" (\u0111\u1EB7t h\xE0ng theo y\xEAu c\u1EA7u). TUY\u1EC6T \u0110\u1ED0I KH\xD4NG d\xF9ng th\u1EF1c \u0111\u01A1n menu ch\u1EA5m ch\u1EA5m cho shop hoa!
+   - N\u1EBEU L\xC0 QU\xC1N C\xC0 PH\xCA / TR\xC0 B\xC1NH: D\xF9ng "hero" (split) + "bento" (\u0111\u1EB7c s\u1EA3n qu\xE1n) + "menu" (th\u1EF1c \u0111\u01A1n th\u1EE9c u\u1ED1ng d\xF2ng ch\u1EA5m) + "split_feature" + "form" (\u0111\u1EB7t b\xE0n).
+   - M\xE0u n\u1EC1n: m\xE0u kem ng\xE0, gi\u1EA5y m\u1ED9c (#faf7f2, #fff9f9), ch\u1EEF n\xE2u espresso (#1f1610) ho\u1EB7c \u0111en than (#18181b), m\xE0u nh\u1EA5n h\u1ED5 ph\xE1ch (#b45309), terracotta (#c2410c), ho\u1EB7c h\u1ED3ng r\u01B0\u1EE3u vang (#e11d48) cho hoa t\u01B0\u01A1i. Font serif thanh l\u1ECBch (Playfair Display ho\u1EB7c Georgia).
 2. "bento" (C\xF4ng ngh\u1EC7, SaaS, startup, app, gi\u1EA3i ph\xE1p s\u1ED1):
    - D\xF9ng section "hero" (split) + "bento" (th\u1EBB b\u1EA5t \u0111\u1ED1i x\u1EE9ng span wide/tall) + "stats" + "form".
    - N\u1EC1n t\u1ED1i ho\u1EB7c tr\u1EAFng tinh kh\xF4i, m\xE0u nh\u1EA5n xanh \u0111i\u1EC7n (Electric Blue #2563eb, t\xEDm neon #7c3aed, ho\u1EB7c ng\u1ECDc l\u1EE5c b\u1EA3o).
@@ -4468,7 +4470,6 @@ Khi \u0111\u1EA7u v\xE0o c\xF3 "currentSpec" ho\u1EB7c "isUpdate: true":
 6. K\u1EBET QU\u1EA2 TR\u1EA2 V\u1EC0: Lu\xF4n tr\u1EA3 v\u1EC1 to\xE0n b\u1ED9 \u0111\u1ED1i t\u01B0\u1EE3ng JSON Spec ho\xE0n ch\u1EC9nh ch\u1EE9a \u0111\u1EA7y \u0111\u1EE7 c\xE1c section c\u0169 \u0111\xE3 \u0111\u01B0\u1EE3c c\u1EADp nh\u1EADt ho\u1EB7c b\u1ED5 sung.`;
 
 // api/generate.ts
-var MODEL = "gemini-3.8-flash";
 var MAX_PROMPT = 1500;
 var RATE_LIMIT = 30;
 var enc = new TextEncoder();
@@ -6151,71 +6152,68 @@ async function callGemini(env, prompt, currentSpec, retryHint) {
 QUY T\u1EAEC B\u1EAET BU\u1ED8C: H\xE3y GI\u1EEE NGUY\xCAN t\u1EA5t c\u1EA3 c\xE1c section, phong c\xE1ch (theme.style), m\xE0u s\u1EAFc, ti\xEAu \u0111\u1EC1 v\xE0 n\u1ED9i dung c\u0169 c\u1EE7a currentSpec!
 Ch\u1EC9 th\xEAm section m\u1EDBi (ngay tr\u01B0\u1EDBc footer) ho\u1EB7c s\u1EEDa \u0111\u1ED5i/c\u1EADp nh\u1EADt section t\u01B0\u01A1ng \u1EE9ng theo \u0111\xFAng y\xEAu c\u1EA7u.
 Xu\u1EA5t ra JSON Spec \u0111\u1EA7y \u0111\u1EE7 ho\xE0n ch\u1EC9nh g\u1ED3m t\u1EA5t c\u1EA3 c\xE1c section c\u0169 v\xE0 m\u1EDBi. Chi ti\u1EBFt: ${userText}` : `H\xE3y t\u1EA1o website ch\u1EA5t l\u01B0\u1EE3ng cao theo y\xEAu c\u1EA7u: "${prompt}". Chi ti\u1EBFt: ${userText}`;
-  try {
-    const openAiUrl = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-    const res2 = await fetch(openAiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${env.GEMINI_API_KEY.trim()}`
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: promptMessage }
-        ],
-        temperature: 0.7
-      }),
-      signal: AbortSignal.timeout(6e3)
-    });
-    if (res2.ok) {
-      const data2 = await res2.json();
-      const content = data2?.choices?.[0]?.message?.content;
-      if (content) {
-        return JSON.parse(content);
-      }
-    } else {
-      console.warn("OpenAI endpoint status:", res2.status);
-    }
-  } catch (err) {
-    console.warn("OpenAI endpoint attempt failed:", err);
-  }
+  const candidateModels = ["gemini-flash-lite-latest", "gemini-3.8-flash", "gemini-flash-latest"];
   const baseUrl = env.GEMINI_BASE_URL || "https://generativelanguage.googleapis.com";
-  const url = `${baseUrl}/v1beta/models/${MODEL}:generateContent?key=${encodeURIComponent(env.GEMINI_API_KEY.trim())}`;
-  const res = await fetch(
-    url,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: [{ role: "user", parts: [{ text: promptMessage }] }],
-        generationConfig: { responseMimeType: "application/json", temperature: 0.7 }
-      }),
-      signal: AbortSignal.timeout(6e3)
-    }
-  );
-  if (!res.ok) {
-    const errText = await res.text().catch(() => "");
-    let errMsg = `Gemini API l\u1ED7i (${res.status})`;
+  let lastErrorMsg = "";
+  for (const modelName of candidateModels) {
     try {
-      const errJson = JSON.parse(errText);
-      if (errJson?.error?.message) {
-        errMsg = errJson.error.message;
+      const url = `${baseUrl}/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(env.GEMINI_API_KEY.trim())}`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: [{ role: "user", parts: [{ text: promptMessage }] }],
+          generationConfig: { responseMimeType: "application/json", temperature: 0.7 }
+        }),
+        signal: AbortSignal.timeout(4e4)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (rawText) {
+          return JSON.parse(rawText);
+        }
+      } else {
+        const errText = await res.text().catch(() => "");
+        lastErrorMsg = `Model ${modelName} (${res.status}): ${errText.slice(0, 100)}`;
+        console.warn(lastErrorMsg);
       }
-    } catch {
-      if (errText) errMsg += `: ${errText.slice(0, 150)}`;
+    } catch (nativeErr) {
+      lastErrorMsg = `Model ${modelName} native error: ${nativeErr?.message || nativeErr}`;
+      console.warn(lastErrorMsg);
     }
-    throw new Error(errMsg);
+    try {
+      const openAiUrl = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+      const res = await fetch(openAiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${env.GEMINI_API_KEY.trim()}`
+        },
+        body: JSON.stringify({
+          model: modelName,
+          response_format: { type: "json_object" },
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: promptMessage }
+          ],
+          temperature: 0.7
+        }),
+        signal: AbortSignal.timeout(4e4)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const content = data?.choices?.[0]?.message?.content;
+        if (content) {
+          return JSON.parse(content);
+        }
+      }
+    } catch (openAiErr) {
+      console.warn(`OpenAI endpoint for ${modelName} failed`);
+    }
   }
-  const data = await res.json();
-  const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!rawText) {
-    throw new Error("Gemini kh\xF4ng tr\u1EA3 v\u1EC1 n\u1ED9i dung h\u1EE3p l\u1EC7.");
-  }
-  return JSON.parse(rawText);
+  throw new Error(lastErrorMsg || "Kh\xF4ng th\u1EC3 k\u1EBFt n\u1ED1i \u0111\u1EBFn AI sau khi \u0111\xE3 th\u1EED t\u1EA5t c\u1EA3 c\xE1c model.");
 }
 __name(callGemini, "callGemini");
 var onRequestPost = /* @__PURE__ */ __name(async ({ request, env }) => {
@@ -6303,7 +6301,7 @@ data: ${JSON.stringify(data)}
   }
 }, "onRequestPost");
 
-// ../.wrangler/tmp/pages-ixVdhR/functionsRoutes-0.780522198950521.mjs
+// ../.wrangler/tmp/pages-svmgOV/functionsRoutes-0.6836441123051522.mjs
 var routes = [
   {
     routePath: "/api/projects/:id",

@@ -17,9 +17,11 @@ CẤU TRÚC JSON:
 }
 
 HƯỚNG DẪN CHỌN PHONG CÁCH (STYLE ARCHETYPE) THEO NGÀNH NGHỀ:
-1. "artisan" (Cà phê, trà, bánh ngọt, thủ công, hoa tươi, spa):
-   - Bố cục ấm áp, tự nhiên. Dùng section "menu" (thực đơn dòng chấm leader) + "split_feature" + "gallery" + "quote".
-   - Màu nền: màu kem, giấy mộc (#faf8f5, #fcfbf9), chữ nâu đậm/espresso (#292524), màu nhấn hổ phách/terracotta/hồng phấn.
+1. "artisan" (Cà phê, trà, bánh ngọt, thủ công, hoa tươi, gốm sứ):
+   - Bố cục ấm áp, tự nhiên, đậm chất nghệ nhân thủ công.
+   - NẾU LÀ SHOP HOA / QUÀ TẶNG / GỐM SỨ / SẢN PHẨM: BẮT BUỘC DÙNG section "cards" (thẻ sản phẩm có ảnh chụp Unsplash độ nét cao, giá bán, mô tả chi tiết, huy hiệu) + "split_feature" (kể chuyện triết lý thương hiệu) + "gallery" + "form" (đặt hàng theo yêu cầu). TUYỆT ĐỐI KHÔNG dùng thực đơn menu chấm chấm cho shop hoa!
+   - NẾU LÀ QUÁN CÀ PHÊ / TRÀ BÁNH: Dùng "hero" (split) + "bento" (đặc sản quán) + "menu" (thực đơn thức uống dòng chấm) + "split_feature" + "form" (đặt bàn).
+   - Màu nền: màu kem ngà, giấy mộc (#faf7f2, #fff9f9), chữ nâu espresso (#1f1610) hoặc đen than (#18181b), màu nhấn hổ phách (#b45309), terracotta (#c2410c), hoặc hồng rượu vang (#e11d48) cho hoa tươi. Font serif thanh lịch (Playfair Display hoặc Georgia).
 2. "bento" (Công nghệ, SaaS, startup, app, giải pháp số):
    - Dùng section "hero" (split) + "bento" (thẻ bất đối xứng span wide/tall) + "stats" + "form".
    - Nền tối hoặc trắng tinh khôi, màu nhấn xanh điện (Electric Blue #2563eb, tím neon #7c3aed, hoặc ngọc lục bảo).
