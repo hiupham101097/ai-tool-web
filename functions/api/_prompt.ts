@@ -74,4 +74,13 @@ NGUỒN ẢNH UNSPLASH CHUẨN ĐỂ SỬ DỤNG (Dùng ảnh chất lượng ca
 QUY TẮC CỐT LÕI:
 - KHÔNG BAO GIỜ lặp lại một thứ tự hay một khuôn mẫu cho mọi website!
 - Tùy vào yêu cầu, chọn các section kết hợp khác nhau (ví dụ: Tiệm bánh/cafe nên dùng ticker + editorial hero + menu + split_feature + quote; SaaS nên dùng hero split + bento + stats + form; Shop hoa nên dùng centered hero + cards + gallery + form).
-- Viết văn phong Tiếng Việt sống động, chuẩn tinh thần thương hiệu.`;
+- Viết văn phong Tiếng Việt sống động, chuẩn tinh thần thương hiệu.
+
+HƯỚNG DẪN BẮT BUỘC KHI CÓ WEBSITE HIỆN CÓ (currentSpec - Chỉnh sửa / Bổ sung):
+Khi đầu vào có "currentSpec" hoặc "isUpdate: true":
+1. BẢO TỒN NỀN CŨ 100%: Tuyệt đối KHÔNG tạo một website mới từ đầu. Phải giữ nguyên toàn bộ các section, ảnh, màu sắc, phong cách (theme.style), typography và nội dung văn bản đã có trong currentSpec.
+2. THÊM SECTION THEO YÊU CẦU: Nếu người dùng yêu cầu "thêm..." (ví dụ: thêm bảng giá, thêm menu, thêm form liên hệ, thêm đánh giá, thêm thư viện ảnh...): Hãy giữ nguyên toàn bộ các section cũ của currentSpec và chèn thêm section mới tương ứng vào vị trí thích hợp (ngay trước section "footer").
+3. THAY ĐỔI MÀU SẮC / THEME: Nếu người dùng yêu cầu "đổi sang tông tối", "đổi màu xanh", v.v.: Cập nhật trường tương ứng trong object "theme", giữ nguyên các section khác.
+4. SỬA ĐỔI NỘI DUNG: Nếu người dùng yêu cầu sửa tiêu đề hoặc sửa một phần cụ thể: Tìm section đó và sửa props của nó, giữ nguyên các section còn lại.
+5. XÓA SECTION: Nếu người dùng yêu cầu bỏ/xóa một section cụ thể: Loại bỏ section đó khỏi danh sách sections.
+6. KẾT QUẢ TRẢ VỀ: Luôn trả về toàn bộ đối tượng JSON Spec hoàn chỉnh chứa đầy đủ các section cũ đã được cập nhật hoặc bổ sung.`;

@@ -10,14 +10,14 @@ export function useGenerate() {
   const [projectId, setProjectId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
-  const generate = useCallback(async (prompt: string, currentSpec?: Spec | null) => {
+  const generate = useCallback(async (prompt: string, currentSpec?: Spec | null, isTweak?: boolean) => {
     const id = projectId ?? crypto.randomUUID();
     setProjectId(id); setStatus("generating"); setStepIndex(0); setError("");
     try {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projectId: id, prompt, currentSpec }),
+        body: JSON.stringify({ projectId: id, prompt, currentSpec, isTweak }),
       });
       if (!res.ok || !res.body) {
         const j: any = await res.json().catch(() => ({}));

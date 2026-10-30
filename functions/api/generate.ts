@@ -115,6 +115,283 @@ function detectStyleFromPrompt(prompt: string): "bento" | "luxury" | "brutalist"
 }
 
 /**
+ * Chỉnh sửa hoặc bổ sung trực tiếp trên nền Spec hiện có (Incremental Edit)
+ * Giữ nguyên 100% bố cục, hình ảnh, phong cách và các section cũ trừ những phần người dùng yêu cầu sửa đổi/thêm/xóa.
+ */
+function modifyExistingSpec(currentSpec: Spec, prompt: string): Spec {
+  const updated: Spec = JSON.parse(JSON.stringify(currentSpec));
+  const p = stripVietnamese(prompt);
+
+  // 1. Tinh chỉnh màu sắc / Giao diện / Chế độ Sáng - Tối
+  if (p.includes("toi") || p.includes("dark") || p.includes("den") || p.includes("nen den")) {
+    updated.theme.background = "#0f172a";
+    updated.theme.text = "#f8fafc";
+  } else if (p.includes("sang") || p.includes("light") || p.includes("trang") || p.includes("nen trang")) {
+    updated.theme.background = "#ffffff";
+    updated.theme.text = "#0f172a";
+  }
+
+  // Tinh chỉnh màu chủ đạo
+  if (p.includes("xanh la") || p.includes("xanh luc") || p.includes("green")) {
+    updated.theme.primary = "#16a34a";
+  } else if (p.includes("xanh duong") || p.includes("xanh bien") || p.includes("blue")) {
+    updated.theme.primary = "#2563eb";
+  } else if (p.includes("mau do") || p.includes("tone do") || (p.includes("do") && (p.includes("mau") || p.includes("tong")))) {
+    updated.theme.primary = "#dc2626";
+  } else if (p.includes("mau cam") || (p.includes("cam") && (p.includes("mau") || p.includes("tong")))) {
+    updated.theme.primary = "#ea580c";
+  } else if (p.includes("mau vang") || (p.includes("vang") && (p.includes("mau") || p.includes("tong") || p.includes("gold")))) {
+    updated.theme.primary = "#d97706";
+  } else if (p.includes("mau tim") || (p.includes("tim") && (p.includes("mau") || p.includes("tong") || p.includes("purple")))) {
+    updated.theme.primary = "#7c3aed";
+  } else if (p.includes("mau hong") || (p.includes("hong") && (p.includes("mau") || p.includes("tong") || p.includes("pink")))) {
+    updated.theme.primary = "#db2777";
+  } else if (p.includes("mau nau") || (p.includes("nau") && (p.includes("mau") || p.includes("tong") || p.includes("coffee")))) {
+    updated.theme.primary = "#78350f";
+  }
+
+  // 2. Chuyển đổi Archetype style nếu yêu cầu
+  if (p.includes("luxury") || p.includes("sang trong")) {
+    updated.theme.style = "luxury";
+    updated.theme.font = "Playfair Display";
+  } else if (p.includes("bento") || p.includes("hien dai cong nghe")) {
+    updated.theme.style = "bento";
+    updated.theme.font = "Be Vietnam Pro";
+  } else if (p.includes("brutalist") || p.includes("pha cach") || p.includes("duong pho")) {
+    updated.theme.style = "brutalist";
+    updated.theme.font = "Bricolage Grotesque";
+  } else if (p.includes("artisan") || p.includes("am ap") || p.includes("vintage") || p.includes("co dien")) {
+    updated.theme.style = "artisan";
+    updated.theme.font = "Playfair Display";
+  } else if (p.includes("minimal") || p.includes("toi gian")) {
+    updated.theme.style = "minimal";
+    updated.theme.font = "system-ui";
+  }
+
+  // Helper để chèn section mới ngay trước footer
+  const insertBeforeFooter = (newSection: Section) => {
+    const footerIdx = updated.sections.findIndex(s => s.type === "footer");
+    if (footerIdx >= 0) {
+      updated.sections.splice(footerIdx, 0, newSection);
+    } else {
+      updated.sections.push(newSection);
+    }
+  };
+
+  // 3. Xử lý xóa section nếu có từ khóa xóa
+  const isDelete = p.includes("xoa") || p.includes("bo ") || p.includes("loai bo") || p.includes("delete") || p.includes("remove");
+  if (isDelete) {
+    if (p.includes("bang gia") || p.includes("table")) {
+      updated.sections = updated.sections.filter(s => s.type !== "table");
+    }
+    if (p.includes("form") || p.includes("lien he") || p.includes("dat ban")) {
+      updated.sections = updated.sections.filter(s => s.type !== "form");
+    }
+    if (p.includes("menu") || p.includes("thuc don")) {
+      updated.sections = updated.sections.filter(s => s.type !== "menu");
+    }
+    if (p.includes("gallery") || p.includes("anh") || p.includes("bo suu tap")) {
+      updated.sections = updated.sections.filter(s => s.type !== "gallery");
+    }
+    if (p.includes("quote") || p.includes("danh gia") || p.includes("nhan xet")) {
+      updated.sections = updated.sections.filter(s => s.type !== "quote");
+    }
+    if (p.includes("stats") || p.includes("thong ke")) {
+      updated.sections = updated.sections.filter(s => s.type !== "stats");
+    }
+    if (p.includes("ticker") || p.includes("chu chay")) {
+      updated.sections = updated.sections.filter(s => s.type !== "ticker");
+    }
+    return updated;
+  }
+
+  // 4. Sửa tiêu đề Hero nếu có yêu cầu
+  if (
+    p.includes("doi ten") || p.includes("sua ten") || p.includes("doi tieu de") ||
+    p.includes("sua tieu de") || p.includes("dat ten") || p.includes("tieu de thanh")
+  ) {
+    const match = prompt.match(/(?:doi|sua|dat|thay)\s+(?:ten|tieu de|brand)?\s*(?:thanh|la|:)?\s*["'“]?([^"'”\n,.]+)/i);
+    const newTitle = match?.[1]?.trim();
+    const heroSection = updated.sections.find(s => s.type === "hero");
+    if (heroSection && heroSection.type === "hero" && newTitle) {
+      heroSection.props.title = newTitle;
+    }
+  }
+
+  let sectionAdded = false;
+
+  // 5. Thêm Section Bảng Giá (Table)
+  if (
+    p.includes("bang gia") || p.includes("gia ca") || p.includes("goi cuoc") ||
+    p.includes("pricing") || p.includes("chi phi") || p.includes("bang phi")
+  ) {
+    const hasTable = updated.sections.some(s => s.type === "table");
+    if (!hasTable) {
+      insertBeforeFooter({
+        type: "table",
+        props: {
+          heading: "Bảng Giá Dịch Vụ & Sản Phẩm",
+          subheading: "Bảng giá chi tiết, minh bạch và cam kết chất lượng hàng đầu",
+          columns: ["Gói Dịch Vụ / Hạng Mục", "Nội Dung Quyền Lợi", "Mức Giá Chi Tiết"],
+          rows: [
+            ["Gói Tiêu Chuẩn (Standard)", "Đầy đủ các quyền lợi cốt lõi, tư vấn & hỗ trợ tận tình", "Liên hệ ưu đãi"],
+            ["Gói Chuyên Nghiệp (Pro)", "Ưu tiên dịch vụ cao cấp, tặng kèm tiện ích độc quyền", "Giảm 20% hôm nay"],
+            ["Gói Doanh Nghiệp (VIP)", "Đồng hành trực tiếp 1-1, tối ưu hóa riêng theo yêu cầu", "Báo giá trực tiếp"],
+          ],
+        },
+      });
+      sectionAdded = true;
+    }
+  }
+
+  // 6. Thêm Form liên hệ / Đặt bàn / Đặt lịch (Form)
+  if (
+    p.includes("form") || p.includes("lien he") || p.includes("dat ban") ||
+    p.includes("dat lich") || p.includes("dang ky") || p.includes("tu van") || p.includes("gui tin nhan")
+  ) {
+    const hasForm = updated.sections.some(s => s.type === "form");
+    if (!hasForm) {
+      const isBooking = p.includes("dat ban") || p.includes("dat cho") || p.includes("dat lich");
+      insertBeforeFooter({
+        type: "form",
+        props: {
+          heading: isBooking ? "Đặt Chỗ / Đặt Lịch Hẹn Trực Tuyến" : "Đăng Ký Tư Vấn & Nhận Báo Giá",
+          subheading: "Vui lòng để lại thông tin, chúng tôi sẽ liên hệ xác nhận trong vòng 15 phút",
+          submitLabel: isBooking ? "Xác Nhận Đặt Chỗ Ngay" : "Gửi Thông Tin Cho Chúng Tôi",
+          fields: [
+            { label: "Họ và tên của bạn", type: "text" },
+            { label: "Số điện thoại liên hệ", type: "tel" },
+            { label: isBooking ? "Thời gian & Số lượng khách" : "Nội dung cần tư vấn", type: "textarea" },
+          ],
+        },
+      });
+      sectionAdded = true;
+    }
+  }
+
+  // 7. Thêm Thực Đơn / Menu (Menu)
+  if (p.includes("menu") || p.includes("thuc don") || p.includes("do uong") || p.includes("mon an")) {
+    const hasMenu = updated.sections.some(s => s.type === "menu");
+    if (!hasMenu) {
+      insertBeforeFooter({
+        type: "menu",
+        props: {
+          heading: "Thực Đơn & Món Nổi Bật",
+          subheading: "Được chắt lọc từ những nguyên liệu tươi ngon và chất lượng nhất",
+          categories: [
+            {
+              name: "Món Bán Chạy Nhất (Signature)",
+              items: [
+                { name: "Món Đặc Trưng Thượng Hạng", desc: "Hương vị độc đáo, chế biến công phu theo công thức riêng", price: "Mức giá hợp lý", badge: "Signature" },
+                { name: "Món Tuyển Chọn Yêu Thích", desc: "Nguyên liệu tươi sạch mỗi ngày, dinh dưỡng và thơm ngon", price: "Bán chạy", badge: "Hot" },
+                { name: "Món Thanh Mát Dịu Lành", desc: "Thanh mát cơ thể, giải nhiệt và sảng khoái tinh thần", price: "Khuyên dùng" },
+              ],
+            },
+          ],
+        },
+      });
+      sectionAdded = true;
+    }
+  }
+
+  // 8. Thêm Đánh giá / Khách hàng nhận xét (Quote)
+  if (
+    p.includes("danh gia") || p.includes("review") || p.includes("nhan xet") ||
+    p.includes("khach hang") || p.includes("feedback") || p.includes("cam nhan") || p.includes("quote")
+  ) {
+    const hasQuote = updated.sections.some(s => s.type === "quote");
+    if (!hasQuote) {
+      insertBeforeFooter({
+        type: "quote",
+        props: {
+          quote: "Dịch vụ vượt trên cả sự mong đợi! Đội ngũ phục vụ chuyên nghiệp, sản phẩm chỉn chu đến từng chi tiết nhỏ và luôn mang lại cảm giác an tâm.",
+          author: "Nguyễn Thu Thảo",
+          role: "Khách hàng thân thiết",
+        },
+      });
+      sectionAdded = true;
+    }
+  }
+
+  // 9. Thêm Bộ Sưu Tập / Hình ảnh (Gallery)
+  if (p.includes("gallery") || p.includes("anh") || p.includes("album") || p.includes("hinh anh") || p.includes("bo suu tap")) {
+    const hasGallery = updated.sections.some(s => s.type === "gallery");
+    if (!hasGallery) {
+      insertBeforeFooter({
+        type: "gallery",
+        props: {
+          heading: "Bộ Sưu Tập Hình Ảnh & Hoạt Động",
+          subheading: "Những góc nhìn chân thực về sản phẩm, không gian và trải nghiệm",
+          items: [
+            { image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80", title: "Không Gian Tinh Tế", desc: "Ấm áp và tràn đầy cảm hứng" },
+            { image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80", title: "Chất Lượng Thượng Hạng", desc: "Tỉ mỉ trong từng đường nét" },
+            { image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80", title: "Sự Hài Lòng", desc: "Được khách hàng yêu mến bình chọn" },
+          ],
+        },
+      });
+      sectionAdded = true;
+    }
+  }
+
+  // 10. Thêm Thống kê / Thành tích (Stats)
+  if (p.includes("stats") || p.includes("thong ke") || p.includes("so lieu") || p.includes("thanh tuu") || p.includes("con so")) {
+    const hasStats = updated.sections.some(s => s.type === "stats");
+    if (!hasStats) {
+      insertBeforeFooter({
+        type: "stats",
+        props: {
+          heading: "Thành Tựu & Những Con Số Biết Nói",
+          items: [
+            { value: "98.5%", label: "Khách Hàng Hài Lòng", desc: "Từ hơn 5,000+ lượt đánh giá" },
+            { value: "10,000+", label: "Lượt Phục Vụ", desc: "Đồng hành mỗi năm" },
+            { value: "Top 1", label: "Chất Lượng Hàng Đầu", desc: "Được tin tưởng và khẳng định" },
+          ],
+        },
+      });
+      sectionAdded = true;
+    }
+  }
+
+  // 11. Thêm Dải chữ chạy (Ticker)
+  if (p.includes("ticker") || p.includes("chu chay") || p.includes("chay chu") || p.includes("banner chay")) {
+    const hasTicker = updated.sections.some(s => s.type === "ticker");
+    if (!hasTicker) {
+      const heroIdx = updated.sections.findIndex(s => s.type === "hero");
+      const insertIdx = heroIdx >= 0 ? heroIdx + 1 : 0;
+      updated.sections.splice(insertIdx, 0, {
+        type: "ticker",
+        props: {
+          items: ["CHẤT LƯỢNG HÀNG ĐẦU", "ƯU ĐÃI ĐẶC QUYỀN TRONG THÁNG", "DỊCH VỤ TẬN TÂM CHUYÊN NGHIỆP", "CAM KẾT HÀI LÒNG 100%"],
+        },
+      });
+      sectionAdded = true;
+    }
+  }
+
+  // 12. Nếu người dùng mô tả thêm nội dung bất kỳ mà chưa match các loại cụ thể ở trên
+  if (!sectionAdded && (p.includes("them") || p.includes("bo sung") || p.includes("xay dung") || p.includes("tao them") || p.includes("viet them"))) {
+    const featureTitle = prompt.length > 55 ? prompt.slice(0, 52) + "..." : prompt;
+    insertBeforeFooter({
+      type: "split_feature",
+      props: {
+        badge: "THÔNG TIN BỔ SUNG",
+        title: featureTitle,
+        description: "Nội dung được cập nhật và bổ sung riêng theo yêu cầu của bạn, hoàn toàn đồng điệu với nhận diện của trang web.",
+        bullets: [
+          "Đảm bảo tiêu chuẩn chất lượng cao và trải nghiệm chuyên nghiệp",
+          "Được đồng bộ màu sắc và kiểu dáng theo bố cục sẵn có",
+          "Sẵn sàng phục vụ và mang lại giá trị thiết thực nhất cho khách hàng",
+        ],
+        image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1000&q=80",
+        cta: "Tìm hiểu thêm",
+      },
+    });
+  }
+
+  return updated;
+}
+
+/**
  * Bộ sinh thông minh dựa trên ngữ cảnh thực tế của prompt nếu mạng bị gián đoạn hoặc bị hạn chế vị trí
  */
 function createSmartPromptSpec(prompt: string): Spec {
@@ -1221,7 +1498,26 @@ async function callGemini(env: Env, prompt: string, currentSpec: unknown, retryH
     throw new Error("Chưa cấu hình GEMINI_API_KEY trong file .dev.vars");
   }
 
-  const userText = JSON.stringify({ prompt, currentSpec, ...(retryHint ? { lastError: retryHint } : {}) });
+  const isUpdate = Boolean(
+    currentSpec &&
+    typeof currentSpec === "object" &&
+    Array.isArray((currentSpec as any).sections) &&
+    (currentSpec as any).sections.length > 0
+  );
+
+  const userText = JSON.stringify({
+    isUpdate,
+    prompt,
+    ...(isUpdate ? { currentSpec } : {}),
+    ...(retryHint ? { lastError: retryHint } : {}),
+  });
+
+  const promptMessage = isUpdate
+    ? `YÊU CẦU TINH CHỈNH / BỔ SUNG TRÊN WEBSITE HIỆN TẠI (currentSpec): "${prompt}".
+QUY TẮC BẮT BUỘC: Hãy GIỮ NGUYÊN tất cả các section, phong cách (theme.style), màu sắc, tiêu đề và nội dung cũ của currentSpec!
+Chỉ thêm section mới (ngay trước footer) hoặc sửa đổi/cập nhật section tương ứng theo đúng yêu cầu.
+Xuất ra JSON Spec đầy đủ hoàn chỉnh gồm tất cả các section cũ và mới. Chi tiết: ${userText}`
+    : `Hãy tạo website chất lượng cao theo yêu cầu: "${prompt}". Chi tiết: ${userText}`;
 
   // Cách 1: Gọi qua endpoint OpenAI-compatible của Google (vượt qua kiểm tra địa lý Cloudflare)
   try {
@@ -1237,7 +1533,7 @@ async function callGemini(env: Env, prompt: string, currentSpec: unknown, retryH
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: `Hãy tạo website chất lượng cao theo yêu cầu: "${prompt}". Chi tiết: ${userText}` },
+          { role: "user", content: promptMessage },
         ],
         temperature: 0.7,
       }),
@@ -1268,7 +1564,7 @@ async function callGemini(env: Env, prompt: string, currentSpec: unknown, retryH
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: [{ role: "user", parts: [{ text: userText }] }],
+        contents: [{ role: "user", parts: [{ text: promptMessage }] }],
         generationConfig: { responseMimeType: "application/json", temperature: 0.7 },
       }),
       signal: AbortSignal.timeout(6000),
@@ -1300,7 +1596,7 @@ async function callGemini(env: Env, prompt: string, currentSpec: unknown, retryH
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   try {
     const body = (await request.json().catch(() => null)) as
-      | { projectId?: string; prompt?: string; currentSpec?: unknown }
+      | { projectId?: string; prompt?: string; currentSpec?: unknown; isTweak?: boolean }
       | null;
     const prompt = body?.prompt?.trim();
     const projectId = body?.projectId;
@@ -1312,6 +1608,24 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     if (await rateLimited(env, ip)) {
       return Response.json({ error: "Bạn thử quá nhiều lần trong 1 giờ, vui lòng quay lại sau." }, { status: 429 });
     }
+
+    const p = stripVietnamese(prompt);
+    const isIncrementalIntent = Boolean(body?.isTweak) ||
+      p.includes("them") || p.includes("bo sung") || p.includes("sua") || p.includes("doi") ||
+      p.includes("thay") || p.includes("xoa") || p.includes("bo ") || p.includes("chinh") ||
+      p.includes("tang") || p.includes("giam") || p.includes("mau") || p.includes("tong") ||
+      p.includes("font") || p.includes("dark") || p.includes("sang") || p.includes("toi") ||
+      p.includes("bang gia") || p.includes("form") || p.includes("menu") || p.includes("danh gia") ||
+      p.includes("gallery") || p.includes("ticker") || p.includes("xay dung them") || p.includes("tao them");
+
+    const hasExistingSpec = Boolean(
+      body?.currentSpec &&
+      typeof body.currentSpec === "object" &&
+      Array.isArray((body.currentSpec as any).sections) &&
+      (body.currentSpec as any).sections.length > 0
+    );
+
+    const shouldModifyExisting = hasExistingSpec && (Boolean(body?.isTweak) || isIncrementalIntent);
 
     const { readable, writable } = new TransformStream();
     const w = writable.getWriter();
@@ -1340,11 +1654,15 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         let raw: any;
 
         try {
-          raw = await callGemini(env, prompt, body?.currentSpec);
+          raw = await callGemini(env, prompt, shouldModifyExisting ? body?.currentSpec : undefined);
         } catch (geminiError: any) {
           console.warn("Kích hoạt bộ kiến tạo thông minh thích ứng do Gemini API:", geminiError?.message || geminiError);
           await sleep(1500); // Giữ nhịp độ trực quan để người dùng thấy AI đang phân tích và thiết kế
-          raw = createSmartPromptSpec(prompt);
+          if (shouldModifyExisting) {
+            raw = modifyExistingSpec(body!.currentSpec as Spec, prompt);
+          } else {
+            raw = createSmartPromptSpec(prompt);
+          }
         }
 
         // Bước 3: Soạn nội dung & chuẩn hóa cấu trúc

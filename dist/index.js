@@ -4456,7 +4456,16 @@ NGU\u1ED2N \u1EA2NH UNSPLASH CHU\u1EA8N \u0110\u1EC2 S\u1EEC D\u1EE4NG (D\xF9ng 
 QUY T\u1EAEC C\u1ED0T L\xD5I:
 - KH\xD4NG BAO GI\u1EDC l\u1EB7p l\u1EA1i m\u1ED9t th\u1EE9 t\u1EF1 hay m\u1ED9t khu\xF4n m\u1EABu cho m\u1ECDi website!
 - T\xF9y v\xE0o y\xEAu c\u1EA7u, ch\u1ECDn c\xE1c section k\u1EBFt h\u1EE3p kh\xE1c nhau (v\xED d\u1EE5: Ti\u1EC7m b\xE1nh/cafe n\xEAn d\xF9ng ticker + editorial hero + menu + split_feature + quote; SaaS n\xEAn d\xF9ng hero split + bento + stats + form; Shop hoa n\xEAn d\xF9ng centered hero + cards + gallery + form).
-- Vi\u1EBFt v\u0103n phong Ti\u1EBFng Vi\u1EC7t s\u1ED1ng \u0111\u1ED9ng, chu\u1EA9n tinh th\u1EA7n th\u01B0\u01A1ng hi\u1EC7u.`;
+- Vi\u1EBFt v\u0103n phong Ti\u1EBFng Vi\u1EC7t s\u1ED1ng \u0111\u1ED9ng, chu\u1EA9n tinh th\u1EA7n th\u01B0\u01A1ng hi\u1EC7u.
+
+H\u01AF\u1EDANG D\u1EAAN B\u1EAET BU\u1ED8C KHI C\xD3 WEBSITE HI\u1EC6N C\xD3 (currentSpec - Ch\u1EC9nh s\u1EEDa / B\u1ED5 sung):
+Khi \u0111\u1EA7u v\xE0o c\xF3 "currentSpec" ho\u1EB7c "isUpdate: true":
+1. B\u1EA2O T\u1ED2N N\u1EC0N C\u0168 100%: Tuy\u1EC7t \u0111\u1ED1i KH\xD4NG t\u1EA1o m\u1ED9t website m\u1EDBi t\u1EEB \u0111\u1EA7u. Ph\u1EA3i gi\u1EEF nguy\xEAn to\xE0n b\u1ED9 c\xE1c section, \u1EA3nh, m\xE0u s\u1EAFc, phong c\xE1ch (theme.style), typography v\xE0 n\u1ED9i dung v\u0103n b\u1EA3n \u0111\xE3 c\xF3 trong currentSpec.
+2. TH\xCAM SECTION THEO Y\xCAU C\u1EA6U: N\u1EBFu ng\u01B0\u1EDDi d\xF9ng y\xEAu c\u1EA7u "th\xEAm..." (v\xED d\u1EE5: th\xEAm b\u1EA3ng gi\xE1, th\xEAm menu, th\xEAm form li\xEAn h\u1EC7, th\xEAm \u0111\xE1nh gi\xE1, th\xEAm th\u01B0 vi\u1EC7n \u1EA3nh...): H\xE3y gi\u1EEF nguy\xEAn to\xE0n b\u1ED9 c\xE1c section c\u0169 c\u1EE7a currentSpec v\xE0 ch\xE8n th\xEAm section m\u1EDBi t\u01B0\u01A1ng \u1EE9ng v\xE0o v\u1ECB tr\xED th\xEDch h\u1EE3p (ngay tr\u01B0\u1EDBc section "footer").
+3. THAY \u0110\u1ED4I M\xC0U S\u1EAEC / THEME: N\u1EBFu ng\u01B0\u1EDDi d\xF9ng y\xEAu c\u1EA7u "\u0111\u1ED5i sang t\xF4ng t\u1ED1i", "\u0111\u1ED5i m\xE0u xanh", v.v.: C\u1EADp nh\u1EADt tr\u01B0\u1EDDng t\u01B0\u01A1ng \u1EE9ng trong object "theme", gi\u1EEF nguy\xEAn c\xE1c section kh\xE1c.
+4. S\u1EECA \u0110\u1ED4I N\u1ED8I DUNG: N\u1EBFu ng\u01B0\u1EDDi d\xF9ng y\xEAu c\u1EA7u s\u1EEDa ti\xEAu \u0111\u1EC1 ho\u1EB7c s\u1EEDa m\u1ED9t ph\u1EA7n c\u1EE5 th\u1EC3: T\xECm section \u0111\xF3 v\xE0 s\u1EEDa props c\u1EE7a n\xF3, gi\u1EEF nguy\xEAn c\xE1c section c\xF2n l\u1EA1i.
+5. X\xD3A SECTION: N\u1EBFu ng\u01B0\u1EDDi d\xF9ng y\xEAu c\u1EA7u b\u1ECF/x\xF3a m\u1ED9t section c\u1EE5 th\u1EC3: Lo\u1EA1i b\u1ECF section \u0111\xF3 kh\u1ECFi danh s\xE1ch sections.
+6. K\u1EBET QU\u1EA2 TR\u1EA2 V\u1EC0: Lu\xF4n tr\u1EA3 v\u1EC1 to\xE0n b\u1ED9 \u0111\u1ED1i t\u01B0\u1EE3ng JSON Spec ho\xE0n ch\u1EC9nh ch\u1EE9a \u0111\u1EA7y \u0111\u1EE7 c\xE1c section c\u0169 \u0111\xE3 \u0111\u01B0\u1EE3c c\u1EADp nh\u1EADt ho\u1EB7c b\u1ED5 sung.`;
 
 // api/generate.ts
 var MODEL = "gemini-3.8-flash";
@@ -4508,6 +4517,237 @@ function detectStyleFromPrompt(prompt) {
   return "modern";
 }
 __name(detectStyleFromPrompt, "detectStyleFromPrompt");
+function modifyExistingSpec(currentSpec, prompt) {
+  const updated = JSON.parse(JSON.stringify(currentSpec));
+  const p = stripVietnamese(prompt);
+  if (p.includes("toi") || p.includes("dark") || p.includes("den") || p.includes("nen den")) {
+    updated.theme.background = "#0f172a";
+    updated.theme.text = "#f8fafc";
+  } else if (p.includes("sang") || p.includes("light") || p.includes("trang") || p.includes("nen trang")) {
+    updated.theme.background = "#ffffff";
+    updated.theme.text = "#0f172a";
+  }
+  if (p.includes("xanh la") || p.includes("xanh luc") || p.includes("green")) {
+    updated.theme.primary = "#16a34a";
+  } else if (p.includes("xanh duong") || p.includes("xanh bien") || p.includes("blue")) {
+    updated.theme.primary = "#2563eb";
+  } else if (p.includes("mau do") || p.includes("tone do") || p.includes("do") && (p.includes("mau") || p.includes("tong"))) {
+    updated.theme.primary = "#dc2626";
+  } else if (p.includes("mau cam") || p.includes("cam") && (p.includes("mau") || p.includes("tong"))) {
+    updated.theme.primary = "#ea580c";
+  } else if (p.includes("mau vang") || p.includes("vang") && (p.includes("mau") || p.includes("tong") || p.includes("gold"))) {
+    updated.theme.primary = "#d97706";
+  } else if (p.includes("mau tim") || p.includes("tim") && (p.includes("mau") || p.includes("tong") || p.includes("purple"))) {
+    updated.theme.primary = "#7c3aed";
+  } else if (p.includes("mau hong") || p.includes("hong") && (p.includes("mau") || p.includes("tong") || p.includes("pink"))) {
+    updated.theme.primary = "#db2777";
+  } else if (p.includes("mau nau") || p.includes("nau") && (p.includes("mau") || p.includes("tong") || p.includes("coffee"))) {
+    updated.theme.primary = "#78350f";
+  }
+  if (p.includes("luxury") || p.includes("sang trong")) {
+    updated.theme.style = "luxury";
+    updated.theme.font = "Playfair Display";
+  } else if (p.includes("bento") || p.includes("hien dai cong nghe")) {
+    updated.theme.style = "bento";
+    updated.theme.font = "Be Vietnam Pro";
+  } else if (p.includes("brutalist") || p.includes("pha cach") || p.includes("duong pho")) {
+    updated.theme.style = "brutalist";
+    updated.theme.font = "Bricolage Grotesque";
+  } else if (p.includes("artisan") || p.includes("am ap") || p.includes("vintage") || p.includes("co dien")) {
+    updated.theme.style = "artisan";
+    updated.theme.font = "Playfair Display";
+  } else if (p.includes("minimal") || p.includes("toi gian")) {
+    updated.theme.style = "minimal";
+    updated.theme.font = "system-ui";
+  }
+  const insertBeforeFooter = /* @__PURE__ */ __name((newSection) => {
+    const footerIdx = updated.sections.findIndex((s) => s.type === "footer");
+    if (footerIdx >= 0) {
+      updated.sections.splice(footerIdx, 0, newSection);
+    } else {
+      updated.sections.push(newSection);
+    }
+  }, "insertBeforeFooter");
+  const isDelete = p.includes("xoa") || p.includes("bo ") || p.includes("loai bo") || p.includes("delete") || p.includes("remove");
+  if (isDelete) {
+    if (p.includes("bang gia") || p.includes("table")) {
+      updated.sections = updated.sections.filter((s) => s.type !== "table");
+    }
+    if (p.includes("form") || p.includes("lien he") || p.includes("dat ban")) {
+      updated.sections = updated.sections.filter((s) => s.type !== "form");
+    }
+    if (p.includes("menu") || p.includes("thuc don")) {
+      updated.sections = updated.sections.filter((s) => s.type !== "menu");
+    }
+    if (p.includes("gallery") || p.includes("anh") || p.includes("bo suu tap")) {
+      updated.sections = updated.sections.filter((s) => s.type !== "gallery");
+    }
+    if (p.includes("quote") || p.includes("danh gia") || p.includes("nhan xet")) {
+      updated.sections = updated.sections.filter((s) => s.type !== "quote");
+    }
+    if (p.includes("stats") || p.includes("thong ke")) {
+      updated.sections = updated.sections.filter((s) => s.type !== "stats");
+    }
+    if (p.includes("ticker") || p.includes("chu chay")) {
+      updated.sections = updated.sections.filter((s) => s.type !== "ticker");
+    }
+    return updated;
+  }
+  if (p.includes("doi ten") || p.includes("sua ten") || p.includes("doi tieu de") || p.includes("sua tieu de") || p.includes("dat ten") || p.includes("tieu de thanh")) {
+    const match2 = prompt.match(/(?:doi|sua|dat|thay)\s+(?:ten|tieu de|brand)?\s*(?:thanh|la|:)?\s*["'“]?([^"'”\n,.]+)/i);
+    const newTitle = match2?.[1]?.trim();
+    const heroSection = updated.sections.find((s) => s.type === "hero");
+    if (heroSection && heroSection.type === "hero" && newTitle) {
+      heroSection.props.title = newTitle;
+    }
+  }
+  let sectionAdded = false;
+  if (p.includes("bang gia") || p.includes("gia ca") || p.includes("goi cuoc") || p.includes("pricing") || p.includes("chi phi") || p.includes("bang phi")) {
+    const hasTable = updated.sections.some((s) => s.type === "table");
+    if (!hasTable) {
+      insertBeforeFooter({
+        type: "table",
+        props: {
+          heading: "B\u1EA3ng Gi\xE1 D\u1ECBch V\u1EE5 & S\u1EA3n Ph\u1EA9m",
+          subheading: "B\u1EA3ng gi\xE1 chi ti\u1EBFt, minh b\u1EA1ch v\xE0 cam k\u1EBFt ch\u1EA5t l\u01B0\u1EE3ng h\xE0ng \u0111\u1EA7u",
+          columns: ["G\xF3i D\u1ECBch V\u1EE5 / H\u1EA1ng M\u1EE5c", "N\u1ED9i Dung Quy\u1EC1n L\u1EE3i", "M\u1EE9c Gi\xE1 Chi Ti\u1EBFt"],
+          rows: [
+            ["G\xF3i Ti\xEAu Chu\u1EA9n (Standard)", "\u0110\u1EA7y \u0111\u1EE7 c\xE1c quy\u1EC1n l\u1EE3i c\u1ED1t l\xF5i, t\u01B0 v\u1EA5n & h\u1ED7 tr\u1EE3 t\u1EADn t\xECnh", "Li\xEAn h\u1EC7 \u01B0u \u0111\xE3i"],
+            ["G\xF3i Chuy\xEAn Nghi\u1EC7p (Pro)", "\u01AFu ti\xEAn d\u1ECBch v\u1EE5 cao c\u1EA5p, t\u1EB7ng k\xE8m ti\u1EC7n \xEDch \u0111\u1ED9c quy\u1EC1n", "Gi\u1EA3m 20% h\xF4m nay"],
+            ["G\xF3i Doanh Nghi\u1EC7p (VIP)", "\u0110\u1ED3ng h\xE0nh tr\u1EF1c ti\u1EBFp 1-1, t\u1ED1i \u01B0u h\xF3a ri\xEAng theo y\xEAu c\u1EA7u", "B\xE1o gi\xE1 tr\u1EF1c ti\u1EBFp"]
+          ]
+        }
+      });
+      sectionAdded = true;
+    }
+  }
+  if (p.includes("form") || p.includes("lien he") || p.includes("dat ban") || p.includes("dat lich") || p.includes("dang ky") || p.includes("tu van") || p.includes("gui tin nhan")) {
+    const hasForm = updated.sections.some((s) => s.type === "form");
+    if (!hasForm) {
+      const isBooking = p.includes("dat ban") || p.includes("dat cho") || p.includes("dat lich");
+      insertBeforeFooter({
+        type: "form",
+        props: {
+          heading: isBooking ? "\u0110\u1EB7t Ch\u1ED7 / \u0110\u1EB7t L\u1ECBch H\u1EB9n Tr\u1EF1c Tuy\u1EBFn" : "\u0110\u0103ng K\xFD T\u01B0 V\u1EA5n & Nh\u1EADn B\xE1o Gi\xE1",
+          subheading: "Vui l\xF2ng \u0111\u1EC3 l\u1EA1i th\xF4ng tin, ch\xFAng t\xF4i s\u1EBD li\xEAn h\u1EC7 x\xE1c nh\u1EADn trong v\xF2ng 15 ph\xFAt",
+          submitLabel: isBooking ? "X\xE1c Nh\u1EADn \u0110\u1EB7t Ch\u1ED7 Ngay" : "G\u1EEDi Th\xF4ng Tin Cho Ch\xFAng T\xF4i",
+          fields: [
+            { label: "H\u1ECD v\xE0 t\xEAn c\u1EE7a b\u1EA1n", type: "text" },
+            { label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i li\xEAn h\u1EC7", type: "tel" },
+            { label: isBooking ? "Th\u1EDDi gian & S\u1ED1 l\u01B0\u1EE3ng kh\xE1ch" : "N\u1ED9i dung c\u1EA7n t\u01B0 v\u1EA5n", type: "textarea" }
+          ]
+        }
+      });
+      sectionAdded = true;
+    }
+  }
+  if (p.includes("menu") || p.includes("thuc don") || p.includes("do uong") || p.includes("mon an")) {
+    const hasMenu = updated.sections.some((s) => s.type === "menu");
+    if (!hasMenu) {
+      insertBeforeFooter({
+        type: "menu",
+        props: {
+          heading: "Th\u1EF1c \u0110\u01A1n & M\xF3n N\u1ED5i B\u1EADt",
+          subheading: "\u0110\u01B0\u1EE3c ch\u1EAFt l\u1ECDc t\u1EEB nh\u1EEFng nguy\xEAn li\u1EC7u t\u01B0\u01A1i ngon v\xE0 ch\u1EA5t l\u01B0\u1EE3ng nh\u1EA5t",
+          categories: [
+            {
+              name: "M\xF3n B\xE1n Ch\u1EA1y Nh\u1EA5t (Signature)",
+              items: [
+                { name: "M\xF3n \u0110\u1EB7c Tr\u01B0ng Th\u01B0\u1EE3ng H\u1EA1ng", desc: "H\u01B0\u01A1ng v\u1ECB \u0111\u1ED9c \u0111\xE1o, ch\u1EBF bi\u1EBFn c\xF4ng phu theo c\xF4ng th\u1EE9c ri\xEAng", price: "M\u1EE9c gi\xE1 h\u1EE3p l\xFD", badge: "Signature" },
+                { name: "M\xF3n Tuy\u1EC3n Ch\u1ECDn Y\xEAu Th\xEDch", desc: "Nguy\xEAn li\u1EC7u t\u01B0\u01A1i s\u1EA1ch m\u1ED7i ng\xE0y, dinh d\u01B0\u1EE1ng v\xE0 th\u01A1m ngon", price: "B\xE1n ch\u1EA1y", badge: "Hot" },
+                { name: "M\xF3n Thanh M\xE1t D\u1ECBu L\xE0nh", desc: "Thanh m\xE1t c\u01A1 th\u1EC3, gi\u1EA3i nhi\u1EC7t v\xE0 s\u1EA3ng kho\xE1i tinh th\u1EA7n", price: "Khuy\xEAn d\xF9ng" }
+              ]
+            }
+          ]
+        }
+      });
+      sectionAdded = true;
+    }
+  }
+  if (p.includes("danh gia") || p.includes("review") || p.includes("nhan xet") || p.includes("khach hang") || p.includes("feedback") || p.includes("cam nhan") || p.includes("quote")) {
+    const hasQuote = updated.sections.some((s) => s.type === "quote");
+    if (!hasQuote) {
+      insertBeforeFooter({
+        type: "quote",
+        props: {
+          quote: "D\u1ECBch v\u1EE5 v\u01B0\u1EE3t tr\xEAn c\u1EA3 s\u1EF1 mong \u0111\u1EE3i! \u0110\u1ED9i ng\u0169 ph\u1EE5c v\u1EE5 chuy\xEAn nghi\u1EC7p, s\u1EA3n ph\u1EA9m ch\u1EC9n chu \u0111\u1EBFn t\u1EEBng chi ti\u1EBFt nh\u1ECF v\xE0 lu\xF4n mang l\u1EA1i c\u1EA3m gi\xE1c an t\xE2m.",
+          author: "Nguy\u1EC5n Thu Th\u1EA3o",
+          role: "Kh\xE1ch h\xE0ng th\xE2n thi\u1EBFt"
+        }
+      });
+      sectionAdded = true;
+    }
+  }
+  if (p.includes("gallery") || p.includes("anh") || p.includes("album") || p.includes("hinh anh") || p.includes("bo suu tap")) {
+    const hasGallery = updated.sections.some((s) => s.type === "gallery");
+    if (!hasGallery) {
+      insertBeforeFooter({
+        type: "gallery",
+        props: {
+          heading: "B\u1ED9 S\u01B0u T\u1EADp H\xECnh \u1EA2nh & Ho\u1EA1t \u0110\u1ED9ng",
+          subheading: "Nh\u1EEFng g\xF3c nh\xECn ch\xE2n th\u1EF1c v\u1EC1 s\u1EA3n ph\u1EA9m, kh\xF4ng gian v\xE0 tr\u1EA3i nghi\u1EC7m",
+          items: [
+            { image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80", title: "Kh\xF4ng Gian Tinh T\u1EBF", desc: "\u1EA4m \xE1p v\xE0 tr\xE0n \u0111\u1EA7y c\u1EA3m h\u1EE9ng" },
+            { image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80", title: "Ch\u1EA5t L\u01B0\u1EE3ng Th\u01B0\u1EE3ng H\u1EA1ng", desc: "T\u1EC9 m\u1EC9 trong t\u1EEBng \u0111\u01B0\u1EDDng n\xE9t" },
+            { image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80", title: "S\u1EF1 H\xE0i L\xF2ng", desc: "\u0110\u01B0\u1EE3c kh\xE1ch h\xE0ng y\xEAu m\u1EBFn b\xECnh ch\u1ECDn" }
+          ]
+        }
+      });
+      sectionAdded = true;
+    }
+  }
+  if (p.includes("stats") || p.includes("thong ke") || p.includes("so lieu") || p.includes("thanh tuu") || p.includes("con so")) {
+    const hasStats = updated.sections.some((s) => s.type === "stats");
+    if (!hasStats) {
+      insertBeforeFooter({
+        type: "stats",
+        props: {
+          heading: "Th\xE0nh T\u1EF1u & Nh\u1EEFng Con S\u1ED1 Bi\u1EBFt N\xF3i",
+          items: [
+            { value: "98.5%", label: "Kh\xE1ch H\xE0ng H\xE0i L\xF2ng", desc: "T\u1EEB h\u01A1n 5,000+ l\u01B0\u1EE3t \u0111\xE1nh gi\xE1" },
+            { value: "10,000+", label: "L\u01B0\u1EE3t Ph\u1EE5c V\u1EE5", desc: "\u0110\u1ED3ng h\xE0nh m\u1ED7i n\u0103m" },
+            { value: "Top 1", label: "Ch\u1EA5t L\u01B0\u1EE3ng H\xE0ng \u0110\u1EA7u", desc: "\u0110\u01B0\u1EE3c tin t\u01B0\u1EDFng v\xE0 kh\u1EB3ng \u0111\u1ECBnh" }
+          ]
+        }
+      });
+      sectionAdded = true;
+    }
+  }
+  if (p.includes("ticker") || p.includes("chu chay") || p.includes("chay chu") || p.includes("banner chay")) {
+    const hasTicker = updated.sections.some((s) => s.type === "ticker");
+    if (!hasTicker) {
+      const heroIdx = updated.sections.findIndex((s) => s.type === "hero");
+      const insertIdx = heroIdx >= 0 ? heroIdx + 1 : 0;
+      updated.sections.splice(insertIdx, 0, {
+        type: "ticker",
+        props: {
+          items: ["CH\u1EA4T L\u01AF\u1EE2NG H\xC0NG \u0110\u1EA6U", "\u01AFU \u0110\xC3I \u0110\u1EB6C QUY\u1EC0N TRONG TH\xC1NG", "D\u1ECACH V\u1EE4 T\u1EACN T\xC2M CHUY\xCAN NGHI\u1EC6P", "CAM K\u1EBET H\xC0I L\xD2NG 100%"]
+        }
+      });
+      sectionAdded = true;
+    }
+  }
+  if (!sectionAdded && (p.includes("them") || p.includes("bo sung") || p.includes("xay dung") || p.includes("tao them") || p.includes("viet them"))) {
+    const featureTitle = prompt.length > 55 ? prompt.slice(0, 52) + "..." : prompt;
+    insertBeforeFooter({
+      type: "split_feature",
+      props: {
+        badge: "TH\xD4NG TIN B\u1ED4 SUNG",
+        title: featureTitle,
+        description: "N\u1ED9i dung \u0111\u01B0\u1EE3c c\u1EADp nh\u1EADt v\xE0 b\u1ED5 sung ri\xEAng theo y\xEAu c\u1EA7u c\u1EE7a b\u1EA1n, ho\xE0n to\xE0n \u0111\u1ED3ng \u0111i\u1EC7u v\u1EDBi nh\u1EADn di\u1EC7n c\u1EE7a trang web.",
+        bullets: [
+          "\u0110\u1EA3m b\u1EA3o ti\xEAu chu\u1EA9n ch\u1EA5t l\u01B0\u1EE3ng cao v\xE0 tr\u1EA3i nghi\u1EC7m chuy\xEAn nghi\u1EC7p",
+          "\u0110\u01B0\u1EE3c \u0111\u1ED3ng b\u1ED9 m\xE0u s\u1EAFc v\xE0 ki\u1EC3u d\xE1ng theo b\u1ED1 c\u1EE5c s\u1EB5n c\xF3",
+          "S\u1EB5n s\xE0ng ph\u1EE5c v\u1EE5 v\xE0 mang l\u1EA1i gi\xE1 tr\u1ECB thi\u1EBFt th\u1EF1c nh\u1EA5t cho kh\xE1ch h\xE0ng"
+        ],
+        image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1000&q=80",
+        cta: "T\xECm hi\u1EC3u th\xEAm"
+      }
+    });
+  }
+  return updated;
+}
+__name(modifyExistingSpec, "modifyExistingSpec");
 function createSmartPromptSpec(prompt) {
   const p = stripVietnamese(prompt);
   const cleanTitle = prompt.length > 55 ? prompt.slice(0, 52) + "..." : prompt;
@@ -5516,7 +5756,19 @@ async function callGemini(env, prompt, currentSpec, retryHint) {
   if (!env.GEMINI_API_KEY) {
     throw new Error("Ch\u01B0a c\u1EA5u h\xECnh GEMINI_API_KEY trong file .dev.vars");
   }
-  const userText = JSON.stringify({ prompt, currentSpec, ...retryHint ? { lastError: retryHint } : {} });
+  const isUpdate = Boolean(
+    currentSpec && typeof currentSpec === "object" && Array.isArray(currentSpec.sections) && currentSpec.sections.length > 0
+  );
+  const userText = JSON.stringify({
+    isUpdate,
+    prompt,
+    ...isUpdate ? { currentSpec } : {},
+    ...retryHint ? { lastError: retryHint } : {}
+  });
+  const promptMessage = isUpdate ? `Y\xCAU C\u1EA6U TINH CH\u1EC8NH / B\u1ED4 SUNG TR\xCAN WEBSITE HI\u1EC6N T\u1EA0I (currentSpec): "${prompt}".
+QUY T\u1EAEC B\u1EAET BU\u1ED8C: H\xE3y GI\u1EEE NGUY\xCAN t\u1EA5t c\u1EA3 c\xE1c section, phong c\xE1ch (theme.style), m\xE0u s\u1EAFc, ti\xEAu \u0111\u1EC1 v\xE0 n\u1ED9i dung c\u0169 c\u1EE7a currentSpec!
+Ch\u1EC9 th\xEAm section m\u1EDBi (ngay tr\u01B0\u1EDBc footer) ho\u1EB7c s\u1EEDa \u0111\u1ED5i/c\u1EADp nh\u1EADt section t\u01B0\u01A1ng \u1EE9ng theo \u0111\xFAng y\xEAu c\u1EA7u.
+Xu\u1EA5t ra JSON Spec \u0111\u1EA7y \u0111\u1EE7 ho\xE0n ch\u1EC9nh g\u1ED3m t\u1EA5t c\u1EA3 c\xE1c section c\u0169 v\xE0 m\u1EDBi. Chi ti\u1EBFt: ${userText}` : `H\xE3y t\u1EA1o website ch\u1EA5t l\u01B0\u1EE3ng cao theo y\xEAu c\u1EA7u: "${prompt}". Chi ti\u1EBFt: ${userText}`;
   try {
     const openAiUrl = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
     const res2 = await fetch(openAiUrl, {
@@ -5530,7 +5782,7 @@ async function callGemini(env, prompt, currentSpec, retryHint) {
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: `H\xE3y t\u1EA1o website ch\u1EA5t l\u01B0\u1EE3ng cao theo y\xEAu c\u1EA7u: "${prompt}". Chi ti\u1EBFt: ${userText}` }
+          { role: "user", content: promptMessage }
         ],
         temperature: 0.7
       }),
@@ -5557,7 +5809,7 @@ async function callGemini(env, prompt, currentSpec, retryHint) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: [{ role: "user", parts: [{ text: userText }] }],
+        contents: [{ role: "user", parts: [{ text: promptMessage }] }],
         generationConfig: { responseMimeType: "application/json", temperature: 0.7 }
       }),
       signal: AbortSignal.timeout(6e3)
@@ -5596,6 +5848,12 @@ var onRequestPost = /* @__PURE__ */ __name(async ({ request, env }) => {
     if (await rateLimited(env, ip)) {
       return Response.json({ error: "B\u1EA1n th\u1EED qu\xE1 nhi\u1EC1u l\u1EA7n trong 1 gi\u1EDD, vui l\xF2ng quay l\u1EA1i sau." }, { status: 429 });
     }
+    const p = stripVietnamese(prompt);
+    const isIncrementalIntent = Boolean(body?.isTweak) || p.includes("them") || p.includes("bo sung") || p.includes("sua") || p.includes("doi") || p.includes("thay") || p.includes("xoa") || p.includes("bo ") || p.includes("chinh") || p.includes("tang") || p.includes("giam") || p.includes("mau") || p.includes("tong") || p.includes("font") || p.includes("dark") || p.includes("sang") || p.includes("toi") || p.includes("bang gia") || p.includes("form") || p.includes("menu") || p.includes("danh gia") || p.includes("gallery") || p.includes("ticker") || p.includes("xay dung them") || p.includes("tao them");
+    const hasExistingSpec = Boolean(
+      body?.currentSpec && typeof body.currentSpec === "object" && Array.isArray(body.currentSpec.sections) && body.currentSpec.sections.length > 0
+    );
+    const shouldModifyExisting = hasExistingSpec && (Boolean(body?.isTweak) || isIncrementalIntent);
     const { readable, writable } = new TransformStream();
     const w = writable.getWriter();
     const send = /* @__PURE__ */ __name((event, data) => w.write(enc.encode(`event: ${event}
@@ -5617,11 +5875,15 @@ data: ${JSON.stringify(data)}
         await send("step", { id: "design" });
         let raw;
         try {
-          raw = await callGemini(env, prompt, body?.currentSpec);
+          raw = await callGemini(env, prompt, shouldModifyExisting ? body?.currentSpec : void 0);
         } catch (geminiError) {
           console.warn("K\xEDch ho\u1EA1t b\u1ED9 ki\u1EBFn t\u1EA1o th\xF4ng minh th\xEDch \u1EE9ng do Gemini API:", geminiError?.message || geminiError);
           await sleep(1500);
-          raw = createSmartPromptSpec(prompt);
+          if (shouldModifyExisting) {
+            raw = modifyExistingSpec(body.currentSpec, prompt);
+          } else {
+            raw = createSmartPromptSpec(prompt);
+          }
         }
         await send("step", { id: "content" });
         await sleep(1200);
@@ -5659,7 +5921,7 @@ data: ${JSON.stringify(data)}
   }
 }, "onRequestPost");
 
-// ../.wrangler/tmp/pages-hHkJLg/functionsRoutes-0.5416488389988429.mjs
+// ../.wrangler/tmp/pages-Crjrsk/functionsRoutes-0.6957318308420236.mjs
 var routes = [
   {
     routePath: "/api/projects/:id",

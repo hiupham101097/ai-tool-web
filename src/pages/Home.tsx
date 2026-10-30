@@ -22,12 +22,12 @@ export default function Home() {
     const text = (textToUse ?? prompt).trim();
     if (!text) return;
     setSubmittedPrompt(text);
-    generate(text, spec);
+    generate(text, spec, false);
   };
 
   const handleTweak = (tweakText: string) => {
     setSubmittedPrompt(tweakText);
-    generate(tweakText, spec);
+    generate(tweakText, spec, true);
   };
 
   const scrollToInput = () => {
