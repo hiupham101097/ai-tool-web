@@ -4,10 +4,29 @@ import { STEPS, type Spec } from "../../shared/schema";
 type Status = "idle" | "generating" | "done" | "error";
 
 export function useGenerate() {
-  const [status, setStatus] = useState<Status>("idle");
+  const [status, setStatus] = useState<Status>(() => {
+    try {
+      return sessionStorage.getItem("agy_last_spec") ? "done" : "idle";
+    } catch {
+      return "idle";
+    }
+  });
   const [stepIndex, setStepIndex] = useState(-1);
-  const [spec, setSpec] = useState<Spec | null>(null);
-  const [projectId, setProjectId] = useState<string | null>(null);
+  const [spec, setSpec] = useState<Spec | null>(() => {
+    try {
+      const saved = sessionStorage.getItem("agy_last_spec");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [projectId, setProjectId] = useState<string | null>(() => {
+    try {
+      return sessionStorage.getItem("agy_last_pid");
+    } catch {
+      return null;
+    }
+  });
   const [error, setError] = useState("");
 
   const generate = useCallback(async (prompt: string, currentSpec?: Spec | null, isTweak?: boolean) => {
@@ -36,7 +55,14 @@ export function useGenerate() {
           const event = p.match(/event: (.+)/)?.[1];
           const data = JSON.parse(p.match(/data: (.+)/)?.[1] ?? "{}");
           if (event === "step") setStepIndex(STEPS.findIndex(s => s.id === data.id));
-          if (event === "done") { setSpec(data.spec); setStatus("done"); }
+          if (event === "done") {
+            setSpec(data.spec);
+            setStatus("done");
+            try {
+              sessionStorage.setItem("agy_last_spec", JSON.stringify(data.spec));
+              sessionStorage.setItem("agy_last_pid", data.projectId || id);
+            } catch {}
+          }
           if (event === "error") { setError(data.message); setStatus("error"); }
         }
       }
@@ -46,6 +72,14 @@ export function useGenerate() {
   }, [projectId]);
 
   const reset = useCallback(() => { setStatus("idle"); setStepIndex(-1); }, []);
-  const startOver = useCallback(() => { setStatus("idle"); setSpec(null); setProjectId(null); }, []);
+  const startOver = useCallback(() => {
+    setStatus("idle");
+    setSpec(null);
+    setProjectId(null);
+    try {
+      sessionStorage.removeItem("agy_last_spec");
+      sessionStorage.removeItem("agy_last_pid");
+    } catch {}
+  }, []);
   return { status, stepIndex, spec, projectId, error, generate, reset, startOver };
 }
