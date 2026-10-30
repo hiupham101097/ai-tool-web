@@ -2,6 +2,12 @@ name = "ai-site-builder"
 compatibility_date = "2024-09-01"
 main = "dist/index.js"
 
+[build]
+command = "npm run build"
+
+[placement]
+mode = "smart"
+
 [assets]
 directory = "./dist"
 

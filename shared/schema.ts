@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const Cta = z.string().max(60).optional();
+const Cta = z.string().max(100).optional();
 
 export const SectionSchema = z.discriminatedUnion("type", [
   z.object({
@@ -28,7 +28,7 @@ export const SectionSchema = z.discriminatedUnion("type", [
           image: z.string().optional(),
           icon: z.string().optional(),
         })
-      ).min(1).max(12),
+      ).min(1).max(20),
     }),
   }),
   z.object({
@@ -42,7 +42,7 @@ export const SectionSchema = z.discriminatedUnion("type", [
           title: z.string().optional(),
           desc: z.string().optional(),
         })
-      ).min(1).max(8),
+      ).min(1).max(12),
     }),
   }),
   z.object({
@@ -50,8 +50,8 @@ export const SectionSchema = z.discriminatedUnion("type", [
     props: z.object({
       heading: z.string().optional(),
       subheading: z.string().optional(),
-      columns: z.array(z.string()).min(1).max(6),
-      rows: z.array(z.array(z.string())).max(30),
+      columns: z.array(z.string()).min(1).max(8),
+      rows: z.array(z.array(z.string())).max(40),
     }),
   }),
   z.object({
@@ -65,34 +65,34 @@ export const SectionSchema = z.discriminatedUnion("type", [
           label: z.string(),
           type: z.enum(["text", "email", "tel", "textarea"]),
         })
-      ).min(1).max(8),
+      ).min(1).max(12),
     }),
   }),
   z.object({
     type: z.literal("footer"),
     props: z.object({
       text: z.string(),
-      links: z.array(z.object({ label: z.string(), href: z.string() })).max(8).optional(),
+      links: z.array(z.object({ label: z.string(), href: z.string() })).max(12).optional(),
     }),
   }),
 ]);
 
 export const SpecSchema = z.object({
   theme: z.object({
-    primary: z.string().regex(/^#[0-9a-fA-F]{6}$/),
-    background: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
-    text: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
-    font: z.enum(["Be Vietnam Pro", "Bricolage Grotesque", "Georgia", "system-ui"]).optional(),
+    primary: z.string(),
+    background: z.string().optional(),
+    text: z.string().optional(),
+    font: z.string().optional(),
   }),
-  sections: z.array(SectionSchema).min(1).max(12),
+  sections: z.array(SectionSchema).min(1).max(20),
 });
 
 export type Spec = z.infer<typeof SpecSchema>;
 export type Section = z.infer<typeof SectionSchema>;
 
 export const STEPS = [
-  { id: "analyze", label: "Phân tích yêu cầu & phong cách thiết kế" },
-  { id: "design", label: "Chọn bảng màu, typography & hình ảnh Unsplash" },
-  { id: "content", label: "Soạn nội dung & hiệu ứng chuyển động" },
-  { id: "validate", label: "Kiểm tra chất lượng & sẵn sàng xuất bản" },
+  { id: "analyze", label: "Phân tích yêu cầu & định hình phong cách" },
+  { id: "design", label: "AI suy nghĩ, chọn bảng màu & hình ảnh Unsplash" },
+  { id: "content", label: "Soạn nội dung & cấu trúc từng phần" },
+  { id: "validate", label: "Kiểm tra và hoàn thiện website" },
 ] as const;

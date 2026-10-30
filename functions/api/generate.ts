@@ -1,4 +1,4 @@
-import { SpecSchema, type Spec } from "../../shared/schema";
+import { SpecSchema, type Spec, type Section } from "../../shared/schema";
 import { SYSTEM_PROMPT } from "./_prompt";
 
 interface Env {
@@ -12,6 +12,7 @@ const MODEL = "gemini-3.8-flash";
 const MAX_PROMPT = 1500;
 const RATE_LIMIT = 30;          // số lần / giờ / IP
 const enc = new TextEncoder();
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 async function rateLimited(env: Env, ip: string): Promise<boolean> {
   try {
@@ -25,322 +26,261 @@ async function rateLimited(env: Env, ip: string): Promise<boolean> {
       .bind(ip, window).first<{ count: number }>();
     return (row?.count ?? 0) > RATE_LIMIT;
   } catch (e) {
-    console.warn("Bỏ qua rate-limit do cảnh báo database:", e);
+    console.warn("Bỏ qua rate-limit do database:", e);
     return false;
   }
 }
 
-function createFallbackSpec(prompt: string): Spec {
-  const p = prompt.toLowerCase();
-  
-  if (p.includes("cafe") || p.includes("cà phê") || p.includes("coffee") || p.includes("trà sữa")) {
-    return {
-      theme: {
-        primary: "#b45309",
-        background: "#fafaf9",
-        text: "#1c1917",
-        font: "Be Vietnam Pro",
-      },
-      sections: [
-        {
-          type: "hero",
-          props: {
-            badge: "✨ Không Gian Acoustic Ấm Áp",
-            title: "Cà Phê Mộc – Nơi Hương Vị Tìm Thấy Sự Bình Yên",
-            subtitle: "Trải nghiệm từng giọt cà phê Arabica & Robusta rang mộc thủ công, hòa cùng tiếng đàn acoustic dịu êm giữa lòng thành phố.",
-            cta: "Đặt bàn giữ chỗ",
-            secondaryCta: "Xem thực đơn",
-            image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80",
-            align: "left",
-          },
-        },
-        {
-          type: "cards",
-          props: {
-            heading: "Hương Vị Đặc Trưng Nhất",
-            subheading: "Được pha chế tinh tế từ những hạt cà phê thượng hạng thu hoạch tại Cầu Đất, Đà Lạt",
-            items: [
-              {
-                title: "Cà phê Muối Cố Đô",
-                desc: "Vị mằn mặn béo ngậy của lớp kem muối sánh mịn hòa quyện hoàn hảo cùng cốt cà phê thơm lừng.",
-                badge: "Bán chạy nhất",
-                image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
-                icon: "☕",
-              },
-              {
-                title: "Cold Brew Cam Vàng",
-                desc: "Cà phê ủ lạnh 18 tiếng kết hợp cùng lát cam vàng mọng nước, mang đến vị chua thanh sảng khoái.",
-                badge: "Signature",
-                image: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80",
-                icon: "🍊",
-              },
-              {
-                title: "Bạc Xỉu Sữa Hạnh Nhân",
-                desc: "Vị bùi béo tự nhiên từ hạt hạnh nhân nguyên chất, ít ngọt, lành mạnh và dễ chịu cho buổi sáng.",
-                badge: "Mới",
-                image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80",
-                icon: "🥛",
-              },
-            ],
-          },
-        },
-        {
-          type: "gallery",
-          props: {
-            heading: "Không Gian & Kỷ Niệm Tại Mộc",
-            subheading: "Từng góc nhỏ đều mang đến sự thư thái để bạn làm việc, đọc sách hay trò chuyện cùng bạn bè",
-            items: [
-              { image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80", title: "Quầy Bar Pha Chế Thủ Công", desc: "Mùi hương cà phê lan tỏa suốt ngày dài" },
-              { image: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80", title: "Hạt Cà Phê Chọn Lọc", desc: "Rang xay mộc chuẩn từng mẻ" },
-              { image: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=800&q=80", title: "Góc Acoustic Cuối Tuần", desc: "Giai điệu mộc mạc và gần gũi" },
-            ],
-          },
-        },
-        {
-          type: "table",
-          props: {
-            heading: "Bảng Giá Đồ Uống",
-            subheading: "Giá đã bao gồm dịch vụ và không gian trải nghiệm",
-            columns: ["Tên món đồ uống", "Size Vừa (M)", "Size Lớn (L)"],
-            rows: [
-              ["Cà phê truyền thống (Đen / Nâu đá)", "35.000đ", "45.000đ"],
-              ["Cà phê Muối Cố Đô đặc biệt", "42.000đ", "52.000đ"],
-              ["Cold Brew Trái Cây Nhiệt Đới", "48.000đ", "58.000đ"],
-              ["Trà Ô Long Sen Vàng Thơm Bùi", "45.000đ", "55.000đ"],
-              ["Bánh Croissant Bơ Pháp Nóng Hổi", "38.000đ", "-"],
-            ],
-          },
-        },
-        {
-          type: "form",
-          props: {
-            heading: "Đặt Bàn Trước – Giữ Chỗ Đẹp",
-            subheading: "Chúng tôi sẽ chuẩn bị sẵn vị trí yêu thích của bạn trước giờ hẹn",
-            submitLabel: "Xác nhận đặt bàn",
-            fields: [
-              { label: "Họ và tên của bạn", type: "text" },
-              { label: "Số điện thoại nhận tin nhắn", type: "tel" },
-              { label: "Thời gian & Số lượng khách (hoặc yêu cầu acoustic)", type: "textarea" },
-            ],
-          },
-        },
-        {
-          type: "footer",
-          props: {
-            text: "© 2026 Cà Phê Mộc. Mở cửa từ 07:00 đến 22:30 mỗi ngày. Hotline đặt chỗ: 0987 654 321.",
-            links: [
-              { label: "Facebook Fanpage", href: "#" },
-              { label: "Instagram", href: "#" },
-              { label: "Chỉ đường Google Maps", href: "#" },
-            ],
-          },
-        },
-      ],
-    };
-  }
+/**
+ * Chuyển đổi linh hoạt mọi định dạng JSON mà Gemini trả về (kể cả products, features, categories, testimonials...)
+ * thành Spec chuẩn, đảm bảo không bao giờ bỏ phí kết quả sáng tạo của AI!
+ */
+function normalizeSpec(raw: any, userPrompt: string): Spec {
+  const theme = {
+    primary: raw?.theme?.primary || "#2563eb",
+    background: raw?.theme?.background || "#ffffff",
+    text: raw?.theme?.text || "#0f172a",
+    font: raw?.theme?.font || "Be Vietnam Pro",
+  };
 
-  if (p.includes("gym") || p.includes("thể hình") || p.includes("fitness") || p.includes("yoga")) {
-    return {
-      theme: {
-        primary: "#ea580c",
-        background: "#090d16",
-        text: "#f8fafc",
-        font: "Bricolage Grotesque",
-      },
-      sections: [
-        {
-          type: "hero",
-          props: {
-            badge: "🔥 Ưu đãi thành viên mới: Giảm 50%",
-            title: "Bứt Phá Giới Hạn Bản Thân Cùng Titan Fitness",
-            subtitle: "Hệ thống phòng tập chuẩn 5 sao với dàn máy móc nhập khẩu nguyên chiếc và đội ngũ huấn luyện viên chuyên nghiệp hàng đầu.",
-            cta: "Đăng ký tập thử 7 ngày",
-            secondaryCta: "Xem bảng giá gói",
-            image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=80",
-            align: "left",
-          },
-        },
-        {
-          type: "cards",
-          props: {
-            heading: "Bộ Môn & Tiện Ích Cao Cấp",
-            subheading: "Môi trường tập luyện truyền cảm hứng và giúp bạn kiên định với mục tiêu sức khỏe",
-            items: [
-              {
-                title: "Gym & Strength Training",
-                desc: "Hơn 100+ thiết bị tạ đơn, giàn tạ khối cao cấp chuẩn thi đấu quốc tế.",
-                badge: "Phổ biến",
-                image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80",
-                icon: "🏋️",
-              },
-              {
-                title: "Yoga & Pilates Studio",
-                desc: "Phòng tập tĩnh tâm, cách âm với sàn gỗ tự nhiên và giảng viên hướng dẫn tận tình.",
-                badge: "Thư giãn",
-                image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=800&q=80",
-                icon: "🧘",
-              },
-              {
-                title: "Huấn Luyện Viên 1:1 (PT)",
-                desc: "Giám sát từng nhịp thở, thiết kế giáo trình tập và thực đơn dinh dưỡng riêng biệt.",
-                badge: "Hiệu quả 100%",
-                image: "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=800&q=80",
-                icon: "⚡",
-              },
-            ],
-          },
-        },
-        {
-          type: "gallery",
-          props: {
-            heading: "Cơ Sở Vật Chất Chuẩn 5 Sao",
-            subheading: "Không gian thoáng đãng, lọc khí ion âm và phòng tắm xông hơi sang trọng",
-            items: [
-              { image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80", title: "Khu Vực Free Weights", desc: "Tạ đòn và sàn cao su giảm chấn" },
-              { image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80", title: "Dàn Máy Cardio", desc: "Máy chạy bộ kết nối màn hình thông minh" },
-              { image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=800&q=80", title: "Lớp Yoga Bình Minh", desc: "Cân bằng năng lượng và giảm căng thẳng" },
-            ],
-          },
-        },
-        {
-          type: "table",
-          props: {
-            heading: "Bảng Giá Gói Hội Viên Ưu Đãi",
-            columns: ["Gói hội viên", "Thời hạn", "Quyền lợi chi tiết", "Chi phí"],
-            rows: [
-              ["Gói Khởi Động", "1 Tháng", "Toàn quyền tập gym, tủ đồ riêng, phòng xông hơi", "499.000đ"],
-              ["Gói Bứt Phá", "6 Tháng", "Gym + Tham gia tất cả lớp Yoga, Tặng 2 buổi PT 1:1", "2.490.000đ"],
-              ["Gói VIP Toàn Năng", "12 Tháng", "Tất cả quyền lợi, Khăn tập riêng mỗi ngày, Đưa đón", "4.200.000đ"],
-            ],
-          },
-        },
-        {
-          type: "form",
-          props: {
-            heading: "Đăng Ký Nhận Vé Tập Thử Miễn Phí",
-            subheading: "Nhận ngay 7 ngày trải nghiệm không giới hạn cùng huấn luyện viên",
-            submitLabel: "Nhận vé tập thử ngay",
-            fields: [
-              { label: "Họ và tên", type: "text" },
-              { label: "Số điện thoại", type: "tel" },
-              { label: "Mục tiêu tập luyện (Tăng cơ / Giảm mỡ / Cải thiện sức bền)", type: "text" },
-            ],
-          },
-        },
-        {
-          type: "footer",
-          props: {
-            text: "© 2026 Titan Fitness & Yoga Center. Mở cửa 05:30 - 22:00 tất cả các ngày trong tuần.",
-            links: [
-              { label: "Lịch lớp Yoga", href: "#" },
-              { label: "Đội ngũ Huấn luyện viên", href: "#" },
-              { label: "Hotline: 1900 1234", href: "#" },
-            ],
-          },
-        },
-      ],
-    };
-  }
+  const rawSections: any[] = Array.isArray(raw?.sections) ? raw.sections : [];
+  const normalizedSections: Section[] = [];
 
-  // Mặc định: Landing page công nghệ / doanh nghiệp hiện đại
-  return {
-    theme: {
-      primary: "#2563eb",
-      background: "#ffffff",
-      text: "#0f172a",
-      font: "Be Vietnam Pro",
-    },
-    sections: [
-      {
+  for (const s of rawSections) {
+    if (!s || typeof s !== "object") continue;
+    const type = String(s.type || "").toLowerCase();
+    const props = s.props || s;
+
+    // 1. HERO section
+    if (type === "hero") {
+      normalizedSections.push({
         type: "hero",
         props: {
-          badge: "🚀 Giải Pháp Số 1 Dành Cho Bạn",
-          title: prompt.length > 55 ? prompt.slice(0, 52) + "..." : prompt,
-          subtitle: "Chúng tôi giúp bạn hiện thực hóa ý tưởng nhanh chóng với trải nghiệm vượt trội, thẩm mỹ hiện đại và hiệu quả cao nhất.",
-          cta: "Khám phá ngay",
-          secondaryCta: "Tư vấn miễn phí",
-          image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
-          align: "left",
+          title: String(props.title || props.heading || userPrompt),
+          subtitle: props.subtitle || props.description || props.subheading,
+          cta: props.cta || props.primaryCta?.label || props.buttonText || "Khám phá ngay",
+          secondaryCta: props.secondaryCta?.label || props.secondaryCta || undefined,
+          badge: props.badge || undefined,
+          image: props.image || props.imageUrl || undefined,
+          align: props.align === "center" ? "center" : "left",
         },
-      },
-      {
-        type: "cards",
+      });
+      continue;
+    }
+
+    // 2. CTA BANNER (chuyển thành Hero gọn)
+    if (type === "cta_banner" || type === "banner") {
+      normalizedSections.push({
+        type: "hero",
         props: {
-          heading: "Giá Trị Khác Biệt Chúng Tôi Mang Lại",
-          subheading: "Được xây dựng với tiêu chuẩn khắt khe để mang lại sự hài lòng tối đa cho khách hàng",
-          items: [
-            {
-              title: "Tốc Độ Triển Khai",
-              desc: "Tiết kiệm 80% thời gian với quy trình tối ưu hóa và công nghệ tiên tiến nhất.",
-              badge: "Nhanh chóng",
-              image: "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80",
-              icon: "⚡",
-            },
-            {
-              title: "Thiết Kế Đột Phá",
-              desc: "Chuẩn thẩm mỹ quốc tế, responsive hoàn hảo trên mọi thiết bị máy tính và điện thoại.",
-              badge: "Thẩm mỹ cao",
-              image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
-              icon: "🎨",
-            },
-            {
-              title: "Đồng Hành Bền Vững",
-              desc: "Đội ngũ chuyên gia luôn sẵn sàng hỗ trợ kỹ thuật và giải đáp mọi thắc mắc của bạn 24/7.",
-              badge: "Tận tâm",
-              image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80",
-              icon: "🤝",
-            },
-          ],
+          title: String(props.title || "Ưu Đãi Đặc Biệt"),
+          subtitle: props.subtitle || props.description,
+          cta: props.buttonText || props.cta || "Nhận ưu đãi",
+          align: "center",
         },
-      },
-      {
-        type: "gallery",
-        props: {
-          heading: "Dự Án & Thành Tựu Tiêu Biểu",
-          items: [
-            { image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80", title: "Nền Tảng Tự Động Hóa" },
-            { image: "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80", title: "Giao Diện Trực Quan" },
-            { image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80", title: "Hợp Tác Toàn Cầu" },
-          ],
-        },
-      },
-      {
+      });
+      continue;
+    }
+
+    // 3. PRODUCTS -> Chuyển thành CARDS với hình ảnh và giá
+    if (type === "products") {
+      const prods: any[] = Array.isArray(props.products) ? props.products : Array.isArray(props.items) ? props.items : [];
+      if (prods.length > 0) {
+        normalizedSections.push({
+          type: "cards",
+          props: {
+            heading: props.title || props.heading || "Sản Phẩm Nổi Bật",
+            subheading: props.subtitle || props.subheading || undefined,
+            items: prods.map(p => ({
+              title: String(p.name || p.title || "Sản phẩm"),
+              desc: p.price ? `Giá: ${p.price}${p.oldPrice ? ` (Gốc: ${p.oldPrice})` : ""}` : (p.desc || p.description),
+              image: p.image || p.imageUrl || undefined,
+              badge: p.tag || p.badge || p.category || undefined,
+              icon: "🛍️",
+            })),
+          },
+        });
+      }
+      continue;
+    }
+
+    // 4. FEATURES -> CARDS
+    if (type === "features") {
+      const feats: any[] = Array.isArray(props.items) ? props.items : [];
+      if (feats.length > 0) {
+        normalizedSections.push({
+          type: "cards",
+          props: {
+            heading: props.title || props.heading || "Lợi Ích & Tính Năng",
+            subheading: props.subtitle || props.subheading || undefined,
+            items: feats.map(f => ({
+              title: String(f.title || f.name || "Tính năng"),
+              desc: f.description || f.desc || undefined,
+              badge: f.badge || undefined,
+              icon: f.icon || "✨",
+              image: f.image || undefined,
+            })),
+          },
+        });
+      }
+      continue;
+    }
+
+    // 5. CATEGORIES -> GALLERY hoặc CARDS
+    if (type === "categories") {
+      const cats: any[] = Array.isArray(props.items) ? props.items : [];
+      if (cats.length > 0) {
+        normalizedSections.push({
+          type: "gallery",
+          props: {
+            heading: props.title || props.heading || "Danh Mục & Bộ Sưu Tập",
+            subheading: props.subtitle || props.subheading || undefined,
+            items: cats.map(c => ({
+              image: c.image || "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
+              title: c.name || c.title,
+              desc: c.count || c.desc,
+            })),
+          },
+        });
+      }
+      continue;
+    }
+
+    // 6. TESTIMONIALS -> CARDS
+    if (type === "testimonials" || type === "reviews") {
+      const tests: any[] = Array.isArray(props.items) ? props.items : [];
+      if (tests.length > 0) {
+        normalizedSections.push({
+          type: "cards",
+          props: {
+            heading: props.title || props.heading || "Đánh Giá Của Khách Hàng",
+            subheading: props.subtitle || props.subheading || undefined,
+            items: tests.map(t => ({
+              title: String(t.name || "Khách hàng"),
+              desc: `"${t.comment || t.text || t.content || ""}"`,
+              badge: t.rating ? `⭐ ${t.rating}/5` : "Khách hàng xác thực",
+              icon: "💬",
+            })),
+          },
+        });
+      }
+      continue;
+    }
+
+    // 7. CARDS tiêu chuẩn
+    if (type === "cards") {
+      const items: any[] = Array.isArray(props.items) ? props.items : [];
+      if (items.length > 0) {
+        normalizedSections.push({
+          type: "cards",
+          props: {
+            heading: props.heading || props.title || undefined,
+            subheading: props.subheading || props.subtitle || undefined,
+            items: items.map(it => ({
+              title: String(it.title || it.name || ""),
+              desc: it.desc || it.description || undefined,
+              badge: it.badge || undefined,
+              image: it.image || undefined,
+              icon: it.icon || undefined,
+            })),
+          },
+        });
+      }
+      continue;
+    }
+
+    // 8. GALLERY tiêu chuẩn
+    if (type === "gallery") {
+      const items: any[] = Array.isArray(props.items) ? props.items : [];
+      if (items.length > 0) {
+        normalizedSections.push({
+          type: "gallery",
+          props: {
+            heading: props.heading || props.title || undefined,
+            subheading: props.subheading || props.subtitle || undefined,
+            items: items.map(it => ({
+              image: String(it.image || it.imageUrl || ""),
+              title: it.title || undefined,
+              desc: it.desc || it.description || undefined,
+            })),
+          },
+        });
+      }
+      continue;
+    }
+
+    // 9. TABLE tiêu chuẩn
+    if (type === "table") {
+      normalizedSections.push({
         type: "table",
         props: {
-          heading: "Bảng So Sánh Các Gói Dịch Vụ",
-          columns: ["Hạng mục", "Cơ bản", "Chuyên nghiệp", "Doanh nghiệp lớn"],
-          rows: [
-            ["Thời gian bàn giao", "3 ngày", "24 giờ", "Ưu tiên tức thì"],
-            ["Hỗ trợ tư vấn", "Giờ hành chính", "24/7 Đội ngũ riêng", "Chuyên gia 1:1"],
-            ["Bảo hành & Cập nhật", "3 tháng", "1 năm", "Trọn đời"],
-          ],
+          heading: props.heading || props.title || undefined,
+          subheading: props.subheading || props.subtitle || undefined,
+          columns: Array.isArray(props.columns) ? props.columns : ["Hạng mục", "Thông tin"],
+          rows: Array.isArray(props.rows) ? props.rows : [],
         },
-      },
-      {
+      });
+      continue;
+    }
+
+    // 10. FORM tiêu chuẩn
+    if (type === "form") {
+      normalizedSections.push({
         type: "form",
         props: {
-          heading: "Liên Hệ Để Được Tư Vấn Ngay",
-          subheading: "Để lại thông tin và chuyên viên của chúng tôi sẽ liên hệ lại trong vòng 15 phút",
-          submitLabel: "Gửi thông tin liên hệ",
-          fields: [
-            { label: "Họ và tên của bạn", type: "text" },
-            { label: "Số điện thoại / Email", type: "text" },
-            { label: "Nội dung cần tư vấn", type: "textarea" },
-          ],
+          heading: props.heading || props.title || undefined,
+          subheading: props.subheading || props.subtitle || undefined,
+          submitLabel: props.submitLabel || "Gửi thông tin ngay",
+          fields: Array.isArray(props.fields)
+            ? props.fields.map((f: any) => ({
+                label: String(f.label || "Thông tin"),
+                type: ["text", "email", "tel", "textarea"].includes(f.type) ? f.type : "text",
+              }))
+            : [{ label: "Họ và tên", type: "text" }, { label: "Số điện thoại", type: "tel" }],
         },
-      },
-      {
+      });
+      continue;
+    }
+
+    // 11. FOOTER
+    if (type === "footer") {
+      normalizedSections.push({
         type: "footer",
         props: {
-          text: "© 2026 Bản quyền thuộc về doanh nghiệp của bạn. Kiến tạo giá trị tương lai.",
-          links: [
-            { label: "Chính sách bảo mật", href: "#" },
-            { label: "Điều khoản sử dụng", href: "#" },
-            { label: "Liên hệ đối tác", href: "#" },
-          ],
+          text: String(props.text || props.copyright || props.about || `© 2026. ${userPrompt}`),
+          links: Array.isArray(props.links) ? props.links : undefined,
         },
+      });
+      continue;
+    }
+  }
+
+  // Nếu thiếu Hero, bổ sung Hero tự động
+  if (!normalizedSections.some(s => s.type === "hero")) {
+    normalizedSections.unshift({
+      type: "hero",
+      props: {
+        title: userPrompt,
+        subtitle: "Giải pháp chất lượng cao đáp ứng trọn vẹn mong đợi của bạn.",
+        cta: "Khám phá ngay",
+        align: "center",
       },
-    ],
+    });
+  }
+
+  // Nếu thiếu Footer, bổ sung Footer
+  if (!normalizedSections.some(s => s.type === "footer")) {
+    normalizedSections.push({
+      type: "footer",
+      props: {
+        text: `© 2026. Thiết kế riêng theo yêu cầu: "${userPrompt.slice(0, 50)}".`,
+      },
+    });
+  }
+
+  return {
+    theme,
+    sections: normalizedSections,
   };
 }
 
@@ -411,7 +351,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
     (async () => {
       try {
+        // Bước 1: Phân tích yêu cầu (cho người dùng thấy AI đang tiếp nhận)
         await send("step", { id: "analyze" });
+        await sleep(1200);
+
         if (env.DB) {
           try {
             await env.DB.prepare("INSERT OR IGNORE INTO projects (id, name) VALUES (?, ?)")
@@ -423,38 +366,33 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
           }
         }
 
+        // Bước 2: AI suy nghĩ và thiết kế
         await send("step", { id: "design" });
         let raw: any;
-        let isUsingFallback = false;
 
         try {
           raw = await callGemini(env, prompt, body?.currentSpec);
         } catch (geminiError: any) {
-          const msg = geminiError?.message || "";
-          // Nếu bị chặn vị trí địa lý do Google giới hạn IP (Việt Nam/Data center), tự động dùng Smart Fallback để không làm gián đoạn người dùng
-          if (msg.includes("location is not supported") || msg.includes("User location") || msg.includes("400")) {
-            console.warn("Google Gemini chặn location, kích hoạt bộ sinh Smart Fallback cho:", prompt);
-            raw = createFallbackSpec(prompt);
-            isUsingFallback = true;
-          } else {
-            throw geminiError;
-          }
+          console.error("Lỗi gọi Gemini:", geminiError);
+          throw new Error(geminiError?.message || "Không thể kết nối với AI Gemini.");
         }
 
+        // Bước 3: Soạn nội dung & chuẩn hóa cấu trúc
         await send("step", { id: "content" });
-        let parsed = SpecSchema.safeParse(raw);
-        if (!parsed.success && !isUsingFallback) {
-          // retry một lần kèm gợi ý lỗi nếu không phải fallback
-          raw = await callGemini(env, prompt, body?.currentSpec, parsed.error.message.slice(0, 800));
-          parsed = SpecSchema.safeParse(raw);
-        }
-        if (!parsed.success) {
-          // Nếu vẫn lỗi, chuyển sang fallback
-          parsed = SpecSchema.safeParse(createFallbackSpec(prompt));
-        }
-        if (!parsed.success) throw new Error("Cấu trúc website do AI tạo không hợp lệ. Vui lòng thử lại.");
+        await sleep(1000);
 
+        // Chuẩn hóa cấu trúc để luôn tương thích 100% với React Renderer
+        const normalized = normalizeSpec(raw, prompt);
+        const parsed = SpecSchema.safeParse(normalized);
+        if (!parsed.success) {
+          console.error("Lỗi validate Spec:", parsed.error);
+          throw new Error("Không thể định dạng cấu trúc website do AI tạo.");
+        }
+
+        // Bước 4: Kiểm tra và hoàn thiện
         await send("step", { id: "validate" });
+        await sleep(800);
+
         const version = Date.now();
         if (env.DB) {
           try {
@@ -467,6 +405,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
           }
         }
 
+        // Hoàn tất!
         await send("done", { projectId, spec: parsed.data });
       } catch (e: any) {
         console.error("Lỗi trong quá trình tạo website:", e);
