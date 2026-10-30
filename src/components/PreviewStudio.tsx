@@ -64,12 +64,12 @@ export function PreviewStudio({
 
   return (
     <div className="preview-studio">
-      {/* Top Bar */}
+      {/* Sleek Compact Top Bar (Height: 46px) */}
       <header className="studio-topbar">
         <div className="studio-left">
           <div className="brand-badge">
             <span className="live-dot" />
-            <strong>Xem trước Website</strong>
+            <strong className="brand-title">Xem trước</strong>
           </div>
 
           <div className="viewport-toggles">
@@ -92,81 +92,51 @@ export function PreviewStudio({
               onClick={() => setViewport("mobile")}
               title="Xem giao diện Điện thoại"
             >
-              📱 Điện thoại
+              📱 Mobile
             </button>
           </div>
         </div>
 
         <div className="studio-actions">
           <button
-            className="btn btn-download-primary"
+            className="btn btn-download-primary btn-sm"
             onClick={handleDownload}
             title="Tải trọn bộ file HTML & CSS độc lập về máy tính"
           >
-            📥 <span>Tải về Website (.html)</span>
+            📥 <span>Tải HTML</span>
           </button>
 
-          <button className="btn btn-secondary" onClick={handleCopyCode}>
-            {copied ? "✓ Đã sao chép HTML!" : "📋 Sao chép Code"}
+          <button className="btn btn-secondary btn-sm" onClick={handleCopyCode}>
+            {copied ? "✓ Đã chép!" : "📋 Chép code"}
           </button>
 
           {projectId && (
-            <button className="btn btn-ghost" onClick={handleCopyLink} title="Chia sẻ liên kết trực tiếp">
+            <button className="btn btn-ghost btn-sm" onClick={handleCopyLink} title="Chia sẻ liên kết trực tiếp">
               {copiedLink ? "✓ Đã chép link!" : "🔗 Chia sẻ"}
             </button>
           )}
 
-          <button className="btn btn-ghost" onClick={() => setShowCodeModal(true)}>
-            {"</>"} Xem mã nguồn
+          <button className="btn btn-ghost btn-sm" onClick={() => setShowCodeModal(true)}>
+            {"</>"} Code
           </button>
 
-          <button className="btn btn-ghost" onClick={onStartOver}>
+          <button className="btn btn-ghost btn-sm" onClick={onStartOver}>
             Tạo mới
           </button>
-          <button className="btn btn-ghost" onClick={onClose}>
-            ✕ Đóng
+          <button className="btn btn-ghost btn-sm btn-close" onClick={onClose} title="Đóng xem trước">
+            ✕
           </button>
         </div>
       </header>
 
-      {/* Decision Notification Banner */}
-      <div className="decision-banner">
-        <div className="decision-content">
-          <span className="decision-icon">💡</span>
-          <div>
-            <strong>Xem giao diện và quyết định tải về:</strong>
-            <span>
-              {" "}Trang web đã được tạo hoàn tất. Bạn có thể kiểm tra trực tiếp, yêu cầu AI đổi màu/nội dung nếu chưa ưng ý, hoặc bấm <strong>"Tải về Website"</strong> để lưu file HTML độc lập và sử dụng ngay lập tức!
-            </span>
-          </div>
+      {/* Floating Download Toast */}
+      {downloadSuccess && (
+        <div className="floating-download-toast">
+          ✓ Đã tải file <code>my-website.html</code> thành công về máy của bạn!
         </div>
-        {downloadSuccess && (
-          <div className="download-toast">
-            ✓ Đã tải file <code>my-website.html</code> thành công về máy của bạn!
-          </div>
-        )}
-      </div>
+      )}
 
-      {/* Tweak / Chat Bar */}
-      <form className="tweak-toolbar" onSubmit={handleTweakSubmit}>
-        <div className="tweak-input-wrap">
-          <span className="tweak-icon">💬</span>
-          <input
-            value={tweakText}
-            onChange={e => setTweakText(e.target.value)}
-            placeholder="Muốn chỉnh sửa gì thêm? VD: 'Đổi màu chủ đạo sang xanh lá', 'Thêm phần đánh giá khách hàng'..."
-          />
-          <button
-            type="submit"
-            className="btn btn-tweak-apply"
-            disabled={!tweakText.trim()}
-          >
-            Áp dụng tinh chỉnh
-          </button>
-        </div>
-      </form>
-
-      {/* Viewport Frame */}
+      {/* Viewport Frame - Fills the entire screen! */}
       <main className="studio-viewport-container">
         <div
           className={`studio-frame-wrapper viewport-${viewport}`}
@@ -182,6 +152,25 @@ export function PreviewStudio({
           </div>
         </div>
       </main>
+
+      {/* Floating Bottom Tweak Pill - Doesn't push the website down! */}
+      <form className="floating-tweak-bar" onSubmit={handleTweakSubmit}>
+        <div className="floating-tweak-inner">
+          <span className="tweak-icon">💬</span>
+          <input
+            value={tweakText}
+            onChange={e => setTweakText(e.target.value)}
+            placeholder="Muốn đổi màu, thêm bảng giá, sửa tiêu đề...? Nhập tại đây..."
+          />
+          <button
+            type="submit"
+            className="btn btn-tweak-apply"
+            disabled={!tweakText.trim()}
+          >
+            Áp dụng
+          </button>
+        </div>
+      </form>
 
       {/* Code Modal */}
       {showCodeModal && (

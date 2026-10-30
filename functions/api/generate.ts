@@ -399,15 +399,145 @@ function createSmartPromptSpec(prompt: string): Spec {
   const cleanTitle = prompt.length > 55 ? prompt.slice(0, 52) + "..." : prompt;
   const style = detectStyleFromPrompt(prompt);
 
-  // 1. ARTISAN ARCHETYPE (Cà phê, trà bánh, hoa tươi, tiệm gốm, đồ thủ công mộc mạc)
+  // 0. SHOP HOA TƯƠI / HOA NGHỆ THUẬT / FLORIST BOUTIQUE
+  const isFlower = p.includes("hoa tuoi") || p.includes("shop hoa") || p.includes("tiem hoa") || p.includes("flower") || /\bhoa\b/.test(p);
+  if (isFlower) {
+    return {
+      theme: {
+        primary: "#e11d48",
+        secondary: "#fda4af",
+        accent: "#f43f5e",
+        background: "#fff9f9",
+        text: "#1e1b1b",
+        font: "Playfair Display",
+        style: "artisan",
+      },
+      sections: [
+        {
+          type: "hero",
+          props: {
+            layout: "centered",
+            badge: "🌸 HOA NGHỆ THUẬT & THIẾT KẾ ĐỘC BẢN",
+            title: cleanTitle,
+            subtitle: "Mỗi đóa hoa là một tác phẩm mang theo câu chuyện cảm xúc, tuyển chọn hoa tươi nhập khẩu trong ngày và sáng tạo thủ công bởi nghệ nhân.",
+            cta: "Đặt Hoa Thiết Kế",
+            secondaryCta: "Xem Bộ Sưu Tập",
+            image: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1200&q=80",
+          },
+        },
+        {
+          type: "ticker",
+          props: {
+            items: [
+              "🌸 HOA TƯƠI NHẬP KHẨU TRONG NGÀY",
+              "💐 THIẾT KẾ HOA CƯỚI & SỰ KIỆN ĐỘC BẢN",
+              "🚀 GIAO HOA HỎA TỐC 60 PHÚT NỘI THÀNH",
+              "💌 TẶNG KÈM THIỆP THIẾT KẾ & BĂNG RÔN",
+              "🌿 CAM KẾT HOA TƯƠI TỐI THIỂU 3 NGÀY"
+            ],
+          },
+        },
+        {
+          type: "cards",
+          props: {
+            heading: "Bộ Sưu Tập Hoa Tươi Nghệ Thuật",
+            subheading: "Được thiết kế kỳ công từ những cành hoa tươi sắc nét nhất",
+            items: [
+              {
+                title: "Bó Hồng Juliet & David Austin",
+                desc: "Hương thơm ngọt ngào, cánh xoăn quý phái nhập khẩu Anh Quốc kèm lá bạc khuynh diệp.",
+                badge: "Signature",
+                price: "950.000đ",
+                image: "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                title: "Lẵng Lan Hồ Điệp Hoàng Gia",
+                desc: "Lan hồ điệp vàng quý phái kết hợp đồng tiền và cẩm tú cầu rực rỡ đón vượng khí.",
+                badge: "Khai trương",
+                price: "1.650.000đ",
+                image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                title: "Hộp Hoa Tulip Hà Lan Pastel",
+                desc: "15 cành tulip màu hồng phấn mềm mại trong hộp nhung trang nhã kèm nơ lụa cao cấp.",
+                badge: "Bán chạy",
+                price: "880.000đ",
+                image: "https://images.unsplash.com/photo-1507290439931-a861b5a38200?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                title: "Bó Hoa Cưới Cầm Tay Cô Dâu",
+                desc: "Linh lan trắng kết hợp mẫu đơn và baby sấy giữ trọn khoảnh khắc thiêng liêng nhất.",
+                badge: "Wedding VIP",
+                price: "1.450.000đ",
+                image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
+              },
+            ],
+          },
+        },
+        {
+          type: "split_feature",
+          props: {
+            badge: "TRIẾT LÝ SÁNG TẠO",
+            title: "Cắm Hoa Theo Cảm Xúc, Không Rập Khuôn",
+            description: "Chúng tôi tin rằng hoa không chỉ để trang trí, hoa thay lời muốn nói những điều chân thành nhất. Mỗi bó hoa ra đời là duy nhất, gói trọn tâm tư bạn muốn gửi trao.",
+            image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1000&q=80",
+            bullets: [
+              "Chỉ sử dụng hoa mới cắt sáng sớm từ vườn Đà Lạt và nhập khẩu Hà Lan",
+              "Tạo hình theo phong cách cắm hoa tự nhiên mộc mạc châu Âu",
+              "Chụp ảnh gửi bạn duyệt thực tế trước khi giao hàng tận nơi",
+            ],
+            cta: "Tìm hiểu thêm",
+          },
+        },
+        {
+          type: "gallery",
+          props: {
+            heading: "Khoảnh Khắc Hoa Trao Tay",
+            subheading: "Hình ảnh thực tế được khách hàng ghi lại trong những dịp kỷ niệm thiêng liêng",
+            items: [
+              { image: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=800&q=80", title: "Ngày Chung Đôi", desc: "Không gian tiệc cưới hoa tươi rực rỡ" },
+              { image: "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80", title: "Hồng David Austin", desc: "Trao gửi yêu thương ngày sinh nhật" },
+              { image: "https://images.unsplash.com/photo-1507290439931-a861b5a38200?auto=format&fit=crop&w=800&q=80", title: "Tulip Hà Lan Mùa Xuân", desc: "Món quà tinh tế và thanh lịch" },
+              { image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80", title: "Lẵng Chúc Mừng", desc: "Khởi đầu hồng phát và thịnh vượng" },
+            ],
+          },
+        },
+        {
+          type: "form",
+          props: {
+            heading: "Đặt Hoa Thiết Kế Theo Dịp",
+            subheading: "Để lại yêu cầu và ngân sách, florist của chúng tôi sẽ tư vấn mẫu hoa ưng ý nhất",
+            submitLabel: "Gửi Yêu Cầu Đặt Hoa",
+            fields: [
+              { label: "Họ và tên của bạn", type: "text" },
+              { label: "Số điện thoại nhận hoa", type: "tel" },
+              { label: "Dịp tặng & Ngân sách dự kiến", type: "text" },
+              { label: "Lời nhắn trên thiệp / Lời chúc", type: "textarea" },
+            ],
+          },
+        },
+        {
+          type: "footer",
+          props: {
+            text: `© 2026 ${cleanTitle}. Tiệm Hoa Nghệ Thuật & Thiết Kế Độc Bản.`,
+            links: [
+              { label: "Trang chủ", href: "#" },
+              { label: "Bộ sưu tập", href: "#" },
+              { label: "Hoa cưới", href: "#" },
+              { label: "Liên hệ", href: "#" },
+            ],
+          },
+        },
+      ],
+    };
+  }
+
+  // 1. ARTISAN ARCHETYPE (Cà phê, trà bánh, tiệm gốm, đồ thủ công mộc mạc)
   if (style === "artisan") {
-    const isFlower = p.includes("hoa tuoi") || p.includes("shop hoa") || p.includes("tiem hoa") || p.includes("flower") || /\bhoa\b/.test(p);
-    const primary = isFlower ? "#e11d48" : "#b45309";
-    const bg = isFlower ? "#fffdfd" : "#faf7f2";
-    const fg = isFlower ? "#1f2937" : "#1f1610";
-    const heroImg = isFlower
-      ? "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1200&q=80"
-      : "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80";
+    const primary = "#b45309";
+    const bg = "#faf7f2";
+    const fg = "#1f1610";
+    const heroImg = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80";
 
     return {
       theme: {
@@ -421,13 +551,11 @@ function createSmartPromptSpec(prompt: string): Spec {
         {
           type: "hero",
           props: {
-            layout: "editorial",
-            badge: isFlower ? "🌸 HOA TƯƠI NGHỆ THUẬT" : "☕ HƯƠNG VỊ RANG XAY THỦ CÔNG",
+            layout: "split",
+            badge: "☕ HƯƠNG VỊ RANG XAY THỦ CÔNG",
             title: cleanTitle,
-            subtitle: isFlower
-              ? "Từng đóa hoa được tuyển chọn trong ngày, gói trọn tình yêu và sự tinh tế dành cho những dịp thiêng liêng nhất."
-              : "Hạt cà phê đặc sản rang mộc mẻ nhỏ mỗi tuần, lưu giữ trọn vẹn hương vị mộc mạc và sự thanh tĩnh của đất trời.",
-            cta: isFlower ? "Xem Bộ Sưu Tập Hoa" : "Khám Phá Menu Thức Uống",
+            subtitle: "Hạt cà phê đặc sản rang mộc mẻ nhỏ mỗi tuần, lưu giữ trọn vẹn hương vị mộc mạc và sự thanh tĩnh của đất trời.",
+            cta: "Khám Phá Menu Thức Uống",
             secondaryCta: "Tìm Hiểu Không Gian",
             image: heroImg,
           },
@@ -435,44 +563,60 @@ function createSmartPromptSpec(prompt: string): Spec {
         {
           type: "ticker",
           props: {
-            items: isFlower
-              ? ["HOA NHẬP KHẨU TƯƠI MỖI NGÀY", "THIẾT KẾ HOA CƯỚI RIÊNG BIỆT", "GIAO HOA TẬN TAY TRONG 60 PHÚT", "GÓI QUÀ THỦ CÔNG NGHỆ NHÂN", "TINH TẾ & ĐỘC BẢN"]
-              : ["HẠT ARABICA CẦU ĐẤT ĐẶC TẢ", "BÁNH TƯƠI NƯỚNG NÓNG MỖI SÁNG", "KHÔNG GIAN YÊN BÌNH MỘC MẠC", "PHA PHIN & POUR OVER THỦ CÔNG", "100% NGUYÊN BẢN KHÔNG PHỤ GIA"],
+            items: [
+              "HẠT ARABICA CẦU ĐẤT ĐẶC TẢ",
+              "BÁNH TƯƠI NƯỚNG NÓNG MỖI SÁNG",
+              "KHÔNG GIAN YÊN BÌNH MỘC MẠC",
+              "PHA PHIN & POUR OVER THỦ CÔNG",
+              "100% NGUYÊN BẢN KHÔNG PHỤ GIA"
+            ],
           },
         },
         {
-          type: "menu",
+          type: "cards",
           props: {
-            heading: isFlower ? "Bó Hoa & Lẵng Hoa Tiêu Biểu" : "Thực Đơn Đậm Chất Nghệ Nhân",
-            subheading: "Được chắt lọc kỹ lưỡng từ nguồn nguyên liệu thượng hạng",
-            categories: [
+            heading: "Thức Uống & Món Bán Chạy",
+            subheading: "Được chắt lọc từ những nguyên liệu sạch và công thức pha chế thủ công",
+            items: [
               {
-                name: isFlower ? "Bộ Sưu Tập Nổi Bật" : "Thức Uống & Bánh Ngọt",
-                items: isFlower
-                  ? [
-                      { name: "Bó Hoa Hồng David Austin Lãng Mạn", desc: "Hồng nhập khẩu cánh xoăn kèm lá bạc khuynh diệp thơm dịu", price: "850.000đ", badge: "Signature" },
-                      { name: "Lẵng Hoa Khai Trương Thịnh Vượng", desc: "Lan hồ điệp kết hợp hoa đồng tiền và cẩm tú cầu rực rỡ", price: "1.250.000đ", badge: "VIP" },
-                      { name: "Hộp Hoa Tulip Hà Lan Pastel", desc: "15 cành tulip màu hồng phấn trong hộp nhung trang nhã", price: "950.000đ" },
-                      { name: "Bó Baby Trắng Thuần Khiết", desc: "Baby nhập khẩu sấy khô giữ màu tự nhiên lên đến 12 tháng", price: "450.000đ" },
-                    ]
-                  : [
-                      { name: "Cà Phê Cold Brew Cam Vàng", desc: "Ủ lạnh 16 tiếng từ hạt Arabica Cầu Đất cùng hương cam thanh mát", price: "65.000đ", badge: "Signature" },
-                      { name: "Espresso Con Panna Thượng Hạng", desc: "Cốt cà phê đậm sâu kết hợp lớp kem tươi béo mịn thủ công", price: "55.000đ" },
-                      { name: "Bánh Croissant Bơ Normandy Nóng", desc: "Ngàn lớp giòn rụm với bơ Pháp nguyên chất thơm nồng nàn", price: "48.000đ", badge: "Bán chạy" },
-                      { name: "Trà Đào Cam Sả Mật Ong Rừng", desc: "Trà thảo mộc thơm lành thanh nhiệt, vị ngọt tự nhiên", price: "58.000đ" },
-                    ],
+                title: "Cà Phê Cold Brew Cam Vàng",
+                desc: "Ủ lạnh 16 tiếng từ hạt Arabica Cầu Đất cùng hương cam thanh mát sảng khoái.",
+                badge: "Signature",
+                price: "65.000đ",
+                image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                title: "Bánh Croissant Bơ Normandy Nóng",
+                desc: "Ngàn lớp giòn rụm với bơ Pháp nguyên chất thơm nồng nàn nướng mới mỗi sáng.",
+                badge: "Bánh tươi",
+                price: "48.000đ",
+                image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                title: "Trà Đào Cam Sả Mật Ong Rừng",
+                desc: "Trà thảo mộc thơm lành thanh nhiệt, vị ngọt thanh tự nhiên từ mật ong rừng nguyên chất.",
+                badge: "Thanh mát",
+                price: "58.000đ",
+                image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80",
               },
             ],
           },
         },
         {
-          type: "quote",
+          type: "menu",
           props: {
-            quote: isFlower
-              ? "Hoa không chỉ để ngắm, hoa thay lời muốn nói những điều chân thành nhất mà ngôn từ khó diễn tả."
-              : "Chúng tôi không chỉ pha một tách cà phê, chúng tôi sẻ chia khoảnh khắc tĩnh tại và sự chăm chút trong từng giọt nước sôi.",
-            author: isFlower ? "Floral Stylist & Founder" : "Master Barista",
-            role: "Nghệ nhân sáng tạo",
+            heading: "Thực Đơn Đậm Chất Nghệ Nhân",
+            subheading: "Được chắt lọc kỹ lưỡng từ nguồn nguyên liệu thượng hạng",
+            categories: [
+              {
+                name: "Cà Phê & Đồ Uống",
+                items: [
+                  { name: "Espresso Con Panna Thượng Hạng", desc: "Cốt cà phê đậm sâu kết hợp lớp kem tươi béo mịn thủ công", price: "55.000đ", badge: "Best" },
+                  { name: "Cà Phê Muối Xứ Huế", desc: "Vị đắng đượm quyện kem béo mặn mòi khó quên", price: "45.000đ" },
+                  { name: "Matcha Latte Nhật Bản", desc: "Bột trà Uji nguyên chất đánh cùng sữa hạt yến mạch", price: "60.000đ" },
+                ],
+              },
+            ],
           },
         },
         {
@@ -480,26 +624,24 @@ function createSmartPromptSpec(prompt: string): Spec {
           props: {
             title: "Sự Tỉ Mỉ Trong Từng Khâu Thực Hiện",
             description: "Từ tuyển chọn nguồn nguyên liệu xanh sạch đến công đoạn chế tác bằng tay, tất cả đều tuân thủ sự chân thành và tinh thần nghệ nhân nguyên bản.",
-            image: isFlower
-              ? "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80"
-              : "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
+            image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
             bullets: [
-              "Nguyên liệu tươi mới thu hái và nhập khẩu trong ngày",
+              "Hạt cà phê chỉ rang và sử dụng trong vòng 14 ngày",
               "Bảo quản hoàn toàn tự nhiên, không chất phụ gia độc hại",
-              "Đóng gói thủ công bằng giấy kraft thân thiện môi trường",
+              "Không gian mộc mạc yên bình lý tưởng để đọc sách và làm việc",
             ],
           },
         },
         {
           type: "form",
           props: {
-            heading: isFlower ? "Đặt Hoa Thiết Kế Theo Yêu Cầu" : "Đặt Bàn Hoặc Đặt Tiệc Nhỏ",
+            heading: "Đặt Bàn Hoặc Đặt Tiệc Nhỏ",
             subheading: "Để lại thông tin, chúng tôi sẽ liên hệ chuẩn bị chu đáo nhất cho bạn",
-            submitLabel: isFlower ? "Gửi Yêu Cầu Đặt Hoa" : "Xác Nhận Đặt Bàn",
+            submitLabel: "Xác Nhận Đặt Bàn",
             fields: [
               { label: "Họ và tên của bạn", type: "text" },
               { label: "Số điện thoại liên hệ", type: "tel" },
-              { label: isFlower ? "Dịp tặng & mong muốn về hoa" : "Số người & giờ ghé quán", type: "textarea" },
+              { label: "Số người & giờ ghé quán", type: "textarea" },
             ],
           },
         },
@@ -512,6 +654,240 @@ function createSmartPromptSpec(prompt: string): Spec {
               { label: "Thực đơn", href: "#" },
               { label: "Không gian", href: "#" },
               { label: "Liên hệ", href: "#" },
+            ],
+          },
+        },
+      ],
+    };
+  }
+
+  // 1.5. NHÀ HÀNG SUSHI / OMAKASE / ẨM THỰC CAO CẤP
+  const isSushi = p.includes("sushi") || p.includes("nha hang") || p.includes("omakase") || p.includes("am thuc") || p.includes("hai san");
+  if (isSushi) {
+    return {
+      theme: {
+        primary: "#dc2626",
+        background: "#0c0a09",
+        text: "#fafaf9",
+        font: "Playfair Display",
+        style: "luxury",
+      },
+      sections: [
+        {
+          type: "hero",
+          props: {
+            layout: "centered",
+            badge: "🍣 OMAKASE THƯỢNG HẠNG NHẬT BẢN",
+            title: cleanTitle,
+            subtitle: "Hải sản tươi sống vận chuyển hỏa tốc từ chợ cá Toyosu Tokyo, kết hợp tài hoa hơn 20 năm của bếp trưởng người Nhật.",
+            cta: "Đặt Bàn Trực Tuyến",
+            secondaryCta: "Xem Thực Đơn Mùa Này",
+            image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=1200&q=80",
+          },
+        },
+        {
+          type: "ticker",
+          props: {
+            items: [
+              "HẢI SẢN TƯƠI BAY TRONG NGÀY TỪ NHẬT BẢN",
+              "BÒ WAGYU A5 CHỨNG NHẬN MIYAZAKI",
+              "PHÒNG VIP RIÊNG TƯ CHUẨN PHONG CÁCH TỐI GIẢN",
+              "BẾP TRƯỞNG 25 NĂM KINH NGHIỆM TẠI GINZA",
+              "BỘ SƯU TẬP RƯỢU SAKE THƯỢNG HẠNG"
+            ],
+          },
+        },
+        {
+          type: "cards",
+          props: {
+            heading: "Tuyệt Tác Ẩm Thực Tươi Ngon",
+            subheading: "Mỗi món ăn là sự kết tinh của nguyên liệu hiếm có và kỹ nghệ điêu luyện",
+            items: [
+              {
+                title: "Nigiri Bò Wagyu A5 Truffle",
+                desc: "Thịt bò nướng tái mặt mỡ tan chảy trên đầu lưỡi cùng sốt nấm Truffle đen thơm nồng.",
+                badge: "Signature",
+                price: "320.000đ / miếng",
+                image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                title: "Sashimi Otoro Bụng Cá Hồi Xanh",
+                desc: "Thớ mỡ vân cẩm thạch ngậy béo, cắt dày nguyên bản giữ trọn vị ngọt đại dương.",
+                badge: "Bán chạy",
+                price: "850.000đ / set",
+                image: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                title: "Cơm Nhím Biển Uni Hokkaido",
+                desc: "Trứng nhím biển vàng ươm béo ngậy ăn kèm rong biển nướng giòn và wasabi tươi giã tay.",
+                badge: "Mùa này",
+                price: "720.000đ / phần",
+                image: "https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=800&q=80",
+              },
+            ],
+          },
+        },
+        {
+          type: "split_feature",
+          props: {
+            badge: "TRIẾT LÝ OMAKASE",
+            title: "Trọn Niềm Tin Vào Đôi Tay Bếp Trưởng",
+            description: "Tại nhà hàng của chúng tôi, thực khách không gọi món theo danh mục thông thường. Bếp trưởng sẽ lắng nghe khẩu vị của bạn và thiết kế một hành trình ẩm thực riêng biệt.",
+            image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1000&q=80",
+            bullets: [
+              "Gạo Koshihikari thượng hạng nấu bằng nước suối khoáng tự nhiên",
+              "Wasabi tươi mài bằng da cá đuối truyền thống Shizuoka",
+              "Không gian quầy bar gỗ Hinoki thơm dịu và ấm cúng",
+            ],
+            cta: "Đặt chỗ trước",
+          },
+        },
+        {
+          type: "form",
+          props: {
+            heading: "Đặt Chỗ Trực Tuyến & Phòng Tiệc VIP",
+            subheading: "Vui lòng đặt trước ít nhất 24 giờ để chúng tôi chuẩn bị hải sản tươi ngon nhất",
+            submitLabel: "Xác Nhận Giữ Chỗ",
+            fields: [
+              { label: "Họ và tên của bạn", type: "text" },
+              { label: "Số điện thoại liên hệ", type: "tel" },
+              { label: "Số lượng khách & Thời gian đến", type: "text" },
+              { label: "Ghi chú dị ứng hoặc yêu cầu riêng", type: "textarea" },
+            ],
+          },
+        },
+        {
+          type: "footer",
+          props: {
+            text: `© 2026 ${cleanTitle}. Tinh hoa ẩm thực xứ sở Phù Tang.`,
+            links: [
+              { label: "Thực đơn Omakase", href: "#" },
+              { label: "Rượu Sake", href: "#" },
+              { label: "Không gian", href: "#" },
+              { label: "Đặt bàn", href: "#" },
+            ],
+          },
+        },
+      ],
+    };
+  }
+
+  // 1.8. KHÓA HỌC / GIÁO DỤC TRỰC TUYẾN / LẬP TRÌNH / HỌC TẬP
+  const isCourse = p.includes("khoa hoc") || p.includes("lap trinh") || p.includes("hoc") || p.includes("dao tao") || p.includes("giao duc");
+  if (isCourse) {
+    return {
+      theme: {
+        primary: "#2563eb",
+        secondary: "#60a5fa",
+        accent: "#f59e0b",
+        background: "#0b1329",
+        text: "#f8fafc",
+        font: "Be Vietnam Pro",
+        style: "bento",
+      },
+      sections: [
+        {
+          type: "hero",
+          props: {
+            layout: "split",
+            badge: "🚀 LỘ TRÌNH ĐÀO TẠO THỰC CHIẾN 2026",
+            title: cleanTitle,
+            subtitle: "Học từ chuyên gia đang làm việc tại các tập đoàn công nghệ lớn. Cam kết hỗ trợ việc làm với mức lương hấp dẫn sau khi tốt nghiệp.",
+            cta: "Đăng Ký Tư Vấn Khóa Học",
+            secondaryCta: "Xem Lộ Trình Chi Tiết",
+            image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
+          },
+        },
+        {
+          type: "ticker",
+          props: {
+            items: [
+              "🔥 98% HỌC VIÊN CÓ VIỆC LÀM SAU 3 THÁNG",
+              "💻 HƠN 50+ DỰ ÁN THỰC CHIẾN ĐƯA VÀO CV",
+              "👨‍🏫 MENTOR 1 KÈM 1 HỖ TRỢ CODE HÀNG NGÀY",
+              "🎁 TẶNG BỘ TÀI LIỆU & CODE MẪU BẢN QUYỀN",
+              "🏢 KẾT NỐI HƠN 400+ DOANH NGHIỆP TUYỂN DỤNG"
+            ],
+          },
+        },
+        {
+          type: "cards",
+          props: {
+            heading: "Các Khóa Học Tiêu Biểu & Chuyên Sâu",
+            subheading: "Được cập nhật công nghệ mới nhất theo nhu cầu thực tế của thị trường",
+            items: [
+              {
+                title: "Frontend React & TypeScript Pro",
+                desc: "Làm chủ React 19, Next.js App Router, TailwindCSS và xây dựng các Web App phức tạp.",
+                badge: "Bán chạy nhất",
+                price: "4.500.000đ",
+                image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                title: "Backend Node.js & Microservices",
+                desc: "Thiết kế RESTful API, NestJS, Docker, Redis, Message Queue và cơ sở dữ liệu phân tán.",
+                badge: "Hot 2026",
+                price: "5.200.000đ",
+                image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+              },
+              {
+                title: "Fullstack Web & AI Integration",
+                desc: "Kết nối LLM, xây dựng ứng dụng AI tự động hóa và triển khai Cloudflare / AWS.",
+                badge: "Chuyên sâu VIP",
+                price: "7.800.000đ",
+                image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80",
+              },
+            ],
+          },
+        },
+        {
+          type: "stats",
+          props: {
+            heading: "NHỮNG CON SỐ BIẾT NÓI",
+            items: [
+              { value: "12,000+", label: "Học viên đã tốt nghiệp" },
+              { value: "98.2%", label: "Tỷ lệ có việc làm đúng ngành" },
+              { value: "15-25tr", label: "Mức lương khởi điểm trung bình" },
+              { value: "400+", label: "Doanh nghiệp đối tác tuyển dụng" },
+            ],
+          },
+        },
+        {
+          type: "table",
+          props: {
+            heading: "So Sánh Lộ Trình Đào Tạo",
+            subheading: "Lựa chọn hình thức học tập phù hợp nhất với quỹ thời gian của bạn",
+            columns: ["Quyền Lợi & Hỗ Trợ", "Lớp Tự Học Có Video", "Lớp Mentor Kèm 1-1"],
+            rows: [
+              ["Video bài giảng Full HD trọn đời", "Có (Truy cập 24/7)", "Có (Cập nhật liên tục)"],
+              ["Hỗ trợ review code trực tiếp", "Hỏi đáp qua forum", "1-1 hàng tuần cùng Tech Lead"],
+              ["Bài tập dự án thực tế", "5 dự án cơ bản", "12 dự án lớn chuẩn doanh nghiệp"],
+              ["Hỗ trợ kết nối phỏng vấn", "Hỗ trợ sửa CV", "Cam kết kết nối trực tiếp HR"],
+            ],
+          },
+        },
+        {
+          type: "form",
+          props: {
+            heading: "Nhận Lộ Trình Học & Ưu Đãi Học Bổng 30%",
+            subheading: "Để lại thông tin để được đội ngũ tuyển sinh tư vấn lộ trình phù hợp với xuất phát điểm của bạn",
+            submitLabel: "Đăng Ký Nhận Tư Vấn Ngay",
+            fields: [
+              { label: "Họ và tên học viên", type: "text" },
+              { label: "Số điện thoại liên hệ", type: "tel" },
+              { label: "Khóa học bạn đang quan tâm", type: "text" },
+            ],
+          },
+        },
+        {
+          type: "footer",
+          props: {
+            text: `© 2026 ${cleanTitle}. Đào tạo lập trình thực chiến chuẩn quốc tế.`,
+            links: [
+              { label: "Khóa học", href: "#" },
+              { label: "Lộ trình", href: "#" },
+              { label: "Học bổng", href: "#" },
+              { label: "Tuyển dụng", href: "#" },
             ],
           },
         },

@@ -4752,12 +4752,142 @@ function createSmartPromptSpec(prompt) {
   const p = stripVietnamese(prompt);
   const cleanTitle = prompt.length > 55 ? prompt.slice(0, 52) + "..." : prompt;
   const style = detectStyleFromPrompt(prompt);
+  const isFlower = p.includes("hoa tuoi") || p.includes("shop hoa") || p.includes("tiem hoa") || p.includes("flower") || /\bhoa\b/.test(p);
+  if (isFlower) {
+    return {
+      theme: {
+        primary: "#e11d48",
+        secondary: "#fda4af",
+        accent: "#f43f5e",
+        background: "#fff9f9",
+        text: "#1e1b1b",
+        font: "Playfair Display",
+        style: "artisan"
+      },
+      sections: [
+        {
+          type: "hero",
+          props: {
+            layout: "centered",
+            badge: "\u{1F338} HOA NGH\u1EC6 THU\u1EACT & THI\u1EBET K\u1EBE \u0110\u1ED8C B\u1EA2N",
+            title: cleanTitle,
+            subtitle: "M\u1ED7i \u0111\xF3a hoa l\xE0 m\u1ED9t t\xE1c ph\u1EA9m mang theo c\xE2u chuy\u1EC7n c\u1EA3m x\xFAc, tuy\u1EC3n ch\u1ECDn hoa t\u01B0\u01A1i nh\u1EADp kh\u1EA9u trong ng\xE0y v\xE0 s\xE1ng t\u1EA1o th\u1EE7 c\xF4ng b\u1EDFi ngh\u1EC7 nh\xE2n.",
+            cta: "\u0110\u1EB7t Hoa Thi\u1EBFt K\u1EBF",
+            secondaryCta: "Xem B\u1ED9 S\u01B0u T\u1EADp",
+            image: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1200&q=80"
+          }
+        },
+        {
+          type: "ticker",
+          props: {
+            items: [
+              "\u{1F338} HOA T\u01AF\u01A0I NH\u1EACP KH\u1EA8U TRONG NG\xC0Y",
+              "\u{1F490} THI\u1EBET K\u1EBE HOA C\u01AF\u1EDAI & S\u1EF0 KI\u1EC6N \u0110\u1ED8C B\u1EA2N",
+              "\u{1F680} GIAO HOA H\u1ECEA T\u1ED0C 60 PH\xDAT N\u1ED8I TH\xC0NH",
+              "\u{1F48C} T\u1EB6NG K\xC8M THI\u1EC6P THI\u1EBET K\u1EBE & B\u0102NG R\xD4N",
+              "\u{1F33F} CAM K\u1EBET HOA T\u01AF\u01A0I T\u1ED0I THI\u1EC2U 3 NG\xC0Y"
+            ]
+          }
+        },
+        {
+          type: "cards",
+          props: {
+            heading: "B\u1ED9 S\u01B0u T\u1EADp Hoa T\u01B0\u01A1i Ngh\u1EC7 Thu\u1EADt",
+            subheading: "\u0110\u01B0\u1EE3c thi\u1EBFt k\u1EBF k\u1EF3 c\xF4ng t\u1EEB nh\u1EEFng c\xE0nh hoa t\u01B0\u01A1i s\u1EAFc n\xE9t nh\u1EA5t",
+            items: [
+              {
+                title: "B\xF3 H\u1ED3ng Juliet & David Austin",
+                desc: "H\u01B0\u01A1ng th\u01A1m ng\u1ECDt ng\xE0o, c\xE1nh xo\u0103n qu\xFD ph\xE1i nh\u1EADp kh\u1EA9u Anh Qu\u1ED1c k\xE8m l\xE1 b\u1EA1c khuynh di\u1EC7p.",
+                badge: "Signature",
+                price: "950.000\u0111",
+                image: "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                title: "L\u1EB5ng Lan H\u1ED3 \u0110i\u1EC7p Ho\xE0ng Gia",
+                desc: "Lan h\u1ED3 \u0111i\u1EC7p v\xE0ng qu\xFD ph\xE1i k\u1EBFt h\u1EE3p \u0111\u1ED3ng ti\u1EC1n v\xE0 c\u1EA9m t\xFA c\u1EA7u r\u1EF1c r\u1EE1 \u0111\xF3n v\u01B0\u1EE3ng kh\xED.",
+                badge: "Khai tr\u01B0\u01A1ng",
+                price: "1.650.000\u0111",
+                image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                title: "H\u1ED9p Hoa Tulip H\xE0 Lan Pastel",
+                desc: "15 c\xE0nh tulip m\xE0u h\u1ED3ng ph\u1EA5n m\u1EC1m m\u1EA1i trong h\u1ED9p nhung trang nh\xE3 k\xE8m n\u01A1 l\u1EE5a cao c\u1EA5p.",
+                badge: "B\xE1n ch\u1EA1y",
+                price: "880.000\u0111",
+                image: "https://images.unsplash.com/photo-1507290439931-a861b5a38200?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                title: "B\xF3 Hoa C\u01B0\u1EDBi C\u1EA7m Tay C\xF4 D\xE2u",
+                desc: "Linh lan tr\u1EAFng k\u1EBFt h\u1EE3p m\u1EABu \u0111\u01A1n v\xE0 baby s\u1EA5y gi\u1EEF tr\u1ECDn kho\u1EA3nh kh\u1EAFc thi\xEAng li\xEAng nh\u1EA5t.",
+                badge: "Wedding VIP",
+                price: "1.450.000\u0111",
+                image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          }
+        },
+        {
+          type: "split_feature",
+          props: {
+            badge: "TRI\u1EBET L\xDD S\xC1NG T\u1EA0O",
+            title: "C\u1EAFm Hoa Theo C\u1EA3m X\xFAc, Kh\xF4ng R\u1EADp Khu\xF4n",
+            description: "Ch\xFAng t\xF4i tin r\u1EB1ng hoa kh\xF4ng ch\u1EC9 \u0111\u1EC3 trang tr\xED, hoa thay l\u1EDDi mu\u1ED1n n\xF3i nh\u1EEFng \u0111i\u1EC1u ch\xE2n th\xE0nh nh\u1EA5t. M\u1ED7i b\xF3 hoa ra \u0111\u1EDDi l\xE0 duy nh\u1EA5t, g\xF3i tr\u1ECDn t\xE2m t\u01B0 b\u1EA1n mu\u1ED1n g\u1EEDi trao.",
+            image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1000&q=80",
+            bullets: [
+              "Ch\u1EC9 s\u1EED d\u1EE5ng hoa m\u1EDBi c\u1EAFt s\xE1ng s\u1EDBm t\u1EEB v\u01B0\u1EDDn \u0110\xE0 L\u1EA1t v\xE0 nh\u1EADp kh\u1EA9u H\xE0 Lan",
+              "T\u1EA1o h\xECnh theo phong c\xE1ch c\u1EAFm hoa t\u1EF1 nhi\xEAn m\u1ED9c m\u1EA1c ch\xE2u \xC2u",
+              "Ch\u1EE5p \u1EA3nh g\u1EEDi b\u1EA1n duy\u1EC7t th\u1EF1c t\u1EBF tr\u01B0\u1EDBc khi giao h\xE0ng t\u1EADn n\u01A1i"
+            ],
+            cta: "T\xECm hi\u1EC3u th\xEAm"
+          }
+        },
+        {
+          type: "gallery",
+          props: {
+            heading: "Kho\u1EA3nh Kh\u1EAFc Hoa Trao Tay",
+            subheading: "H\xECnh \u1EA3nh th\u1EF1c t\u1EBF \u0111\u01B0\u1EE3c kh\xE1ch h\xE0ng ghi l\u1EA1i trong nh\u1EEFng d\u1ECBp k\u1EF7 ni\u1EC7m thi\xEAng li\xEAng",
+            items: [
+              { image: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=800&q=80", title: "Ng\xE0y Chung \u0110\xF4i", desc: "Kh\xF4ng gian ti\u1EC7c c\u01B0\u1EDBi hoa t\u01B0\u01A1i r\u1EF1c r\u1EE1" },
+              { image: "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80", title: "H\u1ED3ng David Austin", desc: "Trao g\u1EEDi y\xEAu th\u01B0\u01A1ng ng\xE0y sinh nh\u1EADt" },
+              { image: "https://images.unsplash.com/photo-1507290439931-a861b5a38200?auto=format&fit=crop&w=800&q=80", title: "Tulip H\xE0 Lan M\xF9a Xu\xE2n", desc: "M\xF3n qu\xE0 tinh t\u1EBF v\xE0 thanh l\u1ECBch" },
+              { image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80", title: "L\u1EB5ng Ch\xFAc M\u1EEBng", desc: "Kh\u1EDFi \u0111\u1EA7u h\u1ED3ng ph\xE1t v\xE0 th\u1ECBnh v\u01B0\u1EE3ng" }
+            ]
+          }
+        },
+        {
+          type: "form",
+          props: {
+            heading: "\u0110\u1EB7t Hoa Thi\u1EBFt K\u1EBF Theo D\u1ECBp",
+            subheading: "\u0110\u1EC3 l\u1EA1i y\xEAu c\u1EA7u v\xE0 ng\xE2n s\xE1ch, florist c\u1EE7a ch\xFAng t\xF4i s\u1EBD t\u01B0 v\u1EA5n m\u1EABu hoa \u01B0ng \xFD nh\u1EA5t",
+            submitLabel: "G\u1EEDi Y\xEAu C\u1EA7u \u0110\u1EB7t Hoa",
+            fields: [
+              { label: "H\u1ECD v\xE0 t\xEAn c\u1EE7a b\u1EA1n", type: "text" },
+              { label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i nh\u1EADn hoa", type: "tel" },
+              { label: "D\u1ECBp t\u1EB7ng & Ng\xE2n s\xE1ch d\u1EF1 ki\u1EBFn", type: "text" },
+              { label: "L\u1EDDi nh\u1EAFn tr\xEAn thi\u1EC7p / L\u1EDDi ch\xFAc", type: "textarea" }
+            ]
+          }
+        },
+        {
+          type: "footer",
+          props: {
+            text: `\xA9 2026 ${cleanTitle}. Ti\u1EC7m Hoa Ngh\u1EC7 Thu\u1EADt & Thi\u1EBFt K\u1EBF \u0110\u1ED9c B\u1EA3n.`,
+            links: [
+              { label: "Trang ch\u1EE7", href: "#" },
+              { label: "B\u1ED9 s\u01B0u t\u1EADp", href: "#" },
+              { label: "Hoa c\u01B0\u1EDBi", href: "#" },
+              { label: "Li\xEAn h\u1EC7", href: "#" }
+            ]
+          }
+        }
+      ]
+    };
+  }
   if (style === "artisan") {
-    const isFlower = p.includes("hoa tuoi") || p.includes("shop hoa") || p.includes("tiem hoa") || p.includes("flower") || /\bhoa\b/.test(p);
-    const primary = isFlower ? "#e11d48" : "#b45309";
-    const bg = isFlower ? "#fffdfd" : "#faf7f2";
-    const fg = isFlower ? "#1f2937" : "#1f1610";
-    const heroImg = isFlower ? "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1200&q=80" : "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80";
+    const primary = "#b45309";
+    const bg = "#faf7f2";
+    const fg = "#1f1610";
+    const heroImg = "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80";
     return {
       theme: {
         primary,
@@ -4770,11 +4900,11 @@ function createSmartPromptSpec(prompt) {
         {
           type: "hero",
           props: {
-            layout: "editorial",
-            badge: isFlower ? "\u{1F338} HOA T\u01AF\u01A0I NGH\u1EC6 THU\u1EACT" : "\u2615 H\u01AF\u01A0NG V\u1ECA RANG XAY TH\u1EE6 C\xD4NG",
+            layout: "split",
+            badge: "\u2615 H\u01AF\u01A0NG V\u1ECA RANG XAY TH\u1EE6 C\xD4NG",
             title: cleanTitle,
-            subtitle: isFlower ? "T\u1EEBng \u0111\xF3a hoa \u0111\u01B0\u1EE3c tuy\u1EC3n ch\u1ECDn trong ng\xE0y, g\xF3i tr\u1ECDn t\xECnh y\xEAu v\xE0 s\u1EF1 tinh t\u1EBF d\xE0nh cho nh\u1EEFng d\u1ECBp thi\xEAng li\xEAng nh\u1EA5t." : "H\u1EA1t c\xE0 ph\xEA \u0111\u1EB7c s\u1EA3n rang m\u1ED9c m\u1EBB nh\u1ECF m\u1ED7i tu\u1EA7n, l\u01B0u gi\u1EEF tr\u1ECDn v\u1EB9n h\u01B0\u01A1ng v\u1ECB m\u1ED9c m\u1EA1c v\xE0 s\u1EF1 thanh t\u0129nh c\u1EE7a \u0111\u1EA5t tr\u1EDDi.",
-            cta: isFlower ? "Xem B\u1ED9 S\u01B0u T\u1EADp Hoa" : "Kh\xE1m Ph\xE1 Menu Th\u1EE9c U\u1ED1ng",
+            subtitle: "H\u1EA1t c\xE0 ph\xEA \u0111\u1EB7c s\u1EA3n rang m\u1ED9c m\u1EBB nh\u1ECF m\u1ED7i tu\u1EA7n, l\u01B0u gi\u1EEF tr\u1ECDn v\u1EB9n h\u01B0\u01A1ng v\u1ECB m\u1ED9c m\u1EA1c v\xE0 s\u1EF1 thanh t\u0129nh c\u1EE7a \u0111\u1EA5t tr\u1EDDi.",
+            cta: "Kh\xE1m Ph\xE1 Menu Th\u1EE9c U\u1ED1ng",
             secondaryCta: "T\xECm Hi\u1EC3u Kh\xF4ng Gian",
             image: heroImg
           }
@@ -4782,38 +4912,60 @@ function createSmartPromptSpec(prompt) {
         {
           type: "ticker",
           props: {
-            items: isFlower ? ["HOA NH\u1EACP KH\u1EA8U T\u01AF\u01A0I M\u1ED6I NG\xC0Y", "THI\u1EBET K\u1EBE HOA C\u01AF\u1EDAI RI\xCANG BI\u1EC6T", "GIAO HOA T\u1EACN TAY TRONG 60 PH\xDAT", "G\xD3I QU\xC0 TH\u1EE6 C\xD4NG NGH\u1EC6 NH\xC2N", "TINH T\u1EBE & \u0110\u1ED8C B\u1EA2N"] : ["H\u1EA0T ARABICA C\u1EA6U \u0110\u1EA4T \u0110\u1EB6C T\u1EA2", "B\xC1NH T\u01AF\u01A0I N\u01AF\u1EDANG N\xD3NG M\u1ED6I S\xC1NG", "KH\xD4NG GIAN Y\xCAN B\xCCNH M\u1ED8C M\u1EA0C", "PHA PHIN & POUR OVER TH\u1EE6 C\xD4NG", "100% NGUY\xCAN B\u1EA2N KH\xD4NG PH\u1EE4 GIA"]
+            items: [
+              "H\u1EA0T ARABICA C\u1EA6U \u0110\u1EA4T \u0110\u1EB6C T\u1EA2",
+              "B\xC1NH T\u01AF\u01A0I N\u01AF\u1EDANG N\xD3NG M\u1ED6I S\xC1NG",
+              "KH\xD4NG GIAN Y\xCAN B\xCCNH M\u1ED8C M\u1EA0C",
+              "PHA PHIN & POUR OVER TH\u1EE6 C\xD4NG",
+              "100% NGUY\xCAN B\u1EA2N KH\xD4NG PH\u1EE4 GIA"
+            ]
           }
         },
         {
-          type: "menu",
+          type: "cards",
           props: {
-            heading: isFlower ? "B\xF3 Hoa & L\u1EB5ng Hoa Ti\xEAu Bi\u1EC3u" : "Th\u1EF1c \u0110\u01A1n \u0110\u1EADm Ch\u1EA5t Ngh\u1EC7 Nh\xE2n",
-            subheading: "\u0110\u01B0\u1EE3c ch\u1EAFt l\u1ECDc k\u1EF9 l\u01B0\u1EE1ng t\u1EEB ngu\u1ED3n nguy\xEAn li\u1EC7u th\u01B0\u1EE3ng h\u1EA1ng",
-            categories: [
+            heading: "Th\u1EE9c U\u1ED1ng & M\xF3n B\xE1n Ch\u1EA1y",
+            subheading: "\u0110\u01B0\u1EE3c ch\u1EAFt l\u1ECDc t\u1EEB nh\u1EEFng nguy\xEAn li\u1EC7u s\u1EA1ch v\xE0 c\xF4ng th\u1EE9c pha ch\u1EBF th\u1EE7 c\xF4ng",
+            items: [
               {
-                name: isFlower ? "B\u1ED9 S\u01B0u T\u1EADp N\u1ED5i B\u1EADt" : "Th\u1EE9c U\u1ED1ng & B\xE1nh Ng\u1ECDt",
-                items: isFlower ? [
-                  { name: "B\xF3 Hoa H\u1ED3ng David Austin L\xE3ng M\u1EA1n", desc: "H\u1ED3ng nh\u1EADp kh\u1EA9u c\xE1nh xo\u0103n k\xE8m l\xE1 b\u1EA1c khuynh di\u1EC7p th\u01A1m d\u1ECBu", price: "850.000\u0111", badge: "Signature" },
-                  { name: "L\u1EB5ng Hoa Khai Tr\u01B0\u01A1ng Th\u1ECBnh V\u01B0\u1EE3ng", desc: "Lan h\u1ED3 \u0111i\u1EC7p k\u1EBFt h\u1EE3p hoa \u0111\u1ED3ng ti\u1EC1n v\xE0 c\u1EA9m t\xFA c\u1EA7u r\u1EF1c r\u1EE1", price: "1.250.000\u0111", badge: "VIP" },
-                  { name: "H\u1ED9p Hoa Tulip H\xE0 Lan Pastel", desc: "15 c\xE0nh tulip m\xE0u h\u1ED3ng ph\u1EA5n trong h\u1ED9p nhung trang nh\xE3", price: "950.000\u0111" },
-                  { name: "B\xF3 Baby Tr\u1EAFng Thu\u1EA7n Khi\u1EBFt", desc: "Baby nh\u1EADp kh\u1EA9u s\u1EA5y kh\xF4 gi\u1EEF m\xE0u t\u1EF1 nhi\xEAn l\xEAn \u0111\u1EBFn 12 th\xE1ng", price: "450.000\u0111" }
-                ] : [
-                  { name: "C\xE0 Ph\xEA Cold Brew Cam V\xE0ng", desc: "\u1EE6 l\u1EA1nh 16 ti\u1EBFng t\u1EEB h\u1EA1t Arabica C\u1EA7u \u0110\u1EA5t c\xF9ng h\u01B0\u01A1ng cam thanh m\xE1t", price: "65.000\u0111", badge: "Signature" },
-                  { name: "Espresso Con Panna Th\u01B0\u1EE3ng H\u1EA1ng", desc: "C\u1ED1t c\xE0 ph\xEA \u0111\u1EADm s\xE2u k\u1EBFt h\u1EE3p l\u1EDBp kem t\u01B0\u01A1i b\xE9o m\u1ECBn th\u1EE7 c\xF4ng", price: "55.000\u0111" },
-                  { name: "B\xE1nh Croissant B\u01A1 Normandy N\xF3ng", desc: "Ng\xE0n l\u1EDBp gi\xF2n r\u1EE5m v\u1EDBi b\u01A1 Ph\xE1p nguy\xEAn ch\u1EA5t th\u01A1m n\u1ED3ng n\xE0n", price: "48.000\u0111", badge: "B\xE1n ch\u1EA1y" },
-                  { name: "Tr\xE0 \u0110\xE0o Cam S\u1EA3 M\u1EADt Ong R\u1EEBng", desc: "Tr\xE0 th\u1EA3o m\u1ED9c th\u01A1m l\xE0nh thanh nhi\u1EC7t, v\u1ECB ng\u1ECDt t\u1EF1 nhi\xEAn", price: "58.000\u0111" }
-                ]
+                title: "C\xE0 Ph\xEA Cold Brew Cam V\xE0ng",
+                desc: "\u1EE6 l\u1EA1nh 16 ti\u1EBFng t\u1EEB h\u1EA1t Arabica C\u1EA7u \u0110\u1EA5t c\xF9ng h\u01B0\u01A1ng cam thanh m\xE1t s\u1EA3ng kho\xE1i.",
+                badge: "Signature",
+                price: "65.000\u0111",
+                image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                title: "B\xE1nh Croissant B\u01A1 Normandy N\xF3ng",
+                desc: "Ng\xE0n l\u1EDBp gi\xF2n r\u1EE5m v\u1EDBi b\u01A1 Ph\xE1p nguy\xEAn ch\u1EA5t th\u01A1m n\u1ED3ng n\xE0n n\u01B0\u1EDBng m\u1EDBi m\u1ED7i s\xE1ng.",
+                badge: "B\xE1nh t\u01B0\u01A1i",
+                price: "48.000\u0111",
+                image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                title: "Tr\xE0 \u0110\xE0o Cam S\u1EA3 M\u1EADt Ong R\u1EEBng",
+                desc: "Tr\xE0 th\u1EA3o m\u1ED9c th\u01A1m l\xE0nh thanh nhi\u1EC7t, v\u1ECB ng\u1ECDt thanh t\u1EF1 nhi\xEAn t\u1EEB m\u1EADt ong r\u1EEBng nguy\xEAn ch\u1EA5t.",
+                badge: "Thanh m\xE1t",
+                price: "58.000\u0111",
+                image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80"
               }
             ]
           }
         },
         {
-          type: "quote",
+          type: "menu",
           props: {
-            quote: isFlower ? "Hoa kh\xF4ng ch\u1EC9 \u0111\u1EC3 ng\u1EAFm, hoa thay l\u1EDDi mu\u1ED1n n\xF3i nh\u1EEFng \u0111i\u1EC1u ch\xE2n th\xE0nh nh\u1EA5t m\xE0 ng\xF4n t\u1EEB kh\xF3 di\u1EC5n t\u1EA3." : "Ch\xFAng t\xF4i kh\xF4ng ch\u1EC9 pha m\u1ED9t t\xE1ch c\xE0 ph\xEA, ch\xFAng t\xF4i s\u1EBB chia kho\u1EA3nh kh\u1EAFc t\u0129nh t\u1EA1i v\xE0 s\u1EF1 ch\u0103m ch\xFAt trong t\u1EEBng gi\u1ECDt n\u01B0\u1EDBc s\xF4i.",
-            author: isFlower ? "Floral Stylist & Founder" : "Master Barista",
-            role: "Ngh\u1EC7 nh\xE2n s\xE1ng t\u1EA1o"
+            heading: "Th\u1EF1c \u0110\u01A1n \u0110\u1EADm Ch\u1EA5t Ngh\u1EC7 Nh\xE2n",
+            subheading: "\u0110\u01B0\u1EE3c ch\u1EAFt l\u1ECDc k\u1EF9 l\u01B0\u1EE1ng t\u1EEB ngu\u1ED3n nguy\xEAn li\u1EC7u th\u01B0\u1EE3ng h\u1EA1ng",
+            categories: [
+              {
+                name: "C\xE0 Ph\xEA & \u0110\u1ED3 U\u1ED1ng",
+                items: [
+                  { name: "Espresso Con Panna Th\u01B0\u1EE3ng H\u1EA1ng", desc: "C\u1ED1t c\xE0 ph\xEA \u0111\u1EADm s\xE2u k\u1EBFt h\u1EE3p l\u1EDBp kem t\u01B0\u01A1i b\xE9o m\u1ECBn th\u1EE7 c\xF4ng", price: "55.000\u0111", badge: "Best" },
+                  { name: "C\xE0 Ph\xEA Mu\u1ED1i X\u1EE9 Hu\u1EBF", desc: "V\u1ECB \u0111\u1EAFng \u0111\u01B0\u1EE3m quy\u1EC7n kem b\xE9o m\u1EB7n m\xF2i kh\xF3 qu\xEAn", price: "45.000\u0111" },
+                  { name: "Matcha Latte Nh\u1EADt B\u1EA3n", desc: "B\u1ED9t tr\xE0 Uji nguy\xEAn ch\u1EA5t \u0111\xE1nh c\xF9ng s\u1EEFa h\u1EA1t y\u1EBFn m\u1EA1ch", price: "60.000\u0111" }
+                ]
+              }
+            ]
           }
         },
         {
@@ -4821,24 +4973,24 @@ function createSmartPromptSpec(prompt) {
           props: {
             title: "S\u1EF1 T\u1EC9 M\u1EC9 Trong T\u1EEBng Kh\xE2u Th\u1EF1c Hi\u1EC7n",
             description: "T\u1EEB tuy\u1EC3n ch\u1ECDn ngu\u1ED3n nguy\xEAn li\u1EC7u xanh s\u1EA1ch \u0111\u1EBFn c\xF4ng \u0111o\u1EA1n ch\u1EBF t\xE1c b\u1EB1ng tay, t\u1EA5t c\u1EA3 \u0111\u1EC1u tu\xE2n th\u1EE7 s\u1EF1 ch\xE2n th\xE0nh v\xE0 tinh th\u1EA7n ngh\u1EC7 nh\xE2n nguy\xEAn b\u1EA3n.",
-            image: isFlower ? "https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=800&q=80" : "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
+            image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
             bullets: [
-              "Nguy\xEAn li\u1EC7u t\u01B0\u01A1i m\u1EDBi thu h\xE1i v\xE0 nh\u1EADp kh\u1EA9u trong ng\xE0y",
+              "H\u1EA1t c\xE0 ph\xEA ch\u1EC9 rang v\xE0 s\u1EED d\u1EE5ng trong v\xF2ng 14 ng\xE0y",
               "B\u1EA3o qu\u1EA3n ho\xE0n to\xE0n t\u1EF1 nhi\xEAn, kh\xF4ng ch\u1EA5t ph\u1EE5 gia \u0111\u1ED9c h\u1EA1i",
-              "\u0110\xF3ng g\xF3i th\u1EE7 c\xF4ng b\u1EB1ng gi\u1EA5y kraft th\xE2n thi\u1EC7n m\xF4i tr\u01B0\u1EDDng"
+              "Kh\xF4ng gian m\u1ED9c m\u1EA1c y\xEAn b\xECnh l\xFD t\u01B0\u1EDFng \u0111\u1EC3 \u0111\u1ECDc s\xE1ch v\xE0 l\xE0m vi\u1EC7c"
             ]
           }
         },
         {
           type: "form",
           props: {
-            heading: isFlower ? "\u0110\u1EB7t Hoa Thi\u1EBFt K\u1EBF Theo Y\xEAu C\u1EA7u" : "\u0110\u1EB7t B\xE0n Ho\u1EB7c \u0110\u1EB7t Ti\u1EC7c Nh\u1ECF",
+            heading: "\u0110\u1EB7t B\xE0n Ho\u1EB7c \u0110\u1EB7t Ti\u1EC7c Nh\u1ECF",
             subheading: "\u0110\u1EC3 l\u1EA1i th\xF4ng tin, ch\xFAng t\xF4i s\u1EBD li\xEAn h\u1EC7 chu\u1EA9n b\u1ECB chu \u0111\xE1o nh\u1EA5t cho b\u1EA1n",
-            submitLabel: isFlower ? "G\u1EEDi Y\xEAu C\u1EA7u \u0110\u1EB7t Hoa" : "X\xE1c Nh\u1EADn \u0110\u1EB7t B\xE0n",
+            submitLabel: "X\xE1c Nh\u1EADn \u0110\u1EB7t B\xE0n",
             fields: [
               { label: "H\u1ECD v\xE0 t\xEAn c\u1EE7a b\u1EA1n", type: "text" },
               { label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i li\xEAn h\u1EC7", type: "tel" },
-              { label: isFlower ? "D\u1ECBp t\u1EB7ng & mong mu\u1ED1n v\u1EC1 hoa" : "S\u1ED1 ng\u01B0\u1EDDi & gi\u1EDD gh\xE9 qu\xE1n", type: "textarea" }
+              { label: "S\u1ED1 ng\u01B0\u1EDDi & gi\u1EDD gh\xE9 qu\xE1n", type: "textarea" }
             ]
           }
         },
@@ -4851,6 +5003,236 @@ function createSmartPromptSpec(prompt) {
               { label: "Th\u1EF1c \u0111\u01A1n", href: "#" },
               { label: "Kh\xF4ng gian", href: "#" },
               { label: "Li\xEAn h\u1EC7", href: "#" }
+            ]
+          }
+        }
+      ]
+    };
+  }
+  const isSushi = p.includes("sushi") || p.includes("nha hang") || p.includes("omakase") || p.includes("am thuc") || p.includes("hai san");
+  if (isSushi) {
+    return {
+      theme: {
+        primary: "#dc2626",
+        background: "#0c0a09",
+        text: "#fafaf9",
+        font: "Playfair Display",
+        style: "luxury"
+      },
+      sections: [
+        {
+          type: "hero",
+          props: {
+            layout: "centered",
+            badge: "\u{1F363} OMAKASE TH\u01AF\u1EE2NG H\u1EA0NG NH\u1EACT B\u1EA2N",
+            title: cleanTitle,
+            subtitle: "H\u1EA3i s\u1EA3n t\u01B0\u01A1i s\u1ED1ng v\u1EADn chuy\u1EC3n h\u1ECFa t\u1ED1c t\u1EEB ch\u1EE3 c\xE1 Toyosu Tokyo, k\u1EBFt h\u1EE3p t\xE0i hoa h\u01A1n 20 n\u0103m c\u1EE7a b\u1EBFp tr\u01B0\u1EDFng ng\u01B0\u1EDDi Nh\u1EADt.",
+            cta: "\u0110\u1EB7t B\xE0n Tr\u1EF1c Tuy\u1EBFn",
+            secondaryCta: "Xem Th\u1EF1c \u0110\u01A1n M\xF9a N\xE0y",
+            image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=1200&q=80"
+          }
+        },
+        {
+          type: "ticker",
+          props: {
+            items: [
+              "H\u1EA2I S\u1EA2N T\u01AF\u01A0I BAY TRONG NG\xC0Y T\u1EEA NH\u1EACT B\u1EA2N",
+              "B\xD2 WAGYU A5 CH\u1EE8NG NH\u1EACN MIYAZAKI",
+              "PH\xD2NG VIP RI\xCANG T\u01AF CHU\u1EA8N PHONG C\xC1CH T\u1ED0I GI\u1EA2N",
+              "B\u1EBEP TR\u01AF\u1EDENG 25 N\u0102M KINH NGHI\u1EC6M T\u1EA0I GINZA",
+              "B\u1ED8 S\u01AFU T\u1EACP R\u01AF\u1EE2U SAKE TH\u01AF\u1EE2NG H\u1EA0NG"
+            ]
+          }
+        },
+        {
+          type: "cards",
+          props: {
+            heading: "Tuy\u1EC7t T\xE1c \u1EA8m Th\u1EF1c T\u01B0\u01A1i Ngon",
+            subheading: "M\u1ED7i m\xF3n \u0103n l\xE0 s\u1EF1 k\u1EBFt tinh c\u1EE7a nguy\xEAn li\u1EC7u hi\u1EBFm c\xF3 v\xE0 k\u1EF9 ngh\u1EC7 \u0111i\xEAu luy\u1EC7n",
+            items: [
+              {
+                title: "Nigiri B\xF2 Wagyu A5 Truffle",
+                desc: "Th\u1ECBt b\xF2 n\u01B0\u1EDBng t\xE1i m\u1EB7t m\u1EE1 tan ch\u1EA3y tr\xEAn \u0111\u1EA7u l\u01B0\u1EE1i c\xF9ng s\u1ED1t n\u1EA5m Truffle \u0111en th\u01A1m n\u1ED3ng.",
+                badge: "Signature",
+                price: "320.000\u0111 / mi\u1EBFng",
+                image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                title: "Sashimi Otoro B\u1EE5ng C\xE1 H\u1ED3i Xanh",
+                desc: "Th\u1EDB m\u1EE1 v\xE2n c\u1EA9m th\u1EA1ch ng\u1EADy b\xE9o, c\u1EAFt d\xE0y nguy\xEAn b\u1EA3n gi\u1EEF tr\u1ECDn v\u1ECB ng\u1ECDt \u0111\u1EA1i d\u01B0\u01A1ng.",
+                badge: "B\xE1n ch\u1EA1y",
+                price: "850.000\u0111 / set",
+                image: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                title: "C\u01A1m Nh\xEDm Bi\u1EC3n Uni Hokkaido",
+                desc: "Tr\u1EE9ng nh\xEDm bi\u1EC3n v\xE0ng \u01B0\u01A1m b\xE9o ng\u1EADy \u0103n k\xE8m rong bi\u1EC3n n\u01B0\u1EDBng gi\xF2n v\xE0 wasabi t\u01B0\u01A1i gi\xE3 tay.",
+                badge: "M\xF9a n\xE0y",
+                price: "720.000\u0111 / ph\u1EA7n",
+                image: "https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          }
+        },
+        {
+          type: "split_feature",
+          props: {
+            badge: "TRI\u1EBET L\xDD OMAKASE",
+            title: "Tr\u1ECDn Ni\u1EC1m Tin V\xE0o \u0110\xF4i Tay B\u1EBFp Tr\u01B0\u1EDFng",
+            description: "T\u1EA1i nh\xE0 h\xE0ng c\u1EE7a ch\xFAng t\xF4i, th\u1EF1c kh\xE1ch kh\xF4ng g\u1ECDi m\xF3n theo danh m\u1EE5c th\xF4ng th\u01B0\u1EDDng. B\u1EBFp tr\u01B0\u1EDFng s\u1EBD l\u1EAFng nghe kh\u1EA9u v\u1ECB c\u1EE7a b\u1EA1n v\xE0 thi\u1EBFt k\u1EBF m\u1ED9t h\xE0nh tr\xECnh \u1EA9m th\u1EF1c ri\xEAng bi\u1EC7t.",
+            image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1000&q=80",
+            bullets: [
+              "G\u1EA1o Koshihikari th\u01B0\u1EE3ng h\u1EA1ng n\u1EA5u b\u1EB1ng n\u01B0\u1EDBc su\u1ED1i kho\xE1ng t\u1EF1 nhi\xEAn",
+              "Wasabi t\u01B0\u01A1i m\xE0i b\u1EB1ng da c\xE1 \u0111u\u1ED1i truy\u1EC1n th\u1ED1ng Shizuoka",
+              "Kh\xF4ng gian qu\u1EA7y bar g\u1ED7 Hinoki th\u01A1m d\u1ECBu v\xE0 \u1EA5m c\xFAng"
+            ],
+            cta: "\u0110\u1EB7t ch\u1ED7 tr\u01B0\u1EDBc"
+          }
+        },
+        {
+          type: "form",
+          props: {
+            heading: "\u0110\u1EB7t Ch\u1ED7 Tr\u1EF1c Tuy\u1EBFn & Ph\xF2ng Ti\u1EC7c VIP",
+            subheading: "Vui l\xF2ng \u0111\u1EB7t tr\u01B0\u1EDBc \xEDt nh\u1EA5t 24 gi\u1EDD \u0111\u1EC3 ch\xFAng t\xF4i chu\u1EA9n b\u1ECB h\u1EA3i s\u1EA3n t\u01B0\u01A1i ngon nh\u1EA5t",
+            submitLabel: "X\xE1c Nh\u1EADn Gi\u1EEF Ch\u1ED7",
+            fields: [
+              { label: "H\u1ECD v\xE0 t\xEAn c\u1EE7a b\u1EA1n", type: "text" },
+              { label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i li\xEAn h\u1EC7", type: "tel" },
+              { label: "S\u1ED1 l\u01B0\u1EE3ng kh\xE1ch & Th\u1EDDi gian \u0111\u1EBFn", type: "text" },
+              { label: "Ghi ch\xFA d\u1ECB \u1EE9ng ho\u1EB7c y\xEAu c\u1EA7u ri\xEAng", type: "textarea" }
+            ]
+          }
+        },
+        {
+          type: "footer",
+          props: {
+            text: `\xA9 2026 ${cleanTitle}. Tinh hoa \u1EA9m th\u1EF1c x\u1EE9 s\u1EDF Ph\xF9 Tang.`,
+            links: [
+              { label: "Th\u1EF1c \u0111\u01A1n Omakase", href: "#" },
+              { label: "R\u01B0\u1EE3u Sake", href: "#" },
+              { label: "Kh\xF4ng gian", href: "#" },
+              { label: "\u0110\u1EB7t b\xE0n", href: "#" }
+            ]
+          }
+        }
+      ]
+    };
+  }
+  const isCourse = p.includes("khoa hoc") || p.includes("lap trinh") || p.includes("hoc") || p.includes("dao tao") || p.includes("giao duc");
+  if (isCourse) {
+    return {
+      theme: {
+        primary: "#2563eb",
+        secondary: "#60a5fa",
+        accent: "#f59e0b",
+        background: "#0b1329",
+        text: "#f8fafc",
+        font: "Be Vietnam Pro",
+        style: "bento"
+      },
+      sections: [
+        {
+          type: "hero",
+          props: {
+            layout: "split",
+            badge: "\u{1F680} L\u1ED8 TR\xCCNH \u0110\xC0O T\u1EA0O TH\u1EF0C CHI\u1EBEN 2026",
+            title: cleanTitle,
+            subtitle: "H\u1ECDc t\u1EEB chuy\xEAn gia \u0111ang l\xE0m vi\u1EC7c t\u1EA1i c\xE1c t\u1EADp \u0111o\xE0n c\xF4ng ngh\u1EC7 l\u1EDBn. Cam k\u1EBFt h\u1ED7 tr\u1EE3 vi\u1EC7c l\xE0m v\u1EDBi m\u1EE9c l\u01B0\u01A1ng h\u1EA5p d\u1EABn sau khi t\u1ED1t nghi\u1EC7p.",
+            cta: "\u0110\u0103ng K\xFD T\u01B0 V\u1EA5n Kh\xF3a H\u1ECDc",
+            secondaryCta: "Xem L\u1ED9 Tr\xECnh Chi Ti\u1EBFt",
+            image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80"
+          }
+        },
+        {
+          type: "ticker",
+          props: {
+            items: [
+              "\u{1F525} 98% H\u1ECCC VI\xCAN C\xD3 VI\u1EC6C L\xC0M SAU 3 TH\xC1NG",
+              "\u{1F4BB} H\u01A0N 50+ D\u1EF0 \xC1N TH\u1EF0C CHI\u1EBEN \u0110\u01AFA V\xC0O CV",
+              "\u{1F468}\u200D\u{1F3EB} MENTOR 1 K\xC8M 1 H\u1ED6 TR\u1EE2 CODE H\xC0NG NG\xC0Y",
+              "\u{1F381} T\u1EB6NG B\u1ED8 T\xC0I LI\u1EC6U & CODE M\u1EAAU B\u1EA2N QUY\u1EC0N",
+              "\u{1F3E2} K\u1EBET N\u1ED0I H\u01A0N 400+ DOANH NGHI\u1EC6P TUY\u1EC2N D\u1EE4NG"
+            ]
+          }
+        },
+        {
+          type: "cards",
+          props: {
+            heading: "C\xE1c Kh\xF3a H\u1ECDc Ti\xEAu Bi\u1EC3u & Chuy\xEAn S\xE2u",
+            subheading: "\u0110\u01B0\u1EE3c c\u1EADp nh\u1EADt c\xF4ng ngh\u1EC7 m\u1EDBi nh\u1EA5t theo nhu c\u1EA7u th\u1EF1c t\u1EBF c\u1EE7a th\u1ECB tr\u01B0\u1EDDng",
+            items: [
+              {
+                title: "Frontend React & TypeScript Pro",
+                desc: "L\xE0m ch\u1EE7 React 19, Next.js App Router, TailwindCSS v\xE0 x\xE2y d\u1EF1ng c\xE1c Web App ph\u1EE9c t\u1EA1p.",
+                badge: "B\xE1n ch\u1EA1y nh\u1EA5t",
+                price: "4.500.000\u0111",
+                image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                title: "Backend Node.js & Microservices",
+                desc: "Thi\u1EBFt k\u1EBF RESTful API, NestJS, Docker, Redis, Message Queue v\xE0 c\u01A1 s\u1EDF d\u1EEF li\u1EC7u ph\xE2n t\xE1n.",
+                badge: "Hot 2026",
+                price: "5.200.000\u0111",
+                image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80"
+              },
+              {
+                title: "Fullstack Web & AI Integration",
+                desc: "K\u1EBFt n\u1ED1i LLM, x\xE2y d\u1EF1ng \u1EE9ng d\u1EE5ng AI t\u1EF1 \u0111\u1ED9ng h\xF3a v\xE0 tri\u1EC3n khai Cloudflare / AWS.",
+                badge: "Chuy\xEAn s\xE2u VIP",
+                price: "7.800.000\u0111",
+                image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80"
+              }
+            ]
+          }
+        },
+        {
+          type: "stats",
+          props: {
+            heading: "NH\u1EEENG CON S\u1ED0 BI\u1EBET N\xD3I",
+            items: [
+              { value: "12,000+", label: "H\u1ECDc vi\xEAn \u0111\xE3 t\u1ED1t nghi\u1EC7p" },
+              { value: "98.2%", label: "T\u1EF7 l\u1EC7 c\xF3 vi\u1EC7c l\xE0m \u0111\xFAng ng\xE0nh" },
+              { value: "15-25tr", label: "M\u1EE9c l\u01B0\u01A1ng kh\u1EDFi \u0111i\u1EC3m trung b\xECnh" },
+              { value: "400+", label: "Doanh nghi\u1EC7p \u0111\u1ED1i t\xE1c tuy\u1EC3n d\u1EE5ng" }
+            ]
+          }
+        },
+        {
+          type: "table",
+          props: {
+            heading: "So S\xE1nh L\u1ED9 Tr\xECnh \u0110\xE0o T\u1EA1o",
+            subheading: "L\u1EF1a ch\u1ECDn h\xECnh th\u1EE9c h\u1ECDc t\u1EADp ph\xF9 h\u1EE3p nh\u1EA5t v\u1EDBi qu\u1EF9 th\u1EDDi gian c\u1EE7a b\u1EA1n",
+            columns: ["Quy\u1EC1n L\u1EE3i & H\u1ED7 Tr\u1EE3", "L\u1EDBp T\u1EF1 H\u1ECDc C\xF3 Video", "L\u1EDBp Mentor K\xE8m 1-1"],
+            rows: [
+              ["Video b\xE0i gi\u1EA3ng Full HD tr\u1ECDn \u0111\u1EDDi", "C\xF3 (Truy c\u1EADp 24/7)", "C\xF3 (C\u1EADp nh\u1EADt li\xEAn t\u1EE5c)"],
+              ["H\u1ED7 tr\u1EE3 review code tr\u1EF1c ti\u1EBFp", "H\u1ECFi \u0111\xE1p qua forum", "1-1 h\xE0ng tu\u1EA7n c\xF9ng Tech Lead"],
+              ["B\xE0i t\u1EADp d\u1EF1 \xE1n th\u1EF1c t\u1EBF", "5 d\u1EF1 \xE1n c\u01A1 b\u1EA3n", "12 d\u1EF1 \xE1n l\u1EDBn chu\u1EA9n doanh nghi\u1EC7p"],
+              ["H\u1ED7 tr\u1EE3 k\u1EBFt n\u1ED1i ph\u1ECFng v\u1EA5n", "H\u1ED7 tr\u1EE3 s\u1EEDa CV", "Cam k\u1EBFt k\u1EBFt n\u1ED1i tr\u1EF1c ti\u1EBFp HR"]
+            ]
+          }
+        },
+        {
+          type: "form",
+          props: {
+            heading: "Nh\u1EADn L\u1ED9 Tr\xECnh H\u1ECDc & \u01AFu \u0110\xE3i H\u1ECDc B\u1ED5ng 30%",
+            subheading: "\u0110\u1EC3 l\u1EA1i th\xF4ng tin \u0111\u1EC3 \u0111\u01B0\u1EE3c \u0111\u1ED9i ng\u0169 tuy\u1EC3n sinh t\u01B0 v\u1EA5n l\u1ED9 tr\xECnh ph\xF9 h\u1EE3p v\u1EDBi xu\u1EA5t ph\xE1t \u0111i\u1EC3m c\u1EE7a b\u1EA1n",
+            submitLabel: "\u0110\u0103ng K\xFD Nh\u1EADn T\u01B0 V\u1EA5n Ngay",
+            fields: [
+              { label: "H\u1ECD v\xE0 t\xEAn h\u1ECDc vi\xEAn", type: "text" },
+              { label: "S\u1ED1 \u0111i\u1EC7n tho\u1EA1i li\xEAn h\u1EC7", type: "tel" },
+              { label: "Kh\xF3a h\u1ECDc b\u1EA1n \u0111ang quan t\xE2m", type: "text" }
+            ]
+          }
+        },
+        {
+          type: "footer",
+          props: {
+            text: `\xA9 2026 ${cleanTitle}. \u0110\xE0o t\u1EA1o l\u1EADp tr\xECnh th\u1EF1c chi\u1EBFn chu\u1EA9n qu\u1ED1c t\u1EBF.`,
+            links: [
+              { label: "Kh\xF3a h\u1ECDc", href: "#" },
+              { label: "L\u1ED9 tr\xECnh", href: "#" },
+              { label: "H\u1ECDc b\u1ED5ng", href: "#" },
+              { label: "Tuy\u1EC3n d\u1EE5ng", href: "#" }
             ]
           }
         }
@@ -5921,7 +6303,7 @@ data: ${JSON.stringify(data)}
   }
 }, "onRequestPost");
 
-// ../.wrangler/tmp/pages-Crjrsk/functionsRoutes-0.6957318308420236.mjs
+// ../.wrangler/tmp/pages-SnsLNW/functionsRoutes-0.22421824951468206.mjs
 var routes = [
   {
     routePath: "/api/projects/:id",
